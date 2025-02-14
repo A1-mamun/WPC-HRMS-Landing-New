@@ -1,32 +1,31 @@
-import { Button, Layout } from "antd";
+import { Outlet } from "react-router-dom";
 
-import { NavLink, Outlet } from "react-router-dom";
-
-import Sidebar from "./Sidebar";
-const { Header, Content } = Layout;
+import { Avatar, Button, Link } from "@heroui/react";
+import DashboardSidebar from "./DashboarSidebar";
+import { FaCircleUser } from "react-icons/fa6";
 
 const DashboardLayout = () => {
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Sidebar />
-      <Layout>
-        <Header style={{ padding: 0 }}>
-          <NavLink to={"/"} className="text-white">
-            <Button type="primary">Home</Button>
-          </NavLink>
-        </Header>
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-            }}
-          >
-            <Outlet />
+    <div className="font-jura flex">
+      <DashboardSidebar />
+      <div className="w-full">
+        <div className="w-full h-16 bg-hrms-blue">
+          <div className="flex items-center justify-start lg:justify-end h-full pl-5 md:pl-8 lg:pr-10">
+            <div className="flex items-center gap-6">
+              <Link className="hidden lg:block" href="/">
+                <Button className="font-inter text-hrms-blue font-medium">
+                  Back to Home
+                </Button>
+              </Link>
+              <Avatar size="sm" isBordered className="">
+                <FaCircleUser />
+              </Avatar>
+            </div>
           </div>
-        </Content>
-      </Layout>
-    </Layout>
+        </div>
+        <Outlet></Outlet>
+      </div>
+    </div>
   );
 };
 

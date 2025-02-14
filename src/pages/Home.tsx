@@ -1,10 +1,13 @@
-import { employeePaths } from "../routes/employee.routes";
-import { routeGenerator } from "../utils/routesGenerator";
+import { Clients, Hero, Reviews } from "../sections";
 
 const Home = () => {
-  const paths = routeGenerator(employeePaths);
-  console.log("paths", paths);
-  return <div className="">This is the home page</div>;
+  return (
+    <main className="mt-20">
+      <Hero />
+      <Clients />
+      <Reviews />
+    </main>
+  );
 };
 
 export default Home;

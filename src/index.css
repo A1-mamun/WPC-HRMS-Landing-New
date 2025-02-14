@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sora:wght@100..800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,4 +9,13 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+@layer utilities {
+  .padding-responsive-x {
+    @apply px-5 md:px-10 lg:px-16 xl:px-24 2xl:px-32 3xl:px-40;
+  }
+  .padding-responsive {
+    @apply px-5 md:px-10 lg:px-16 xl:px-24 2xl:px-32 3xl:px-40 py-10 lg:py-14 xl:py-20;
+  }
 }
