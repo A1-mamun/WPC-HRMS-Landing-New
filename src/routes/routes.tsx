@@ -5,11 +5,15 @@ import Register from "../pages/Register";
 import Home from "../pages/Home";
 import Pricing from "../pages/Pricing";
 import Contact from "../pages/Contact";
-import EmployeeDashboard from "../pages/employee/EmployeeDashboard";
 import { DashboardLayout } from "../components";
-import Leave from "../pages/employee/Leave";
-
-import Attendance from "../pages/employee/Attendance";
+import Leave from "../pages/Dashboard/Employee/Leave";
+import Dashboard from "../pages/Dashboard/Common/Dashboard";
+import AddOrgDocuments from "../pages/Dashboard/Employer/AddOrgDocuments";
+import CreateEmployee from "../pages/Dashboard/Employer/CreateEmployee";
+import ManageEmployee from "../pages/Dashboard/Employer/ManageEmployee";
+import ManagePayroll from "../pages/Dashboard/Employer/ManagePayroll";
+import Attendance from "../pages/Dashboard/Employee/Attendance";
+import AddDocuments from "../pages/Dashboard/Employee/AddDocuments";
 
 const router = createBrowserRouter([
   {
@@ -39,25 +43,13 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <DashboardLayout />,
     children: [
-      // {
-      //   path: "admin",
-      //   children: routeGenerator(adminPaths),
-      // },
-      // {
-      //   path: "employer",
-      //   children: routeGenerator(employerPaths),
-      // },
-      // {
-      //   path: "employee",
-      //   children: routeGenerator(employeePaths),
-      // },
       {
         index: true,
-        element: <EmployeeDashboard />,
+        element: <Dashboard />,
       },
       {
-        path: "employee-dashboard",
-        element: <EmployeeDashboard />,
+        path: "add-employee-documents",
+        element: <AddDocuments />,
       },
       {
         path: "employee-attendance",
@@ -66,6 +58,22 @@ const router = createBrowserRouter([
       {
         path: "employee-leave",
         element: <Leave />,
+      },
+      {
+        path: "add-org-documents",
+        element: <AddOrgDocuments />,
+      },
+      {
+        path: "create-employee",
+        element: <CreateEmployee />,
+      },
+      {
+        path: "manage-employee",
+        element: <ManageEmployee />,
+      },
+      {
+        path: "manage-payroll",
+        element: <ManagePayroll />,
       },
     ],
   },

@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import { MdClose } from "react-icons/md";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineDashboard, AiOutlineMenu } from "react-icons/ai";
 import {
   Button,
   Drawer,
@@ -12,6 +12,10 @@ import {
   Link,
   useDisclosure,
 } from "@heroui/react";
+import MenuItem from "./Menu/MenuItem";
+import AdminMenu from "./Menu/AdminMenu";
+import EmployerMenu from "./Menu/EmployerMenu";
+import EmployeeMenu from "./Menu/EmployeeMenu";
 
 const DashboardSidebar = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -19,61 +23,22 @@ const DashboardSidebar = () => {
   const handleOpen = () => {
     onOpen();
   };
+  const role = "employee";
   const navLinks = (
     <>
-      {/* Home */}
-
-      <NavLink
-        to="employee-dashboard"
-        className={({ isActive }) =>
-          isActive
-            ? "w-full bg-hrms-blue-hover flex items-center space-x-3 rounded-md gap-3"
-            : "w-full bg-hrms-blue-light flex items-center space-x-3 rounded-md gap-3"
-        }
-      >
-        <Button
-          radius="sm"
-          className="w-full flex items-center justify-start bg-transparent text-bg-primary font-inter font-medium"
-        >
-          Dashboard
-        </Button>
-      </NavLink>
-
-      <NavLink
-        to="employee-attendance"
-        className={({ isActive }) =>
-          isActive
-            ? "w-full bg-hrms-blue-hover flex items-center space-x-3 rounded-md gap-3"
-            : "w-full bg-hrms-blue-light flex items-center space-x-3 rounded-md gap-3"
-        }
-      >
-        <Button
-          radius="sm"
-          className="w-full flex items-center justify-start bg-transparent text-bg-primary font-inter font-medium"
-        >
-          Ataendance
-        </Button>
-      </NavLink>
-
-      <NavLink
-        to="employee-leave"
-        className={({ isActive }) =>
-          isActive
-            ? "w-full bg-hrms-blue-hover flex items-center space-x-3 rounded-md gap-3"
-            : "w-full bg-hrms-blue-light flex items-center space-x-3 rounded-md gap-3"
-        }
-      >
-        <Button
-          radius="sm"
-          className="w-full flex items-center justify-start bg-transparent text-bg-primary font-inter font-medium"
-        >
-          Leave
-        </Button>
-      </NavLink>
+      <MenuItem
+        label="Dashboard"
+        address="/dashboard"
+        icon={<AiOutlineDashboard />}
+      />
+      {role === "admin" && <AdminMenu />}
+      {role === "employer" && <EmployerMenu />}
+      {role === "employee" && <EmployeeMenu />}
     </>
   );
+
   return (
-    <div>
+    <div className="">
       <div
         className="lg:hidden absolute z-10 top-2
         right-1 md:right-3"
@@ -139,7 +104,7 @@ const DashboardSidebar = () => {
           </div>
         </div> */}
       </div>
-      <div className="hidden lg:block bg-hrms-blue ">
+      <div className="hidden lg:block bg-hrms-blue sticky left-0 top-0 h-screen z-20 ">
         <div className="h-screen px-3 w-52">
           <div className="h-16 flex items-center justify-center">
             <Link href="/">

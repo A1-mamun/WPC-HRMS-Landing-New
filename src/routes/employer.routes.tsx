@@ -1,7 +1,7 @@
-import CreateEmployee from "../pages/employer/CreateEmployee";
-import EmployerDashboard from "../pages/employer/EmployerDashboard";
-import ManageEmployee from "../pages/employer/ManageEmployee";
-import ManagePayroll from "../pages/employer/ManagePayroll";
+import CreateEmployee from "../pages/Dashboard/Employer/CreateEmployee";
+import EmployerDashboard from "../pages/Dashboard/Employer/EmployerDashboard";
+import ManageEmployee from "../pages/Dashboard/Employer/ManageEmployee";
+import ManagePayroll from "../pages/Dashboard/Employer/ManagePayroll";
 
 export const employerPaths = [
   {

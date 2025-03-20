@@ -89,3 +89,301 @@ export const reviewsData = [
       "We recently partnered with Project WhiteCode for our website development, and we're thrilled with the results. Their team showcased exceptional expertise, delivering a site that excels in design, usability, and performance. From start to finish, the process was seamless and professional. We're excited to collaborate with them on future projects!",
   },
 ];
+
+// orgainzation type data
+export const organizationTypes = [
+  {
+    value: "Private Company Limited by Shares",
+  },
+  {
+    value: "Charitable Incorporated Organisation",
+  },
+  {
+    value: "Industrial and Provident Society",
+  },
+  {
+    value: "General Partnership",
+  },
+  {
+    value: "Limited Partnership",
+  },
+  {
+    value: "Limited Liability Partnership",
+  },
+  {
+    value: "Sole Trader",
+  },
+  {
+    value: "Public Limited Company",
+  },
+  {
+    value: "Private Company Limited by Guarantee",
+  },
+  {
+    value: "Community Interest Company",
+  },
+  {
+    value: "Unincorporated Association",
+  },
+  {
+    value: "Sole Propitership",
+  },
+  {
+    value: "Other",
+  },
+];
+
+// organization trading period data
+export const tradingPeriods = [
+  {
+    value: "0 to 6 months",
+  },
+  {
+    value: "Over 6 to 12 months",
+  },
+  {
+    value: "Over 12 to 18 months",
+  },
+  {
+    value: "Over 18 to 36 months",
+  },
+  {
+    value: "Over 36 months +",
+  },
+];
+
+// organization sector data
+export const sectorsName = [
+  {
+    value: "Agriculture, Forestry and Fishing",
+  },
+  {
+    value: "Mining and Quarrying",
+  },
+  {
+    value: "Manufacturing",
+  },
+  {
+    value: "Electricity, Gas, Steam and Air Conditioning Supply",
+  },
+  {
+    value:
+      "Water Supply; Sewerage, Waste Management and Remediation Activities",
+  },
+  {
+    value: "Construction",
+  },
+  {
+    value:
+      "Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles",
+  },
+  {
+    value: "Transportation and Storage",
+  },
+  {
+    value: "Accommodation and Food Service Activities",
+  },
+  {
+    value: "Information and Communication",
+  },
+  {
+    value: "Financial and Insurance Activities",
+  },
+  {
+    value: "Real Estate Activities",
+  },
+  {
+    value: "Professional, Scientific and Technical Activities",
+  },
+  {
+    value: "Administrative and Support Service Activities",
+  },
+  {
+    value: "Public Administration and Defence; Compulsory Social Security",
+  },
+  {
+    value: "Education",
+  },
+  {
+    value: "Human Health and Social Work Activities",
+  },
+  {
+    value: "Arts, Entertainment and Recreation",
+  },
+  {
+    value:
+      "Activities of Households as Employers; Undifferentiated Goods- and Services-Producing Activities of Households for Own Use",
+  },
+  {
+    value: "Activities of Extraterritorial Organizations and Bodies",
+  },
+  {
+    value: "Other Service Activities",
+  },
+];
+
+// country data
+export const countries = [
+  { value: "Afghanistan" },
+  { value: "Albania" },
+  { value: "Algeria" },
+  { value: "Andorra" },
+  { value: "Angola" },
+  { value: "Antigua and Barbuda" },
+  { value: "Argentina" },
+  { value: "Armenia" },
+  { value: "Australia" },
+  { value: "Austria" },
+  { value: "Azerbaijan" },
+  { value: "Bahamas" },
+  { value: "Bahrain" },
+  { value: "Bangladesh" },
+  { value: "Barbados" },
+  { value: "Belarus" },
+  { value: "Belgium" },
+  { value: "Belize" },
+  { value: "Benin" },
+  { value: "Bhutan" },
+  { value: "Bolivia" },
+  { value: "Bosnia and Herzegovina" },
+  { value: "Botswana" },
+  { value: "Brazil" },
+  { value: "Brunei" },
+  { value: "Bulgaria" },
+  { value: "Burkina Faso" },
+  { value: "Burundi" },
+  { value: "Cabo Verde" },
+  { value: "Cambodia" },
+  { value: "Cameroon" },
+  { value: "Canada" },
+  { value: "Central African Republic" },
+  { value: "Chad" },
+  { value: "Chile" },
+  { value: "China" },
+  { value: "Colombia" },
+  { value: "Comoros" },
+  { value: "Congo (Congo-Brazzaville)" },
+  { value: "Congo (Congo-Kinshasa)" },
+  { value: "Costa Rica" },
+  { value: "Croatia" },
+  { value: "Cuba" },
+  { value: "Cyprus" },
+  { value: "Czechia" },
+  { value: "Denmark" },
+  { value: "Djibouti" },
+  { value: "Dominica" },
+  { value: "Dominican Republic" },
+  { value: "Ecuador" },
+  { value: "Egypt" },
+  { value: "El Salvador" },
+  { value: "Equatorial Guinea" },
+  { value: "Eritrea" },
+  { value: "Estonia" },
+  { value: "Eswatini" },
+  { value: "Ethiopia" },
+  { value: "Fiji" },
+  { value: "Finland" },
+  { value: "France" },
+  { value: "Gabon" },
+  { value: "Gambia" },
+  { value: "Georgia" },
+  { value: "Germany" },
+  { value: "Ghana" },
+  { value: "Greece" },
+  { value: "Grenada" },
+  { value: "Guatemala" },
+  { value: "Guinea" },
+  { value: "Guinea-Bissau" },
+  { value: "Guyana" },
+  { value: "Haiti" },
+  { value: "Honduras" },
+  { value: "Hungary" },
+  { value: "Iceland" },
+  { value: "India" },
+  { value: "Indonesia" },
+  { value: "Iran" },
+  { value: "Iraq" },
+  { value: "Ireland" },
+  { value: "Israel" },
+  { value: "Italy" },
+  { value: "Jamaica" },
+  { value: "Japan" },
+  { value: "Jordan" },
+  { value: "Kazakhstan" },
+  { value: "Kenya" },
+  { value: "Kiribati" },
+  { value: "Kuwait" },
+  { value: "Kyrgyzstan" },
+  { value: "Laos" },
+  { value: "Latvia" },
+  { value: "Lebanon" },
+  { value: "Lesotho" },
+  { value: "Liberia" },
+  { value: "Libya" },
+  { value: "Liechtenstein" },
+  { value: "Lithuania" },
+  { value: "Luxembourg" },
+  { value: "Madagascar" },
+  { value: "Malawi" },
+  { value: "Malaysia" },
+  { value: "Maldives" },
+  { value: "Mali" },
+  { value: "Malta" },
+  { value: "Mauritania" },
+  { value: "Mauritius" },
+  { value: "Mexico" },
+  { value: "Moldova" },
+  { value: "Monaco" },
+  { value: "Mongolia" },
+  { value: "Montenegro" },
+  { value: "Morocco" },
+  { value: "Mozambique" },
+  { value: "Myanmar" },
+  { value: "Namibia" },
+  { value: "Nauru" },
+  { value: "Nepal" },
+  { value: "Netherlands" },
+  { value: "New Zealand" },
+  { value: "Nicaragua" },
+  { value: "Niger" },
+  { value: "Nigeria" },
+  { value: "North Korea" },
+  { value: "North Macedonia" },
+  { value: "Norway" },
+  { value: "Oman" },
+  { value: "Pakistan" },
+  { value: "Palau" },
+  { value: "Panama" },
+  { value: "Papua New Guinea" },
+  { value: "Paraguay" },
+  { value: "Peru" },
+  { value: "Philippines" },
+  { value: "Poland" },
+  { value: "Portugal" },
+  { value: "Qatar" },
+  { value: "Romania" },
+  { value: "Russia" },
+  { value: "Rwanda" },
+  { value: "Saudi Arabia" },
+  { value: "Senegal" },
+  { value: "Serbia" },
+  { value: "Singapore" },
+  { value: "Slovakia" },
+  { value: "Slovenia" },
+  { value: "South Africa" },
+  { value: "South Korea" },
+  { value: "Spain" },
+  { value: "Sri Lanka" },
+  { value: "Sudan" },
+  { value: "Sweden" },
+  { value: "Switzerland" },
+  { value: "Turkey" },
+  { value: "Ukraine" },
+  { value: "United Arab Emirates" },
+  { value: "United Kingdom" },
+  { value: "United States" },
+  { value: "Vietnam" },
+  { value: "Yemen" },
+  { value: "Zambia" },
+  { value: "Zimbabwe" },
+];

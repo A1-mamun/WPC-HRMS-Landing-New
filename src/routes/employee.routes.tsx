@@ -1,6 +1,6 @@
-import Attendance from "../pages/employee/Attendance";
-import EmployeeDashboard from "../pages/employee/EmployeeDashboard";
-import Leave from "../pages/employee/Leave";
+import Attendance from "../pages/Dashboard/Employee/Attendance";
+import EmployeeDashboard from "../pages/Dashboard/Employee/EmployeeDashboard";
+import Leave from "../pages/Dashboard/Employee/Leave";
 
 export const employeePaths = [
   {

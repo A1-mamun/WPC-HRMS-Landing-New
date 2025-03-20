@@ -1,7 +1,7 @@
-import AdminDashboard from "../pages/admin/AdminDashboard";
-import CreateEmployer from "../pages/admin/CreateEmployer";
-import EmployerSubscription from "../pages/admin/EmployerSubscription";
-import ManageEmployer from "../pages/admin/ManageEmployer";
+import AdminDashboard from "../pages/Dashboard/Admin/AdminDashboard";
+import CreateEmployer from "../pages/Dashboard/Admin/CreateEmployer";
+import EmployerSubscription from "../pages/Dashboard/Admin/EmployerSubscription";
+import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
 
 export const adminPaths = [
   {
