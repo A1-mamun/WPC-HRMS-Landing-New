@@ -8,6 +8,8 @@ import { navItems } from "../../data";
 import { FaCircleUser } from "react-icons/fa6";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
+import { useCurrentUser } from "../../redux/features/auth/authSlice";
 
 const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,6 +17,8 @@ const Header = () => {
   const [isNavbarVisible, setNavbarVisible] = useState(true);
   const [lastScrollPos, setLastScrollPos] = useState(0);
   const [isScrolledPast, setScrolledPast] = useState(false);
+
+  const user = useAppSelector(useCurrentUser);
 
   useEffect(() => {
     const handleScroll = () => {

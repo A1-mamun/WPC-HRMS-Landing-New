@@ -1,5 +1,3 @@
-import { NavLink } from "react-router-dom";
-
 import { MdClose } from "react-icons/md";
 import { AiOutlineDashboard, AiOutlineMenu } from "react-icons/ai";
 import {
@@ -16,14 +14,24 @@ import MenuItem from "./Menu/MenuItem";
 import AdminMenu from "./Menu/AdminMenu";
 import EmployerMenu from "./Menu/EmployerMenu";
 import EmployeeMenu from "./Menu/EmployeeMenu";
+import { useAppSelector } from "../../../redux/hooks";
+import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+
+const userRole = {
+  ADMIN: "admin",
+  EMPLOYER: "employer",
+  EMPLOYEE: "employee",
+};
 
 const DashboardSidebar = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const user = useAppSelector(useCurrentUser);
+
   const handleOpen = () => {
     onOpen();
   };
-  const role = "employee";
+
   const navLinks = (
     <>
       <MenuItem
@@ -31,16 +39,16 @@ const DashboardSidebar = () => {
         address="/dashboard"
         icon={<AiOutlineDashboard />}
       />
-      {role === "admin" && <AdminMenu />}
-      {role === "employer" && <EmployerMenu />}
-      {role === "employee" && <EmployeeMenu />}
+      {user!.role === userRole.ADMIN && <AdminMenu />}
+      {user!.role === userRole.EMPLOYER && <EmployerMenu />}
+      {user!.role === userRole.EMPLOYEE && <EmployeeMenu />}
     </>
   );
 
   return (
     <div className="">
       <div
-        className="lg:hidden absolute z-10 top-2
+        className="lg:hidden absolute z-20 top-2
         right-1 md:right-3"
       >
         <div className="flex items-center justify-between h-full">

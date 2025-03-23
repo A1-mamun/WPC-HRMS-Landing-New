@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Home from "../pages/Home";
-import Pricing from "../pages/Pricing";
-import Contact from "../pages/Contact";
+import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
+import Home from "../pages/Home/Home";
+import Pricing from "../pages/Pricing/Pricing";
+import Contact from "../pages/Contact/Contact";
 import { DashboardLayout } from "../components";
 import Leave from "../pages/Dashboard/Employee/Leave";
 import Dashboard from "../pages/Dashboard/Common/Dashboard";

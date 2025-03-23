@@ -1,10 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { Avatar, Button, Link } from "@heroui/react";
 import { FaCircleUser } from "react-icons/fa6";
 import DashboardSidebar from "./Sidebar/DashboarSidebar";
+import { useAppDispatch } from "../../redux/hooks";
+import { logOut } from "../../redux/features/auth/authSlice";
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleLogOut = () => {
+    dispatch(logOut());
+    navigate("/");
+  };
   return (
     <div className="font-jura flex">
       <DashboardSidebar />
@@ -17,6 +25,15 @@ const DashboardLayout = () => {
                   Back to Home
                 </Button>
               </Link>
+              <Link className="hidden lg:block" href="/">
+                <Button
+                  onPress={handleLogOut}
+                  className="font-inter text-hrms-blue font-medium"
+                >
+                  Log Out
+                </Button>
+              </Link>
+
               <Avatar size="sm" isBordered className="">
                 <FaCircleUser />
               </Avatar>
