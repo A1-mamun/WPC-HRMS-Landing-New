@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Input, Button } from "@heroui/react";
+import { Input, Button } from "@heroui/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ const Register = () => {
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="w-96 px-5 py-8 bg-bg-primary/50 rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold text-center mb-10">Register</h1>
-        <Form
+        <form
           onSubmit={handleSubmit(handleRegistration)}
           className="w-full max-w-sm flex flex-col gap-5"
         >
@@ -108,7 +108,7 @@ const Register = () => {
           <Button radius="sm" fullWidth color="primary" type="submit">
             Register
           </Button>
-        </Form>
+        </form>
         <p className="mt-2">
           Have an acount?{" "}
           <Link to="/login" className="font-medium underline ">

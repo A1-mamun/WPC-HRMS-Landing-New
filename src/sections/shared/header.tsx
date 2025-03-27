@@ -7,9 +7,9 @@ import { navItems } from "../../data";
 
 import { FaCircleUser } from "react-icons/fa6";
 import { IoClose, IoMenu } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks";
-import { useCurrentUser } from "../../redux/features/auth/authSlice";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { logOut, useCurrentUser } from "../../redux/features/auth/authSlice";
 
 const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,6 +19,12 @@ const Header = () => {
   const [isScrolledPast, setScrolledPast] = useState(false);
 
   const user = useAppSelector(useCurrentUser);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleLogOut = () => {
+    dispatch(logOut());
+    navigate("/");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,33 +126,46 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Desktop Menu */}
         <ul className="hidden lg:flex items-center justify-center h-full gap-10">
           {navlinks}
-          {/* Quick Links */}
-          <div className="hidden lg:flex items-center gap-5 h-full ml-3">
-            <Button
-              as="a"
-              href="/login"
-              variant="bordered"
-              radius="sm"
-              className="border-hrms-gold text-hrms-gold"
-            >
-              Log In
-            </Button>
-            <Button
-              as="a"
-              href="/register"
-              variant="bordered"
-              radius="sm"
-              className="border-hrms-blue text-hrms-blue font-medium"
-            >
-              Register
-            </Button>
-            <Avatar isBordered className="">
-              <FaCircleUser />
-            </Avatar>
-          </div>
+
+          {user ? (
+            <div className="hidden lg:flex items-center gap-5 h-full ml-3">
+              <Button
+                variant="bordered"
+                radius="sm"
+                onPress={handleLogOut}
+                className="border-hrms-gold text-hrms-gold"
+              >
+                Log Out
+              </Button>
+
+              <Avatar isBordered className="">
+                <FaCircleUser />
+              </Avatar>
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center gap-5 h-full ml-3">
+              <Button
+                as="a"
+                href="/login"
+                variant="bordered"
+                radius="sm"
+                className="border-hrms-gold text-hrms-gold"
+              >
+                Log In
+              </Button>
+              <Button
+                as="a"
+                href="/register"
+                variant="bordered"
+                radius="sm"
+                className="border-hrms-blue text-hrms-blue font-medium"
+              >
+                Register
+              </Button>
+            </div>
+          )}
         </ul>
 
         {/* Mobile Menu Toggle */}
