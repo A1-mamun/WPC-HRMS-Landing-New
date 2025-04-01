@@ -1,10 +1,10 @@
-# The New ARS Landing Site
+# The WPC HRMS Landing Site
 
-## Contributing to The New ARS Landing Project
+## Contributing to The WPC HRMS Landing Project
 
 1. **Fork the Repository**
 
-   - Go to [ars-landing-new on GitHub](https://github.com/A1-mamun/WPC-HRMS-Landing-New) and click the "Fork" button at the top right of the page.
+   - Go to [WPC-HRMS-Landing-New on GitHub](https://github.com/A1-mamun/WPC-HRMS-Landing-New) and click the "Fork" button at the top right of the page.
 
 2. **Clone Your Fork**
 
