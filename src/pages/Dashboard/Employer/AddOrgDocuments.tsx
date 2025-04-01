@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 const AddOrgDocuments = () => {
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
     useState(false);
-
   const [isLevel1PersonSameAsAuthorised, setIsLevel1PersonSameAsAuthorised] =
     useState(false);
   const { register, control, handleSubmit, watch, setValue } = useForm();

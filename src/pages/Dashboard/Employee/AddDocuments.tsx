@@ -6,17 +6,33 @@ import {
   SelectItem,
   Textarea,
 } from "@heroui/react";
-import { countries } from "../../../data";
+import {
+  countries,
+  dbsTypes,
+  employmentTypes,
+  maritalStatus,
+  nationalities,
+} from "../../../data";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import { format } from "date-fns";
 
 const AddDocuments = () => {
+  const { register, control, handleSubmit } = useForm();
+
+  const handleSubmitForm = (data: FieldValues) => {
+    console.log(data);
+  };
   return (
     <main className="dashboard-padding">
       <h1 className="text-2xl font-medium pb-2 border-b border-hrms-blue-light">
         Add Your Documents
       </h1>
-      <form>
-        {/* Employee details */}
+      <form onSubmit={handleSubmit(handleSubmitForm)}>
+        {/* Employee personal details */}
         <div>
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Personal Details
+          </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
             <Input
               radius="sm"
@@ -26,28 +42,70 @@ const AddDocuments = () => {
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("employeeCode")}
             />
             <Input
               radius="sm"
-              label="Employee Name"
+              label="First Name"
               labelPlacement="outside"
-              placeholder="Enter employee name"
+              placeholder="Enter first name"
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("firstName")}
             />
-            <Select
+            <Input
               radius="sm"
-              label="Gender"
-              className="text-hrms-blue font-semibold"
+              label="Middle Name"
               labelPlacement="outside"
-              placeholder="Select gender"
+              placeholder="Enter middle name"
+              type="text"
               isRequired
-            >
-              <SelectItem value="Male">Male</SelectItem>
-              <SelectItem value="Female">Female</SelectItem>
-              <SelectItem value="Others">Others</SelectItem>
-            </Select>
+              className="text-hrms-blue font-semibold"
+              {...register("middleName")}
+            />
+            <Input
+              radius="sm"
+              label="Last Name"
+              labelPlacement="outside"
+              placeholder="Enter last name"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("lastName")}
+            />
+
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Gender"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select gender"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Male" value="Male">
+                    Male
+                  </SelectItem>
+                  <SelectItem key="Female" value="Female">
+                    Female
+                  </SelectItem>
+                  <SelectItem key="Others" value="Others">
+                    Others
+                  </SelectItem>
+                </Select>
+              )}
+            />
+
             <Input
               radius="sm"
               label="NI Number"
@@ -56,31 +114,87 @@ const AddDocuments = () => {
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("niNumber")}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Date of Birth"
-              labelPlacement="outside"
-              isRequired
+
+            <Controller
+              name="dateOfBirth"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Date of Birth"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <Input
-              radius="sm"
-              label="Marital Status"
-              labelPlacement="outside"
-              placeholder="Enter marital status"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
+
+            <Controller
+              name="maritalStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Marital Status"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select status"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {maritalStatus.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
-            <Input
-              radius="sm"
-              label="Nationality"
-              labelPlacement="outside"
-              placeholder="Enter nationality"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
+            <Controller
+              name="nationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
             <Input
               radius="sm"
@@ -90,24 +204,35 @@ const AddDocuments = () => {
               type="email"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("email")}
             />
             <Input
               radius="sm"
               label="Contact Number"
               labelPlacement="outside"
               placeholder="Enter contact number"
-              type="tel"
+              type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("contactNumber")}
             />
             <Input
               radius="sm"
               label="Alternative Number"
               labelPlacement="outside"
               placeholder="Enter alternative number"
-              type="tel"
+              type="text"
               className="text-hrms-blue font-semibold"
+              {...register("alternativeNumber")}
             />
+          </div>
+        </div>
+        {/* Service details */}
+        <div>
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Service Details
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
             <Input
               radius="sm"
               label="Department"
@@ -116,6 +241,7 @@ const AddDocuments = () => {
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("department")}
             />
             <Input
               radius="sm"
@@ -125,46 +251,125 @@ const AddDocuments = () => {
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("designation")}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Date of Joining"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="dateOfJoining"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Date of Joining"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <Select
-              radius="sm"
-              label="Employment Type"
-              className="text-hrms-blue font-semibold"
-              labelPlacement="outside"
-              placeholder="Select employment type"
-              isRequired
-            >
-              <SelectItem value="Full Time">Full Time</SelectItem>
-              <SelectItem value="Part Time">Part Time</SelectItem>
-              <SelectItem value="Contractual">Contractual</SelectItem>
-            </Select>
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Date of Confirmation"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="employeeType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Employee Type"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select employee type"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {employmentTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Contract Start Date"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="dateOfConfirmation"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Date of Confirmation"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Contract End Date"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="contractStartDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Contract Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+            <Controller
+              name="contractEndDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Contract End Date (if applicable)"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
             <Input
               radius="sm"
@@ -174,57 +379,89 @@ const AddDocuments = () => {
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("jobLocation")}
             />
             <Input
               radius="sm"
-              label="Job Title"
+              label="Profile Picture"
               labelPlacement="outside"
-              placeholder="Enter job title"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("profilePicture")}
+            />
+            <Input
+              radius="sm"
+              label="Reporting Authority"
+              labelPlacement="outside"
+              placeholder="Enter reporting authority"
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("reportingAuthority")}
             />
-            <DatePicker
+            <Input
               radius="sm"
+              label="Leave Sanction Authority"
+              labelPlacement="outside"
+              placeholder="Enter leave sanction authority"
+              type="text"
+              isRequired
               className="text-hrms-blue font-semibold"
-              label="Start Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <div className="flex flex-col gap-3">
-              <DatePicker
-                radius="sm"
-                className="text-hrms-blue font-semibold"
-                label="End Date"
-                labelPlacement="outside"
-                isRequired
-              />
-              <Input
-                radius="sm"
-                label="Years of Experience"
-                labelPlacement="outside"
-                placeholder="Enter years of experience"
-                type="number"
-                isRequired
-                className="text-hrms-blue font-semibold"
-              />
-            </div>
-
-            <Textarea
-              radius="sm"
-              label="Job Description"
-              labelPlacement="outside"
-              placeholder="Enter job description"
-              maxRows={5}
-              minRows={5}
-              isRequired
-              className="text-hrms-blue font-semibold col-span-3 row-span-2"
+              {...register("leaveSanctionAuthority")}
             />
           </div>
         </div>
 
+        {/* <div>
+          {" "}
+          <Input
+            radius="sm"
+            label="Job Title"
+            labelPlacement="outside"
+            placeholder="Enter job title"
+            type="text"
+            isRequired
+            className="text-hrms-blue font-semibold"
+          />
+          <DatePicker
+            radius="sm"
+            className="text-hrms-blue font-semibold"
+            label="Start Date"
+            labelPlacement="outside"
+            isRequired
+          />
+          <div className="flex flex-col gap-3">
+            <DatePicker
+              radius="sm"
+              className="text-hrms-blue font-semibold"
+              label="End Date"
+              labelPlacement="outside"
+              isRequired
+            />
+            <Input
+              radius="sm"
+              label="Years of Experience"
+              labelPlacement="outside"
+              placeholder="Enter years of experience"
+              type="number"
+              isRequired
+              className="text-hrms-blue font-semibold"
+            />
+          </div>
+          <Textarea
+            radius="sm"
+            label="Job Description"
+            labelPlacement="outside"
+            placeholder="Enter job description"
+            maxRows={5}
+            minRows={5}
+            isRequired
+            className="text-hrms-blue font-semibold col-span-3 row-span-2"
+          />
+        </div> */}
+
         {/*  Next of Kin Information */}
-        <div>
+        {/* <div>
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Next of Kin Information
           </h1>
@@ -275,10 +512,283 @@ const AddDocuments = () => {
               className="text-hrms-blue font-semibold"
             />
           </div>
+        </div> */}
+
+        {/* Contact Information  */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Contact Information (Correspondence Address)
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Post Code"
+              labelPlacement="outside"
+              placeholder="Enter post code"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("postCode")}
+            />
+            <Input
+              radius="sm"
+              label="Address Line 1"
+              labelPlacement="outside"
+              placeholder="Enter address line 1"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("addressLine1")}
+            />
+            <Input
+              radius="sm"
+              label="Address Line 2"
+              labelPlacement="outside"
+              placeholder="Enter address line 2"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("addressLine2")}
+            />
+            <Input
+              radius="sm"
+              label="Address Line 3"
+              labelPlacement="outside"
+              placeholder="Enter address line 3"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("addressLine3")}
+            />
+            <Input
+              radius="sm"
+              label="City / County"
+              labelPlacement="outside"
+              placeholder="Enter city / county"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("cityCounty")}
+            />
+            <Controller
+              name="country"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Country"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select country"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {countries.map((country) => (
+                    <SelectItem key={country.value} value={country.value}>
+                      {country.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Input
+              radius="sm"
+              label="Proof Of Address"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("proofOfAddress")}
+            />
+          </div>
+        </div>
+
+        {/* passport details */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Passport Details
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Passport Number"
+              labelPlacement="outside"
+              placeholder="Enter passport number"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("passportNumber")}
+            />
+            <Controller
+              name="passportNationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality (Passport)"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Input
+              radius="sm"
+              label="Place of Birth"
+              labelPlacement="outside"
+              placeholder="Enter place of birth"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("placeOfBirth")}
+            />
+            <Input
+              radius="sm"
+              label="Passport Issued By"
+              labelPlacement="outside"
+              placeholder="Enter issuing authority"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("passportIssuedBy")}
+            />
+
+            <Controller
+              name="passportIssueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Passport Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="passportExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Passport Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="passportEligibleReviewDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Passport Eligible Review Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Passport Document"
+              labelPlacement="outside"
+              type="file"
+              required
+              className="text-hrms-blue font-semibold"
+              {...register("passportDocument")}
+            />
+            <Input
+              radius="sm"
+              label="Passport Remarks"
+              labelPlacement="outside"
+              placeholder="Enter passport remarks"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("passportRemarks")}
+            />
+            <Controller
+              name="isCurrentPassport"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Is this your current passport?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
+            />
+          </div>
         </div>
 
         {/* Address & Identification Details */}
-        <div className="pt-5">
+        {/* <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Address & Identification Details
           </h1>
@@ -327,42 +837,8 @@ const AddDocuments = () => {
               required
               className="text-hrms-blue font-semibold"
             />
-            <Input
-              radius="sm"
-              label="Passport Number"
-              labelPlacement="outside"
-              placeholder="Enter passport number"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Nationality (Passport)"
-              labelPlacement="outside"
-              placeholder="Enter nationality"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Place of Birth"
-              labelPlacement="outside"
-              placeholder="Enter place of birth"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Passport Issued By"
-              labelPlacement="outside"
-              placeholder="Enter issuing authority"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
+            
+           
             <DatePicker
               radius="sm"
               className="text-hrms-blue font-semibold"
@@ -412,12 +888,12 @@ const AddDocuments = () => {
               className="text-hrms-blue font-semibold"
             />
           </div>
-        </div>
+        </div> */}
 
         {/*  Visa Information */}
         <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Visa Information
+            Visa/BRP Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
             <Input
@@ -427,29 +903,62 @@ const AddDocuments = () => {
               placeholder="Enter visa number"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("visaNumber")}
             />
-            <Input
-              radius="sm"
-              label="Nationality"
-              labelPlacement="outside"
-              placeholder="Enter nationality"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
+            <Controller
+              name="visaNationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
-            <Select
-              radius="sm"
-              label="Country of Residence"
-              className="text-hrms-blue font-semibold"
-              labelPlacement="outside"
-              placeholder="Select country"
-            >
-              {countries.map((country, index) => (
-                <SelectItem key={index} value={country.value}>
-                  {country.value}
-                </SelectItem>
-              ))}
-            </Select>
+            <Controller
+              name="countryOfResidence"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Country of Residence"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select country"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {countries.map((country) => (
+                    <SelectItem key={country.value} value={country.value}>
+                      {country.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
             <Input
               radius="sm"
               label="Visa Issued By"
@@ -457,31 +966,94 @@ const AddDocuments = () => {
               placeholder="Enter visa issuing authority"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("visaIssuedBy")}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Visa Issued Date"
-              labelPlacement="outside"
+            <Controller
+              name="visaIssueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Visa Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Visa Expiry Date"
-              labelPlacement="outside"
+
+            <Controller
+              name="visaExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Visa Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Visa Eligible Review Date"
-              labelPlacement="outside"
+
+            <Controller
+              name="visaEligibleReviewDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Visa Eligible Review Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
             <Input
               radius="sm"
-              label="Visa Document"
+              label="Visa Document Front Side"
               labelPlacement="outside"
               type="file"
               className="text-hrms-blue font-semibold"
+              {...register("visaDocumentFrontSide")}
+            />
+            <Input
+              radius="sm"
+              label="Visa Document Back Side"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("visaDocumentBackSide")}
             />
             <Input
               radius="sm"
@@ -490,6 +1062,34 @@ const AddDocuments = () => {
               placeholder="Enter visa remarks"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("visaRemarks")}
+            />
+            <Controller
+              name="isCurrentVisa"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Is this your current Visa?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
             />
           </div>
         </div>
@@ -497,42 +1097,114 @@ const AddDocuments = () => {
         {/*EUSS (European Union Settlement Scheme) / Time Limit Details  */}
         <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            EUSS (European Union Settlement Scheme) / Time Limit Details
+            EUSS/Time Limit Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
             <Input
               radius="sm"
-              label="EUSS/Time Limit Reference Number"
+              label="Reference Number"
               labelPlacement="outside"
               placeholder="Enter reference number"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("eussReferenceNumber")}
             />
-            <Input
-              radius="sm"
-              label="EUSS/Time Limit Nationality"
-              labelPlacement="outside"
-              placeholder="Enter nationality"
-              type="text"
-              className="text-hrms-blue font-semibold"
+            <Controller
+              name="eussNationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="EUSS/Time Limit Issued Date"
-              labelPlacement="outside"
+            <Controller
+              name="eussIssueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="EUSS/Time Limit Expiry Date"
-              labelPlacement="outside"
+            <Controller
+              name="eussExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="EUSS/Time Limit Eligible Review Date"
-              labelPlacement="outside"
+            <Controller
+              name="eussEligibleReviewDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Eligible Review Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
             <Input
               radius="sm"
@@ -540,6 +1212,7 @@ const AddDocuments = () => {
               labelPlacement="outside"
               type="file"
               className="text-hrms-blue font-semibold"
+              {...register("eussDocument")}
             />
             <Input
               radius="sm"
@@ -548,6 +1221,34 @@ const AddDocuments = () => {
               placeholder="Enter remarks"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("eussRemarks")}
+            />
+            <Controller
+              name="isCurrentEussStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Is this your current status?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
             />
           </div>
         </div>
@@ -558,53 +1259,119 @@ const AddDocuments = () => {
             DBS (Disclosure and Barring Service) Information
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="DBS Type"
-              labelPlacement="outside"
-              placeholder="Enter DBS Type"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
+            <Controller
+              name="dbsType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="DBS Type"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select dbs type"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {dbsTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
             <Input
               radius="sm"
-              label="DBS Reference Number"
+              label="Reference Number"
               labelPlacement="outside"
-              placeholder="Enter DBS Reference Number"
+              placeholder="Enter Reference Number"
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("dbsReferenceNumber")}
             />
             <Input
               radius="sm"
-              label="DBS Nationality"
+              label="Nationality"
               labelPlacement="outside"
-              placeholder="Enter DBS Nationality"
+              placeholder="Enter Nationality"
               type="text"
               isRequired
               className="text-hrms-blue font-semibold"
+              {...register("dbsNationality")}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="DBS Issued Date"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="dbsIssueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="DBS Expiry Date"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="dbsExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="DBS Eligible Review Date"
-              labelPlacement="outside"
-              isRequired
+            <Controller
+              name="dbsExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
             <Input
               radius="sm"
@@ -612,20 +1379,49 @@ const AddDocuments = () => {
               labelPlacement="outside"
               type="file"
               className="text-hrms-blue font-semibold"
+              {...register("dbsDocument")}
             />
             <Input
               radius="sm"
-              label="DBS Remarks"
+              label="EUSS/Time Limit Remarks"
               labelPlacement="outside"
-              placeholder="Enter DBS Remarks"
+              placeholder="Enter remarks"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("dbsRemarks")}
+            />
+            <Controller
+              name="isCurrentDbsStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Is this your current status?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
             />
           </div>
         </div>
 
         {/* National ID Details */}
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             National ID Details
           </h1>
@@ -634,71 +1430,194 @@ const AddDocuments = () => {
               radius="sm"
               label="National ID Number"
               labelPlacement="outside"
-              placeholder="Enter national ID number"
+              placeholder="Enter national id number"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
+              {...register("nationalIdNumber")}
+            />
+            <Controller
+              name="nationalIdNationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Controller
+              name="nationalIdCountryOfResidence"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Country of Residence"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select country"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {countries.map((country) => (
+                    <SelectItem key={country.value} value={country.value}>
+                      {country.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Controller
+              name="nationalIdIssueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="nationalIdExpiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Visa Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="nationalIdEligibleReviewDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Visa Eligible Review Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
             />
             <Input
               radius="sm"
-              label="National ID Nationality"
-              labelPlacement="outside"
-              placeholder="Enter nationality"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Country of Residence"
-              labelPlacement="outside"
-              placeholder="Enter country of residence"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="National ID Issued Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="National ID Expiry Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="National ID Eligible Review Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <Input
-              radius="sm"
-              label="National ID Document Upload"
+              label="National Id Document Front Side"
               labelPlacement="outside"
               type="file"
-              isRequired
               className="text-hrms-blue font-semibold"
+              {...register("nationalIdDocumentFrontSide")}
             />
             <Input
               radius="sm"
-              label="National ID Remarks"
+              label="National Id Document Back Side"
               labelPlacement="outside"
-              placeholder="Enter remarks"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("nationalIdDocumentBackSide")}
+            />
+            <Input
+              radius="sm"
+              label="National Id Remarks"
+              labelPlacement="outside"
+              placeholder="Enter visa remarks"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("nationalIdRemarks")}
+            />
+            <Controller
+              name="isCurrentNationalIdStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Is this your current status?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
+                  </SelectItem>
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
             />
           </div>
         </div>
 
         {/* Bank Details */}
-        <div className="pt-5">
+        {/* <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Bank Details
           </h1>
@@ -741,7 +1660,7 @@ const AddDocuments = () => {
               className="text-hrms-blue font-semibold"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* submit button */}
         <div className="flex justify-between items-center pt-5 pb-10">
