@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# The New ARS Landing Site
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Contributing to The New ARS Landing Project
 
-Currently, two official plugins are available:
+1. **Fork the Repository**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   - Go to [ars-landing-new on GitHub](https://github.com/A1-mamun/WPC-HRMS-Landing-New) and click the "Fork" button at the top right of the page.
 
-## Expanding the ESLint configuration
+2. **Clone Your Fork**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+   - Run the following command to clone your fork to your local machine:
+     ```bash
+     git clone https://github.com/<your-username>/WPC-HRMS-Landing-New.git
+     ```
 
-- Configure the top-level `parserOptions` property like this:
+3. **Set Upstream Remote**
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+   - Navigate to your project directory:
+     ```bash
+     cd WPC-HRMS-Landing-New
+     ```
+   - Add the original repository as an upstream remote:
+     ```bash
+     git remote add upstream https://github.com/A1-mamun/WPC-HRMS-Landing-New.git
+     ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+4. **Pull Updates from Upstream**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+   - Fetch the latest changes from the original repository:
+     ```bash
+     git fetch upstream
+     ```
+   - Merge changes into your local branch:
+     ```bash
+     git merge upstream/main
+     ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+5. **Create a Pull Request**
+   - Push your changes to your fork:
+     ```bash
+     git push origin <your-branch>
+     ```
+   - Open a pull request from your fork's branch to the main repository's `main` branch.
