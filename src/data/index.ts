@@ -577,3 +577,76 @@ export const dbsTypes = [
   { value: "Standard" },
   { value: "Advanced" },
 ];
+
+//pay type
+
+export const payGroups = [
+  {value: "Group 1"},
+  {value: "Group 2"}
+];
+export const wedgesPaymodes = [
+  {value: "Pay 1"},
+  {value: "Pay 2"}
+];
+export const annualPays = [
+  {value: "Pay 1"},
+  {value: "Pay 2"}
+];
+export const paymentTypes = [
+  {value: "Pay 1"},
+  {value: "Pay 2"}
+];
+
+export const taxCodes = [
+  {value: "2341"},
+  {value: "5342"},
+  {value: "5312"},
+];
+export const paymentModes = [
+  {value: "Mode 1"},
+  {value: "Mode 2"},
+  {value: "Mode 3"},
+];
+
+export const bankNames = [
+  { value: "Chase Bank (USA)", label: "chase" },
+  { value: "Bank of America (USA)", label: "boa" },
+  { value: "Wells Fargo (USA)", label: "wells_fargo" },
+  { value: "Citibank (Global)", label: "citi" },
+  { value: "HSBC (UK & Global)", label: "hsbc" },
+  { value: "Barclays (UK)", label: "barclays" },
+  { value: "Deutsche Bank (Germany)", label: "db" },
+  { value: "Standard Chartered (Global)", label: "sc" },
+];
+
+
+export const paymentCurrencies = [
+  { value: "USD - United States Dollar", label: "usd" },
+  { value: "EUR - Euro (European Union)", label: "eur" },
+  { value: "GBP - British Pound Sterling (UK)", label: "gbp" },
+  { value: "INR - Indian Rupee (India)", label: "inr" },
+  { value: "JPY - Japanese Yen (Japan)", label: "jpy" },
+  { value: "CAD - Canadian Dollar (Canada)", label: "cad" },
+  { value: "AUD - Australian Dollar (Australia)", label: "aud" },
+  { value: "CNY - Chinese Yuan (China)", label: "cny" },
+];
+
+
+// pay structure 
+export const taxables = [
+  {value:"Dearness Allowance"},
+  {value:" House Rent Allowance"},
+  {value:"Conveyance Allowance"},
+  {value:"Performance Allowance"},
+  {value:"Monthly Fixed Allowance"},
+]
+
+
+export const deductions = [
+  {value:" I. Tax Deduction"},
+  {value:"NI Deduction"},
+  {value:"I. Tax Cess"},
+  {value:" ESI"},
+  {value:"Prof Tax"},
+]
+

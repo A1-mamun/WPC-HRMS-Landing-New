@@ -2,16 +2,28 @@ import {
   Button,
   DatePicker,
   Input,
+  Radio,
+  RadioGroup,
   Select,
   SelectItem,
   Textarea,
 } from "@heroui/react";
 import {
+  annualPays,
+  bankNames,
   countries,
   dbsTypes,
+  deductions,
   employmentTypes,
   maritalStatus,
   nationalities,
+  payGroups,
+  paymentCurrencies,
+  paymentModes,
+  paymentTypes,
+  taxables,
+  taxCodes,
+  wedgesPaymodes,
 } from "../../../data";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { format } from "date-fns";
@@ -411,32 +423,199 @@ const AddDocuments = () => {
             />
           </div>
         </div>
+        {/* Educational details */}
 
-        {/* <div>
-          {" "}
-          <Input
-            radius="sm"
-            label="Job Title"
-            labelPlacement="outside"
-            placeholder="Enter job title"
-            type="text"
-            isRequired
-            className="text-hrms-blue font-semibold"
-          />
-          <DatePicker
-            radius="sm"
-            className="text-hrms-blue font-semibold"
-            label="Start Date"
-            labelPlacement="outside"
-            isRequired
-          />
-          <div className="flex flex-col gap-3">
-            <DatePicker
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Educational Details
+          </h1>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border p-2">Sl. No.</th>
+                <th className="border p-2">Qualification</th>
+                <th className="border p-2">Subject</th>
+                <th className="border p-2">Institution Name</th>
+                <th className="border p-2">Awarding Body/ University</th>
+                <th className="border p-2">Year of Passing</th>
+                <th className="border p-2">Percentage</th>
+                <th className="border p-2">Grade/Division</th>
+                <th className="border p-2">Transcript Document</th>
+                <th className="border p-2">Certificate Document</th>
+                <th className="border p-2">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border p-2">1</td>
+                <td className="border p-2">
+                  <Controller
+                    name="qualification"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="subject"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="institutionName"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="awardingBody"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="yearOfPassing"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="percentage"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Controller
+                    name="gradeDivision"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        className="w-full p-1 border rounded"
+                      />
+                    )}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Input
+                    radius="sm"
+                    labelPlacement="outside"
+                    type="file"
+                    className="text-hrms-blue font-semibold"
+                    {...register("taxReference")}
+                  />
+                </td>
+                <td className="border p-2">
+                  <Input
+                    radius="sm"
+                    labelPlacement="outside"
+                    type="file"
+                    className="text-hrms-blue font-semibold"
+                    {...register("taxReference")}
+                  />
+                </td>
+                <td className="border p-2">
+                  <button
+                    type="button"
+                    className="bg-green-500 text-white p-2 rounded"
+                  >
+                    +
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Job Details */}
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Job Details
+          </h1>
+          <div className="grid grid-cols-3 gap-5 pt-5">
+            <Input
               radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="End Date"
+              label="Job Title"
               labelPlacement="outside"
+              placeholder="Enter job title"
+              type="text"
               isRequired
+              className="text-hrms-blue font-semibold"
+            />
+            <Controller
+              name="startDate"
+              control={control}
+              rules={{ required: "Start Date is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              name="endDate"
+              control={control}
+              rules={{ required: "End Date is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
             />
             <Input
               radius="sm"
@@ -447,25 +626,104 @@ const AddDocuments = () => {
               isRequired
               className="text-hrms-blue font-semibold"
             />
+            <Textarea
+              radius="sm"
+              label="Job Description"
+              labelPlacement="outside"
+              placeholder="Enter job description"
+              maxRows={5}
+              minRows={5}
+              isRequired
+              className="text-hrms-blue font-semibold col-span-3 row-span-2"
+            />
           </div>
-          <Textarea
-            radius="sm"
-            label="Job Description"
-            labelPlacement="outside"
-            placeholder="Enter job description"
-            maxRows={5}
-            minRows={5}
-            isRequired
-            className="text-hrms-blue font-semibold col-span-3 row-span-2"
-          />
-        </div> */}
-
-        {/*  Next of Kin Information */}
-        {/* <div>
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Next of Kin Information
+        </div>
+        {/* key responsibility */}
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Key Responsibilities
           </h1>
           <div className="grid grid-cols-3 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Responsibility Name"
+              labelPlacement="outside"
+              placeholder="Enter Responsibility Name"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("responsibilityName")}
+            />
+          </div>
+        </div>
+        {/* training details details */}
+
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Training Details
+          </h1>
+          <div className="grid grid-cols-3 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Department"
+              labelPlacement="outside"
+              placeholder="Enter department"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("department")}
+            />
+            <Controller
+              name="startDate"
+              control={control}
+              rules={{ required: "Start Date is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              name="endDate"
+              control={control}
+              rules={{ required: "End Date is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Textarea
+              radius="sm"
+              label="Job Description"
+              labelPlacement="outside"
+              placeholder="Enter job description"
+              maxRows={5}
+              minRows={5}
+              isRequired
+              className="text-hrms-blue font-semibold col-span-1 row-span-2"
+            />
+          </div>
+        </div>
+
+        {/*  Next of Kin Information */}
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Emergency / Next of Kin Contact Details
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
             <Input
               radius="sm"
               label="Next of Kin Contact Name"
@@ -512,7 +770,68 @@ const AddDocuments = () => {
               className="text-hrms-blue font-semibold"
             />
           </div>
-        </div> */}
+        </div>
+        {/* Certified Membership */}
+
+        <div>
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Certified Membership
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Title of Certified License"
+              labelPlacement="outside"
+              placeholder="Enter Title of Certified License"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("titleCertifiedLicense")}
+            />
+            <Input
+              radius="sm"
+              label="License Number"
+              labelPlacement="outside"
+              placeholder="Enter License Number"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("licenseNumber")}
+            />
+            <Controller
+              name="startDate"
+              control={control}
+              rules={{ required: "Start Date is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              name="endDate"
+              control={control}
+              rules={{ required: "End Date  is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Start Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+        </div>
 
         {/* Contact Information  */}
         <div className="pt-5">
@@ -1611,6 +1930,522 @@ const AddDocuments = () => {
                     No
                   </SelectItem>
                 </Select>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* other Details */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Other Details
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Document name."
+              labelPlacement="outside"
+              placeholder="Enter Document name."
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("documentName")}
+            />
+            <Input
+              radius="sm"
+              label="Document reference number.
+"
+              labelPlacement="outside"
+              placeholder="Enter document reference number.
+"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("documentReferenceNumber")}
+            />
+            <Controller
+              name="nationalIdNationality"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Nationality"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select nationality"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {nationalities.map((nationality) => (
+                    <SelectItem
+                      key={nationality.value}
+                      value={nationality.value}
+                    >
+                      {nationality.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Controller
+              name="issueDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Issue Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="expiryDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Expiry Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="eligibleReviewDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  radius="sm"
+                  className="text-hrms-blue font-semibold"
+                  label="Eligible Review Date"
+                  labelPlacement="outside"
+                  isRequired
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
+                />
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Upload Document"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("uploadDocument")}
+            />
+
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  label="Is this your current status?"
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Remarks"
+              labelPlacement="outside"
+              placeholder="Enter remarks"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("remarks")}
+            />
+          </div>
+        </div>
+
+        {/* Pay Details */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Pay Details
+          </h1>
+          <div className="grid grid-cols-3 gap-5 pt-5">
+            <Controller
+              name="payGroup"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Pay Group"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select group"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {payGroups.map((payGroup) => (
+                    <SelectItem key={payGroup.value} value={payGroup.value}>
+                      {payGroup.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Controller
+              name="wedgesPaymode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Wedges pay mode"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Wedges pay mode"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {wedgesPaymodes.map((wedgesPaymode) => (
+                    <SelectItem
+                      key={wedgesPaymode.value}
+                      value={wedgesPaymode.value}
+                    >
+                      {wedgesPaymode.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Controller
+              name="annualPay"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Annual Pay"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Annual Pay"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {annualPays.map((annualPay) => (
+                    <SelectItem key={annualPay.value} value={annualPay.value}>
+                      {annualPay.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Controller
+              name="paymentType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Payment Type"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Payment Type"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {paymentTypes.map((paymentType) => (
+                    <SelectItem
+                      key={paymentType.value}
+                      value={paymentType.value}
+                    >
+                      {paymentType.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Basic / Daily Wedges"
+              labelPlacement="outside"
+              placeholder="Enter Basic / Daily Wedges."
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("basicDailyWedges")}
+            />
+            <Input
+              radius="sm"
+              label="Min. Working Hour.
+"
+              labelPlacement="outside"
+              placeholder="Enter Min. Working Hour.
+"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("minWorkingHour")}
+            />
+            <Input
+              radius="sm"
+              label="Rate."
+              labelPlacement="outside"
+              placeholder="Enter Rate."
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("rate")}
+            />
+            <Controller
+              name="taxCode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Tax Code"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Tax Code"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {taxCodes.map((taxCode) => (
+                    <SelectItem key={taxCode.value} value={taxCode.value}>
+                      {taxCode.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Tax Reference"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("taxReference")}
+            />
+
+            <Input
+              radius="sm"
+              label="Remarks"
+              labelPlacement="outside"
+              placeholder="Tax Percentage"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("taxPercentage")}
+            />
+            <Controller
+              name="paymentMode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Payment Mode"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Payment Mode"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {paymentModes.map((paymentMode) => (
+                    <SelectItem
+                      key={paymentMode.value}
+                      value={paymentMode.value}
+                    >
+                      {paymentMode.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Controller
+              name="bankName"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Bank Name"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Bank Name"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {bankNames.map((bankName) => (
+                    <SelectItem key={bankName.value} value={bankName.value}>
+                      {bankName.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <Input
+              radius="sm"
+              label="Branch Name"
+              labelPlacement="outside"
+              placeholder="Enter Branch Name"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("branchName")}
+            />
+            <Input
+              radius="sm"
+              label="Account No"
+              labelPlacement="outside"
+              placeholder="Account No"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("accountNo")}
+            />
+            <Input
+              radius="sm"
+              label="Sort Code"
+              labelPlacement="outside"
+              placeholder="Enter Sort Code"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("sortCode")}
+            />
+
+            <Controller
+              name="paymentCurrency"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Payment Currency"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select Payment Currency"
+                  isRequired
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {paymentCurrencies.map((paymentCurrency) => (
+                    <SelectItem
+                      key={paymentCurrency.value}
+                      value={paymentCurrency.value}
+                    >
+                      {paymentCurrency.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* other Details */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Pay Structure
+          </h1>
+          <div className="grid grid-cols-1 gap-5 pt-5">
+            <Controller
+              name="taxables"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  label="Payment (Taxable)"
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  {taxables.map((mode) => (
+                    <Radio key={mode.value} value={mode.value}>
+                      {mode.value}
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              )}
+            />
+            <Controller
+              name="deductio"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  label="Deductio"
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  {deductions.map((mode) => (
+                    <Radio key={mode.value} value={mode.value}>
+                      {mode.value}
+                    </Radio>
+                  ))}
+                </RadioGroup>
               )}
             />
           </div>
