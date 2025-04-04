@@ -1,5 +1,7 @@
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
   DatePicker,
   Input,
   Radio,
@@ -27,9 +29,42 @@ import {
 } from "../../../data";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { useState } from "react";
 
 const AddDocuments = () => {
   const { register, control, handleSubmit } = useForm();
+  const [educationalDetails, setEducationalDetails] = useState([
+    {
+      qualification: "",
+      subject: "",
+      institutionName: "",
+      awardingBody: "",
+      yearOfPassing: "",
+      percentage: "",
+      grade: "",
+      transcriptDocument: null,
+      certificateDocument: null,
+    },
+  ])
+
+  const handleAddRow = () =>{
+    setEducationalDetails([ ...educationalDetails, {
+        qualification: "",
+        subject: "",
+        institutionName: "",
+        awardingBody: "",
+        yearOfPassing: "",
+        percentage: "",
+        grade: "",
+        transcriptDocument: null,
+        certificateDocument: null,
+    }])
+  }
+
+
+  const handleRemoveRow = (index : any) => {
+    setEducationalDetails(educationalDetails.filter((_, i) => i !== index))
+  }
 
   const handleSubmitForm = (data: FieldValues) => {
     console.log(data);
@@ -430,126 +465,139 @@ const AddDocuments = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border p-2">1</td>
-                <td className="border p-2">
-                  <Controller
-                    name="qualification"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
+              {educationalDetails.map((detail, index) => (
+                <tr key={index}>
+                  <td className="border p-2">{index + 1}</td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.qualification}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].qualification = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.subject}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].subject = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.institutionName}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].institutionName = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.awardingBody}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].awardingBody = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.yearOfPassing}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].yearOfPassing = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.percentage}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].percentage = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      className="w-full p-1 border rounded"
+                      value={detail.grade}
+                      onChange={(e) => {
+                        const newDetails = [...educationalDetails]
+                        newDetails[index].grade = e.target.value
+                        setEducationalDetails(newDetails)
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <Input
+                      radius="sm"
+                      labelPlacement="outside"
+                      type="file"
+                      className="text-hrms-blue font-semibold"
+                      onChange={(e) => {
+                        // File handling is excluded as per requirements
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <Input
+                      radius="sm"
+                      labelPlacement="outside"
+                      type="file"
+                      className="text-hrms-blue font-semibold"
+                      onChange={(e) => {
+                        // File handling is excluded as per requirements
+                      }}
+                    />
+                  </td>
+                  <td className="border p-2 flex gap-2">
+                    {index === educationalDetails.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={handleAddRow}
+                        className="bg-green-500 text-white p-2 rounded"
+                        aria-label="Add row"
+                      >
+                        +
+                      </button>
                     )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="subject"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
+                    {educationalDetails.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveRow(index)}
+                        className="bg-red-500 text-white p-2 rounded"
+                        aria-label="Remove row"
+                      >
+                        -
+                      </button>
                     )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="institutionName"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
-                    )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="awardingBody"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
-                    )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="yearOfPassing"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
-                    )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="percentage"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
-                    )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Controller
-                    name="gradeDivision"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="text"
-                        className="w-full p-1 border rounded"
-                      />
-                    )}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Input
-                    radius="sm"
-                    labelPlacement="outside"
-                    type="file"
-                    className="text-hrms-blue font-semibold"
-                    {...register("taxReference")}
-                  />
-                </td>
-                <td className="border p-2">
-                  <Input
-                    radius="sm"
-                    labelPlacement="outside"
-                    type="file"
-                    className="text-hrms-blue font-semibold"
-                    {...register("taxReference")}
-                  />
-                </td>
-                <td className="border p-2">
-                  <button
-                    type="button"
-                    className="bg-green-500 text-white p-2 rounded"
-                  >
-                    +
-                  </button>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -2234,36 +2282,74 @@ const AddDocuments = () => {
               name="taxables"
               control={control}
               render={({ field }) => (
-                <RadioGroup
+                <CheckboxGroup
                   label="Payment (Taxable)"
                   orientation="horizontal"
                   value={field.value}
                   onValueChange={field.onChange}
                 >
                   {taxables.map((mode) => (
-                    <Radio key={mode.value} value={mode.value}>
+                    <Checkbox key={mode.value} value={mode.value}>
                       {mode.value}
-                    </Radio>
+                    </Checkbox>
                   ))}
-                </RadioGroup>
+                </CheckboxGroup>
               )}
             />
             <Controller
               name="deductio"
               control={control}
               render={({ field }) => (
-                <RadioGroup
+                <CheckboxGroup
                   label="Deductio"
                   orientation="horizontal"
                   value={field.value}
                   onValueChange={field.onChange}
                 >
                   {deductions.map((mode) => (
-                    <Radio key={mode.value} value={mode.value}>
+                    <Checkbox key={mode.value} value={mode.value}>
                       {mode.value}
-                    </Radio>
+                    </Checkbox>
                   ))}
-                </RadioGroup>
+                </CheckboxGroup>
+              )}
+            />
+          </div>
+        </div>
+
+         {/* Verification Status */}
+         <div>
+          <h1 className="text-xl font-medium py-4 border-b border-hrms-blue-light">
+            Verification Status
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Controller
+              name="verificationStatus"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Verification Status"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  placeholder="Select verification status"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Pending" value="Pending">
+                    Pending
+                  </SelectItem>
+                  <SelectItem key="Verified" value="Verified">
+                    Verified
+                  </SelectItem>
+                  <SelectItem key="Rejected" value="Rejected">
+                    Rejected
+                  </SelectItem>
+                </Select>
               )}
             />
           </div>
