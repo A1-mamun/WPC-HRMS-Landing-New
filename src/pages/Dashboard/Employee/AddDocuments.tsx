@@ -72,7 +72,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter middle name"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("middleName")}
             />
@@ -97,7 +96,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select gender"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -124,7 +122,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter NI Number"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("niNumber")}
             />
@@ -138,7 +135,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Date of Birth"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -163,7 +159,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select status"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -189,7 +184,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select nationality"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -251,7 +245,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter department"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("department")}
             />
@@ -261,7 +254,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter designation"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("designation")}
             />
@@ -274,7 +266,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Date of Joining"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -298,7 +289,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select employee type"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -323,7 +313,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Date of Confirmation"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -346,7 +335,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Contract Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -369,7 +357,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Contract End Date (if applicable)"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -389,7 +376,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter job location"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("jobLocation")}
             />
@@ -407,7 +393,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter reporting authority"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("reportingAuthority")}
             />
@@ -417,7 +402,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter leave sanction authority"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("leaveSanctionAuthority")}
             />
@@ -582,7 +566,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter job title"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Controller
@@ -596,7 +579,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -612,7 +594,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -623,7 +604,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter years of experience"
               type="number"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Textarea
@@ -633,7 +613,6 @@ const AddDocuments = () => {
               placeholder="Enter job description"
               maxRows={5}
               minRows={5}
-              isRequired
               className="text-hrms-blue font-semibold col-span-3 row-span-2"
             />
           </div>
@@ -650,12 +629,12 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter Responsibility Name"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("responsibilityName")}
             />
           </div>
         </div>
+
         {/* training details details */}
 
         <div>
@@ -669,7 +648,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter department"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("department")}
             />
@@ -684,7 +662,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -700,7 +677,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -712,7 +688,6 @@ const AddDocuments = () => {
               placeholder="Enter job description"
               maxRows={5}
               minRows={5}
-              isRequired
               className="text-hrms-blue font-semibold col-span-1 row-span-2"
             />
           </div>
@@ -730,7 +705,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter name"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Input
@@ -739,7 +713,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter relationship"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Input
@@ -748,7 +721,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter contact email"
               type="tel"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Input
@@ -757,7 +729,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter contact number"
               type="tel"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
             <Input
@@ -766,7 +737,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter address"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
             />
           </div>
@@ -784,7 +754,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter Title of Certified License"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("titleCertifiedLicense")}
             />
@@ -794,7 +763,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter License Number"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("licenseNumber")}
             />
@@ -809,7 +777,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -825,7 +792,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={field.onChange}
                 />
               )}
@@ -932,7 +898,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter passport number"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("passportNumber")}
             />
@@ -946,7 +911,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select nationality"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -971,7 +935,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter place of birth"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("placeOfBirth")}
             />
@@ -981,7 +944,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter issuing authority"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("passportIssuedBy")}
             />
@@ -995,7 +957,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Passport Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1019,7 +980,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Passport Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1043,7 +1003,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Passport Eligible Review Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1063,7 +1022,6 @@ const AddDocuments = () => {
               label="Passport Document"
               labelPlacement="outside"
               type="file"
-              required
               className="text-hrms-blue font-semibold"
               {...register("passportDocument")}
             />
@@ -1085,7 +1043,6 @@ const AddDocuments = () => {
                   label="Is this your current passport?"
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
-                  isRequired
                   placeholder="Select Yes or No"
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
@@ -1105,109 +1062,6 @@ const AddDocuments = () => {
             />
           </div>
         </div>
-
-        {/* Address & Identification Details */}
-        {/* <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Address & Identification Details
-          </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="COS Number"
-              labelPlacement="outside"
-              placeholder="Enter cos number"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="COS Number Start Date"
-              labelPlacement="outside"
-              placeholder="Enter cos number start date"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="COS Number End Date"
-              labelPlacement="outside"
-              placeholder="Enter cos number end date"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Present Address"
-              labelPlacement="outside"
-              placeholder="Enter address"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Proof Of Present Address"
-              labelPlacement="outside"
-              type="file"
-              required
-              className="text-hrms-blue font-semibold"
-            />
-            
-           
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Passport Issue Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Passport Expiry Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <DatePicker
-              radius="sm"
-              className="text-hrms-blue font-semibold"
-              label="Passport Eligible Review Date"
-              labelPlacement="outside"
-              isRequired
-            />
-            <Input
-              radius="sm"
-              label="Passport Document"
-              labelPlacement="outside"
-              type="file"
-              required
-              className="text-hrms-blue font-semibold"
-            />
-            <Select
-              radius="sm"
-              label="Gender"
-              className="text-hrms-blue font-semibold"
-              labelPlacement="outside"
-              placeholder="Select Yes or No"
-              isRequired
-            >
-              <SelectItem value="Yes">Yes</SelectItem>
-              <SelectItem value="No">No</SelectItem>
-            </Select>
-            <Input
-              radius="sm"
-              label="Passport Remarks"
-              labelPlacement="outside"
-              placeholder="Enter passport remarks"
-              type="text"
-              className="text-hrms-blue font-semibold"
-            />
-          </div>
-        </div> */}
 
         {/*  Visa Information */}
         <div className="pt-5">
@@ -1234,7 +1088,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select nationality"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -1296,7 +1149,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Visa Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1320,7 +1172,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Visa Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1344,7 +1195,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Visa Eligible Review Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1392,7 +1242,6 @@ const AddDocuments = () => {
                   label="Is this your current Visa?"
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
-                  isRequired
                   placeholder="Select Yes or No"
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
@@ -1465,7 +1314,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1488,7 +1336,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1511,7 +1358,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Eligible Review Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1551,7 +1397,6 @@ const AddDocuments = () => {
                   label="Is this your current status?"
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
-                  isRequired
                   placeholder="Select Yes or No"
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
@@ -1609,7 +1454,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter Reference Number"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("dbsReferenceNumber")}
             />
@@ -1619,7 +1463,6 @@ const AddDocuments = () => {
               labelPlacement="outside"
               placeholder="Enter Nationality"
               type="text"
-              isRequired
               className="text-hrms-blue font-semibold"
               {...register("dbsNationality")}
             />
@@ -1632,7 +1475,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1655,7 +1497,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1678,7 +1519,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1718,7 +1558,6 @@ const AddDocuments = () => {
                   label="Is this your current status?"
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
-                  isRequired
                   placeholder="Select Yes or No"
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
@@ -1764,7 +1603,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select nationality"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -1818,7 +1656,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1842,7 +1679,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Visa Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1866,7 +1702,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Visa Eligible Review Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -1914,7 +1749,6 @@ const AddDocuments = () => {
                   label="Is this your current status?"
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
-                  isRequired
                   placeholder="Select Yes or No"
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
@@ -1952,11 +1786,9 @@ const AddDocuments = () => {
             />
             <Input
               radius="sm"
-              label="Document reference number.
-"
+              label="Document reference number."
               labelPlacement="outside"
-              placeholder="Enter document reference number.
-"
+              placeholder="Enter document reference number."
               type="text"
               className="text-hrms-blue font-semibold"
               {...register("documentReferenceNumber")}
@@ -1971,7 +1803,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select nationality"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2000,7 +1831,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -2024,7 +1854,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -2048,7 +1877,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   label="Eligible Review Date"
                   labelPlacement="outside"
-                  isRequired
                   onChange={(date) =>
                     field.onChange(
                       date
@@ -2116,7 +1944,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select group"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2142,7 +1969,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Wedges pay mode"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2171,7 +1997,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Annual Pay"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2197,7 +2022,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Payment Type"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2228,11 +2052,9 @@ const AddDocuments = () => {
             />
             <Input
               radius="sm"
-              label="Min. Working Hour.
-"
+              label="Min. Working Hour."
               labelPlacement="outside"
-              placeholder="Enter Min. Working Hour.
-"
+              placeholder="Enter Min. Working Hour."
               type="text"
               className="text-hrms-blue font-semibold"
               {...register("minWorkingHour")}
@@ -2256,7 +2078,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Tax Code"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2301,7 +2122,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Payment Mode"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2330,7 +2150,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Bank Name"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2384,7 +2203,6 @@ const AddDocuments = () => {
                   className="text-hrms-blue font-semibold"
                   labelPlacement="outside"
                   placeholder="Select Payment Currency"
-                  isRequired
                   selectedKeys={
                     field.value ? new Set([field.value]) : new Set()
                   } // Ensure proper binding
@@ -2450,52 +2268,6 @@ const AddDocuments = () => {
             />
           </div>
         </div>
-
-        {/* Bank Details */}
-        {/* <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Bank Details
-          </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="Bank Name"
-              labelPlacement="outside"
-              placeholder="Enter bank name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Branch Name"
-              labelPlacement="outside"
-              placeholder="Enter branch name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-
-            <Input
-              radius="sm"
-              label="Sort Code"
-              labelPlacement="outside"
-              placeholder="Enter sort code"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-            <Input
-              radius="sm"
-              label="Account Number"
-              labelPlacement="outside"
-              placeholder="Enter account number"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-            />
-          </div>
-        </div> */}
 
         {/* submit button */}
         <div className="flex justify-between items-center pt-5 pb-10">
