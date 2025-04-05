@@ -1,6 +1,7 @@
 import { Button, Checkbox, Input, Select, SelectItem } from "@heroui/react";
 import {
   countries,
+  organizationFileFields,
   organizationTypes,
   sectorsName,
   tradingPeriods,
@@ -69,7 +70,15 @@ const AddOrgDocuments = () => {
   }, [isLevel1PersonSameAsAuthorised, setValue, watchAuthorisedPerson]);
 
   const handleSubmitForm = (data: FieldValues) => {
-    console.log(data);
+    const formData = new FormData();
+
+    // Append files to FormData
+    organizationFileFields.forEach((field) => {
+      const file = data[field]?.[0];
+      if (file) {
+        formData.append(field, file);
+      }
+    });
   };
 
   return (
@@ -78,224 +87,239 @@ const AddOrgDocuments = () => {
         Add Organaisation Documents
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
-        <div className="grid grid-cols-4 gap-5 pt-5">
-          <Input
-            radius="sm"
-            label="Organisation Name"
-            labelPlacement="outside"
-            placeholder="Enter organisation name"
-            type="text"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("organizationName")}
-          />
-          <Controller
-            name="organizationType"
-            control={control}
-            render={({ field }) => (
-              <Select
-                radius="sm"
-                label="Type of Organisation"
-                className="text-hrms-blue font-semibold"
-                labelPlacement="outside"
-                isRequired
-                placeholder="Select organisation type"
-                selectedKeys={field.value ? new Set([field.value]) : new Set()} // Ensure proper binding
-                onSelectionChange={(keys) =>
-                  field.onChange(Array.from(keys)[0])
-                } // Extract single value from Set
-              >
-                {organizationTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.value}
+        <div>
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
+            Organisation Details
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <Input
+              radius="sm"
+              label="Organisation Name"
+              labelPlacement="outside"
+              placeholder="Enter organisation name"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("organizationName")}
+            />
+            <Controller
+              name="organizationType"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Type of Organisation"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select organisation type"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {organizationTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Registration Number"
+              labelPlacement="outside"
+              placeholder="Enter organisation registration number"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("registrationNumber")}
+            />
+
+            <Input
+              radius="sm"
+              label="Contact No"
+              labelPlacement="outside"
+              placeholder="Enter organisation contact number"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("contactNumber")}
+            />
+            <Input
+              radius="sm"
+              label="LogIn Email"
+              labelPlacement="outside"
+              placeholder="Enter LogIn email"
+              type="email"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("loginEmail")}
+            />
+            <Input
+              radius="sm"
+              label="Organisation Email"
+              labelPlacement="outside"
+              placeholder="Enter organisation email"
+              type="email"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("organizationEmail")}
+            />
+            <Input
+              radius="sm"
+              label="Website URL"
+              labelPlacement="outside"
+              placeholder="Enter organisation website URL"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("websiteURL")}
+            />
+
+            <Input
+              radius="sm"
+              label="Landline No"
+              labelPlacement="outside"
+              placeholder="Enter organisation landline number"
+              type="text"
+              required
+              className="text-hrms-blue font-semibold"
+              {...register("landlineNumber")}
+            />
+            <Input
+              radius="sm"
+              label="Trading Name"
+              labelPlacement="outside"
+              placeholder="Enter organisation trading name"
+              type="text"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("tradingName")}
+            />
+            <Controller
+              name="tradingPeriod"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Trading Period"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select trading period"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {tradingPeriods.map((period) => (
+                    <SelectItem key={period.value} value={period.value}>
+                      {period.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Controller
+              name="sector"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Name of Sector"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select sector"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  {sectorsName.map((sector) => (
+                    <SelectItem key={sector.value} value={sector.value}>
+                      {sector.value}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+
+            <Input
+              radius="sm"
+              label="Organisation Logo"
+              labelPlacement="outside"
+              type="file"
+              isRequired
+              className="text-hrms-blue font-semibold"
+              {...register("organizationLogo")}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-5 pt-5">
+            <Controller
+              name="nameChangeLast5Years"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Have you changed Organisation Name/Trading Name in the last 5 years?"
+                  className="text-hrms-blue font-semibold"
+                  placeholder="Select Yes or No"
+                  isRequired
+                  labelPlacement="outside"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
                   </SelectItem>
-                ))}
-              </Select>
-            )}
-          />
-
-          <Input
-            radius="sm"
-            label="Registration Number"
-            labelPlacement="outside"
-            placeholder="Enter organisation registration number"
-            type="text"
-            className="text-hrms-blue font-semibold"
-            {...register("registrationNumber")}
-          />
-
-          <Input
-            radius="sm"
-            label="Contact No"
-            labelPlacement="outside"
-            placeholder="Enter organisation contact number"
-            type="text"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("contactNumber")}
-          />
-          <Input
-            radius="sm"
-            label="LogIn Email"
-            labelPlacement="outside"
-            placeholder="Enter LogIn email"
-            type="email"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("loginEmail")}
-          />
-          <Input
-            radius="sm"
-            label="Organisation Email"
-            labelPlacement="outside"
-            placeholder="Enter organisation email"
-            type="email"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("organizationEmail")}
-          />
-          <Input
-            radius="sm"
-            label="Website URL"
-            labelPlacement="outside"
-            placeholder="Enter organisation website URL"
-            type="text"
-            className="text-hrms-blue font-semibold"
-            {...register("websiteURL")}
-          />
-
-          <Input
-            radius="sm"
-            label="Landline No"
-            labelPlacement="outside"
-            placeholder="Enter organisation landline number"
-            type="text"
-            required
-            className="text-hrms-blue font-semibold"
-            {...register("landlineNumber")}
-          />
-          <Input
-            radius="sm"
-            label="Trading Name"
-            labelPlacement="outside"
-            placeholder="Enter organisation trading name"
-            type="text"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("tradingName")}
-          />
-          <Controller
-            name="tradingPeriod"
-            control={control}
-            render={({ field }) => (
-              <Select
-                radius="sm"
-                label="Trading Period"
-                className="text-hrms-blue font-semibold"
-                labelPlacement="outside"
-                isRequired
-                placeholder="Select trading period"
-                selectedKeys={field.value ? new Set([field.value]) : new Set()} // Ensure proper binding
-                onSelectionChange={(keys) =>
-                  field.onChange(Array.from(keys)[0])
-                } // Extract single value from Set
-              >
-                {tradingPeriods.map((period) => (
-                  <SelectItem key={period.value} value={period.value}>
-                    {period.value}
+                  <SelectItem key="No" value="No">
+                    No
                   </SelectItem>
-                ))}
-              </Select>
-            )}
-          />
+                </Select>
+              )}
+            />
 
-          <Controller
-            name="sector"
-            control={control}
-            render={({ field }) => (
-              <Select
-                radius="sm"
-                label="Name of Sector"
-                className="text-hrms-blue font-semibold"
-                labelPlacement="outside"
-                isRequired
-                placeholder="Select sector"
-                selectedKeys={field.value ? new Set([field.value]) : new Set()} // Ensure proper binding
-                onSelectionChange={(keys) =>
-                  field.onChange(Array.from(keys)[0])
-                } // Extract single value from Set
-              >
-                {sectorsName.map((sector) => (
-                  <SelectItem key={sector.value} value={sector.value}>
-                    {sector.value}
+            <Controller
+              name="penaltyLast3Years"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  radius="sm"
+                  label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
+                  className="text-hrms-blue font-semibold"
+                  labelPlacement="outside"
+                  isRequired
+                  placeholder="Select Yes or No"
+                  selectedKeys={
+                    field.value ? new Set([field.value]) : new Set()
+                  } // Ensure proper binding
+                  onSelectionChange={(keys) =>
+                    field.onChange(Array.from(keys)[0])
+                  } // Extract single value from Set
+                >
+                  <SelectItem key="Yes" value="Yes">
+                    Yes
                   </SelectItem>
-                ))}
-              </Select>
-            )}
-          />
-
-          <Input
-            radius="sm"
-            label="Organisation Logo"
-            labelPlacement="outside"
-            type="file"
-            isRequired
-            className="text-hrms-blue font-semibold"
-            {...register("organizationLogo")}
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-5 pt-5">
-          <Controller
-            name="nameChangeLast5Years"
-            control={control}
-            render={({ field }) => (
-              <Select
-                radius="sm"
-                label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                className="text-hrms-blue font-semibold"
-                placeholder="Select Yes or No"
-                isRequired
-                labelPlacement="outside"
-                selectedKeys={field.value ? new Set([field.value]) : new Set()} // Ensure proper binding
-                onSelectionChange={(keys) =>
-                  field.onChange(Array.from(keys)[0])
-                } // Extract single value from Set
-              >
-                <SelectItem key="Yes" value="Yes">
-                  Yes
-                </SelectItem>
-                <SelectItem key="No" value="No">
-                  No
-                </SelectItem>
-              </Select>
-            )}
-          />
-
-          <Controller
-            name="penaltyLast3Years"
-            control={control}
-            render={({ field }) => (
-              <Select
-                radius="sm"
-                label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                className="text-hrms-blue font-semibold"
-                labelPlacement="outside"
-                isRequired
-                placeholder="Select Yes or No"
-                selectedKeys={field.value ? new Set([field.value]) : new Set()} // Ensure proper binding
-                onSelectionChange={(keys) =>
-                  field.onChange(Array.from(keys)[0])
-                } // Extract single value from Set
-              >
-                <SelectItem key="Yes" value="Yes">
-                  Yes
-                </SelectItem>
-                <SelectItem key="No" value="No">
-                  No
-                </SelectItem>
-              </Select>
-            )}
-          />
+                  <SelectItem key="No" value="No">
+                    No
+                  </SelectItem>
+                </Select>
+              )}
+            />
+          </div>
         </div>
 
         {/* authorised person details */}

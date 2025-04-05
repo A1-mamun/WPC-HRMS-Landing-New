@@ -580,32 +580,20 @@ export const dbsTypes = [
 
 //pay type
 
-export const payGroups = [
-  {value: "Group 1"},
-  {value: "Group 2"}
-];
-export const wedgesPaymodes = [
-  {value: "Pay 1"},
-  {value: "Pay 2"}
-];
-export const annualPays = [
-  {value: "Pay 1"},
-  {value: "Pay 2"}
-];
-export const paymentTypes = [
-  {value: "Pay 1"},
-  {value: "Pay 2"}
-];
+export const payGroups = [{ value: "Group 1" }, { value: "Group 2" }];
+export const wedgesPaymodes = [{ value: "Pay 1" }, { value: "Pay 2" }];
+export const annualPays = [{ value: "Pay 1" }, { value: "Pay 2" }];
+export const paymentTypes = [{ value: "Pay 1" }, { value: "Pay 2" }];
 
 export const taxCodes = [
-  {value: "2341"},
-  {value: "5342"},
-  {value: "5312"},
+  { value: "2341" },
+  { value: "5342" },
+  { value: "5312" },
 ];
 export const paymentModes = [
-  {value: "Mode 1"},
-  {value: "Mode 2"},
-  {value: "Mode 3"},
+  { value: "Mode 1" },
+  { value: "Mode 2" },
+  { value: "Mode 3" },
 ];
 
 export const bankNames = [
@@ -619,7 +607,6 @@ export const bankNames = [
   { value: "Standard Chartered (Global)", label: "sc" },
 ];
 
-
 export const paymentCurrencies = [
   { value: "USD - United States Dollar", label: "usd" },
   { value: "EUR - Euro (European Union)", label: "eur" },
@@ -631,22 +618,35 @@ export const paymentCurrencies = [
   { value: "CNY - Chinese Yuan (China)", label: "cny" },
 ];
 
-
-// pay structure 
+// pay structure
 export const taxables = [
-  {value:"Dearness Allowance"},
-  {value:" House Rent Allowance"},
-  {value:"Conveyance Allowance"},
-  {value:"Performance Allowance"},
-  {value:"Monthly Fixed Allowance"},
-]
-
+  { value: "Dearness Allowance" },
+  { value: " House Rent Allowance" },
+  { value: "Conveyance Allowance" },
+  { value: "Performance Allowance" },
+  { value: "Monthly Fixed Allowance" },
+];
 
 export const deductions = [
-  {value:" I. Tax Deduction"},
-  {value:"NI Deduction"},
-  {value:"I. Tax Cess"},
-  {value:" ESI"},
-  {value:"Prof Tax"},
-]
+  { value: " I. Tax Deduction" },
+  { value: "NI Deduction" },
+  { value: "I. Tax Cess" },
+  { value: " ESI" },
+  { value: "Prof Tax" },
+];
 
+// organization file fields
+export const organizationFileFields = [
+  "organizationLogo",
+  "proofOfId",
+  "payeeAccountReference",
+  "latestRti",
+  "employerLiabilityInsurance",
+  "proofOfBusinessPremises",
+  "copyOfLease",
+  "businessBankStatement",
+  "signedAnnualAccount",
+  "vatCertificate",
+  "healthSafetyRating",
+  "regulatoryBodyCertificate",
+];
