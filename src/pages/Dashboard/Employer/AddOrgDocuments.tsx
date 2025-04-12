@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Checkbox, Input, Select, SelectItem } from "@heroui/react";
 import {
   countries,
-  document1,
   organizationFileFields,
   organizationTypes,
   sectorsName,
@@ -9,13 +9,22 @@ import {
 } from "../../../data";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useAddOrgDocumentsMutation } from "../../../redux/features/employer/addOrgDocumentsApi";
+import { toast } from "sonner";
+// import { useAppSelector } from "../../../redux/hooks";
+// import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 
 const AddOrgDocuments = () => {
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
     useState(false);
   const [isLevel1PersonSameAsAuthorised, setIsLevel1PersonSameAsAuthorised] =
     useState(false);
+
   const { register, control, handleSubmit, watch, setValue } = useForm();
+
+  const [addOrgDocuments] = useAddOrgDocumentsMutation();
+  // const user = useAppSelector(useCurrentUser);
+  // console.log("user", user?.email);
 
   // watch authorise person details
   const watchAuthorisedPerson = watch([
@@ -47,7 +56,7 @@ const AddOrgDocuments = () => {
       setValue("keyPersonProofOfId", null);
       setValue("keyPersonCriminalHistory", "");
     }
-  }, [isKeyPersonSameAsAuthorised, setValue, watchAuthorisedPerson]);
+  }, [isKeyPersonSameAsAuthorised, watchAuthorisedPerson]);
 
   // update level 1 user details when checkbox is checked
   useEffect(() => {
@@ -68,72 +77,58 @@ const AddOrgDocuments = () => {
       setValue("level1PersonProofOfId", null);
       setValue("level1PersonCriminalHistory", "");
     }
-  }, [isLevel1PersonSameAsAuthorised, setValue, watchAuthorisedPerson]);
+  }, [isLevel1PersonSameAsAuthorised, watchAuthorisedPerson]);
 
-  const handleSubmitForm = (data: FieldValues) => {
+  const handleSubmitForm = async (data: FieldValues) => {
     // Create FormData object for file uploads
     const formData = new FormData();
-
-    // Append files to FormData
-    organizationFileFields.forEach((field) => {
-      const file = data[field]?.[0];
-      if (file) {
-        formData.append(field, file);
-      }
-    });
 
     // Organize form data by sections
     const formattedData = {
       // Organization Details section
-      organizationDetails: {
-        organizationName: data.organizationName,
-        organizationType: data.organizationType,
-        registrationNumber: data.registrationNumber,
-        contactNumber: data.contactNumber,
+      organisationDetails: {
+        name: data.organizationName,
+        type: data.organizationType,
+        registrationNo: data.registrationNumber,
+        contactNo: data.contactNumber,
         loginEmail: data.loginEmail,
-        organizationEmail: data.organizationEmail,
+        organisationEmail: data.organizationEmail,
         websiteURL: data.websiteURL,
-        landlineNumber: data.landlineNumber,
+        landlineNo: data.landlineNumber,
         tradingName: data.tradingName,
         tradingPeriod: data.tradingPeriod,
-        sector: data.sector,
+        nameOfSector: data.sector,
         nameChangeLast5Years: data.nameChangeLast5Years,
-        penaltyLast3Years: data.penaltyLast3Years,
-        organizationLogo: data.organizationLogo?.[0] || null,
+        FacedPenaltyLast3Years: data.penaltyLast3Years,
       },
 
       // Authorised Person Details section
-      authorisedPersonDetails: {
+      authorisedPerson: {
         firstName: data.firstName,
         lastName: data.lastName,
         designation: data.designation,
         phoneNo: data.phoneNo,
         email: data.email,
-        proofOfId: data.proofOfId?.[0] || null,
         criminalHistory: data.criminalHistory,
       },
 
       // Key Contact Person section
       keyContactPerson: {
-        isSameAsAuthorised: isKeyPersonSameAsAuthorised,
         firstName: data.keyPersonFirstName,
         lastName: data.keyPersonLastName,
         designation: data.keyPersonDesignation,
         phoneNo: data.keyPersonPhoneNo,
         email: data.keyPersonEmail,
-        proofOfId: data.keyPersonProofOfId?.[0] || null,
         criminalHistory: data.keyPersonCriminalHistory,
       },
 
       // Level 1 User section
       level1User: {
-        isSameAsAuthorised: isLevel1PersonSameAsAuthorised,
         firstName: data.level1PersonFirstName,
         lastName: data.level1PersonLastName,
         designation: data.level1PersonDesignation,
         phoneNo: data.level1PersonPhoneNo,
         email: data.level1PersonEmail,
-        proofOfId: data.level1PersonProofOfId?.[0] || null,
         criminalHistory: data.level1PersonCriminalHistory,
       },
 
@@ -143,102 +138,114 @@ const AddOrgDocuments = () => {
         addressLine1: data.addressLine1,
         addressLine2: data.addressLine2,
         addressLine3: data.addressLine3,
-        cityCounty: data.cityCounty,
+        city: data.cityCounty,
         country: data.country,
       },
 
       // Trading Hours section
-      tradingHours: {
-        monday: {
+      tradingHours: [
+        {
+          day: "Monday",
           status: data.mondayStatus,
-          openingTime: data.mondayOpeningTime,
-          closingTime: data.mondayClosingTime,
+          startTime: data.mondayOpeningTime,
+          endTime: data.mondayClosingTime,
         },
-        tuesday: {
+        {
+          day: "Tuesday",
           status: data.tuesdayStatus,
-          openingTime: data.tuesdayOpeningTime,
-          closingTime: data.tuesdayClosingTime,
+          startTime: data.tuesdayOpeningTime,
+          endTime: data.tuesdayClosingTime,
         },
-        wednesday: {
+        {
+          day: "Wednesday",
           status: data.wednesdayStatus,
-          openingTime: data.wednesdayOpeningTime,
-          closingTime: data.wednesdayClosingTime,
+          startTime: data.wednesdayOpeningTime,
+          endTime: data.wednesdayClosingTime,
         },
-        thursday: {
+        {
+          day: "Thursday",
           status: data.thursdayStatus,
-          openingTime: data.thursdayOpeningTime,
-          closingTime: data.thursdayClosingTime,
+          startTime: data.thursdayOpeningTime,
+          endTime: data.thursdayClosingTime,
         },
-        friday: {
+        {
+          day: "Friday",
           status: data.fridayStatus,
-          openingTime: data.fridayOpeningTime,
-          closingTime: data.fridayClosingTime,
+          startTime: data.fridayOpeningTime,
+          endTime: data.fridayClosingTime,
         },
-        saturday: {
+        {
+          day: "Saturday",
           status: data.saturdayStatus,
-          openingTime: data.saturdayOpeningTime,
-          closingTime: data.saturdayClosingTime,
+          startTime: data.saturdayOpeningTime,
+          endTime: data.saturdayClosingTime,
         },
-        sunday: {
+        {
+          day: "Sunday",
           status: data.sundayStatus,
-          openingTime: data.sundayOpeningTime,
-          closingTime: data.sundayClosingTime,
+          startTime: data.sundayOpeningTime,
+          endTime: data.sundayClosingTime,
         },
-      },
+      ],
 
-      // Upload Documents section
+      // documents section
       documents: {
-        // File uploads
-        payeeAccountReference: data.payeeAccountReference?.[0] || null,
-        latestRti: data.latestRti?.[0] || null,
-        employerLiabilityInsurance:
-          data.employerLiabilityInsurance?.[0] || null,
-        proofOfBusinessPremises: data.proofOfBusinessPremises?.[0] || null,
-        copyOfLease: data.copyOfLease?.[0] || null,
-        businessBankStatement: data.businessBankStatement?.[0] || null,
-        signedAnnualAccount: data.signedAnnualAccount?.[0] || null,
-        vatCertificate: data.vatCertificate?.[0] || null,
-        healthSafetyRating: data.healthSafetyRating?.[0] || null,
-        regulatoryBodyCertificate: data.regulatoryBodyCertificate?.[0] || null,
-
-        // Document dropdown selections
-        payeeAccountReferenceSelect: data.payeeAccountReferenceSelect,
-        accountRefFromHMRCSelect: data.accountRefFromHMRCSelect,
-        latestRtiSelect: data.latestRtiSelect,
-        employerLiabilityInsuranceSelect: data.employerLiabilityInsuranceSelect,
-        proofOfBusinessPremisesSelect: data.proofOfBusinessPremisesSelect,
-        copyOfLeaseSelect: data.copyOfLeaseSelect,
-        businessBankStatementSelect: data.businessBankStatementSelect,
-        signedAnnualAccountSelect: data.signedAnnualAccountSelect,
-        vatCertificateSelect: data.vatCertificateSelect,
-        healthSafetyRatingSelect: data.healthSafetyRatingSelect,
-        regulatoryBodyCertificateSelect: data.regulatoryBodyCertificateSelect,
-
-        documentType: data.documentType || "",
+        payeeAccountReference: "",
+        latestRti: "",
+        employerLiabilityInsurance: "",
+        proofOfBusinessPremises: "",
+        copyOfLease: "",
+        businessBankStatement: "",
+        signedAnnualAccounts: "",
+        vatCertificate: "",
+        healthSafetyRating: "",
+        regulatoryBodyCertificate: "",
+        businessLicense: "",
+        franchiseAgreement: "",
+        governingBodyRegistration: "",
+        auditedAnnualAccounts: "",
+        othersDocuments: "",
       },
     };
 
-    console.log("Formatted Form Data:", formattedData);
+    console.log("Formatted Data:", formattedData);
+    //append formattedData to formData as a JSON string
+    formData.append("data", JSON.stringify(formattedData));
 
-    // Now, append formattedData to formData as a JSON string
-    formData.append("formattedData", JSON.stringify(formattedData));
-
-    // Also append document dropdown selections individually to formData
-    Object.keys(formattedData.documents).forEach(key => {
-      const typedKey = key as keyof typeof formattedData.documents;
-    
-      if (key.endsWith('Select') && formattedData.documents[typedKey]) {
-        formData.append(key, formattedData.documents[typedKey]);
+    // Append files to FormData
+    organizationFileFields.forEach((field) => {
+      const file = data[field]?.[0];
+      if (file) {
+        formData.append(field, file);
       }
     });
-    
 
-    console.log("FormData with formattedData:", formData);
- 
-    // Example API call:
+    if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
+      formData.append("keyPersonProofOfId", data.keyPersonProofOfId?.[0]);
+    }
+    if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
+      formData.append("level1PersonProofOfId", data.level1PersonProofOfId?.[0]);
+    }
 
+    // console.log("FormData entries:");
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
 
-    return { formData, formattedData };
+    const toastId = toast.loading("Adding organisation documents...");
+
+    try {
+      const res = await addOrgDocuments(formData).unwrap();
+      // const res = await addOrgDocuments(formattedData).unwrap();
+      console.log("Response:", res);
+      toast.success("Organisation documents added successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (err: any) {
+      console.log("Error:", err);
+      toast.error(err.data.message, { id: toastId, duration: 2000 });
+    }
   };
 
   return (
@@ -247,6 +254,7 @@ const AddOrgDocuments = () => {
         Add Organaisation Documents
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
+        {/* Organisation details */}
         <div>
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
             Organisation Details
@@ -420,7 +428,7 @@ const AddOrgDocuments = () => {
               type="file"
               isRequired
               className="text-hrms-blue font-semibold"
-              {...register("organizationLogo")}
+              {...register("logo")}
             />
           </div>
           <div className="grid grid-cols-2 gap-5 pt-5">
@@ -602,6 +610,12 @@ const AddOrgDocuments = () => {
               className="text-hrms-blue font-semibold"
               {...register("keyPersonFirstName")}
             />
+            {/* <input
+              type="text"
+              required
+              className="text-hrms-blue font-semibold border border-hrms-blue-light rounded-md"
+              {...register("keyPersonFirstName")}
+            /> */}
             <Input
               radius="sm"
               label="Last Name"
@@ -940,6 +954,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Monday Status"
                     radius="sm"
                     label="Status"
                     className="text-hrms-blue font-semibold"
@@ -952,8 +967,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -967,6 +982,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Tuesday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -977,8 +993,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -991,6 +1007,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Wednesday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -1001,8 +1018,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -1015,6 +1032,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Thursday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -1025,8 +1043,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -1039,6 +1057,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Friday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -1049,8 +1068,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -1063,6 +1082,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Saturday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -1073,8 +1093,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -1087,6 +1107,7 @@ const AddOrgDocuments = () => {
                 control={control}
                 render={({ field }) => (
                   <Select
+                    aria-label="Sunday Status"
                     radius="sm"
                     className="text-hrms-blue font-semibold"
                     placeholder="Select status"
@@ -1097,8 +1118,8 @@ const AddOrgDocuments = () => {
                       field.onChange(Array.from(keys)[0])
                     } // Extract single value from Set
                   >
-                    <SelectItem key="Closed" value="Closed">
-                      Closed
+                    <SelectItem key="Close" value="Close">
+                      Close
                     </SelectItem>
                     <SelectItem key="Open" value="Open">
                       Open
@@ -1221,390 +1242,126 @@ const AddOrgDocuments = () => {
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Upload Documents
           </h1>
-          <div className="grid grid-cols-2 gap-5 pt-5">
-            {/* 1. PAYEE Account Reference */}
-            <Controller
-              name="payeeAccountReferenceSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Select PAYEE Account Reference"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
+          <div className="grid grid-cols-3 gap-5 pt-5">
             <Input
               radius="sm"
+              label="PAYEE And Account Reference Letter From HMRC"
               labelPlacement="outside"
               type="file"
-              aria-label="Payee Account Reference"
               className="text-hrms-blue font-semibold"
               {...register("payeeAccountReference")}
             />
-
-            {/* 2. PAYEE And Account Reference Letter From HMRC */}
-            <Controller
-              name="accountRefFromHMRCSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Latest RTI from Accountant"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Latest RTI from accountant"
               labelPlacement="outside"
               type="file"
-              aria-label="Latest RTI from Accountant"
-              className="text-hrms-blue font-semibold"
-              {...register("accountRefFromHMRC")}
-            />
-
-            {/* 3. Latest RTI from accountant */}
-            <Controller
-              name="latestRtiSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Latest RTI from accountant"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
-            <Input
-              radius="sm"
-              labelPlacement="outside"
-              type="file"
-              aria-label="Payee Account Reference"
               className="text-hrms-blue font-semibold"
               {...register("latestRti")}
             />
-
-            {/* 4. Employer Liability Insurance Certificate */}
-            <Controller
-              name="employerLiabilityInsuranceSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Employer Liability Insurance Certificate"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Employer Liability Insurance Certificate"
               labelPlacement="outside"
               type="file"
-              aria-label="Employer Liability Insurance Certificate"
               className="text-hrms-blue font-semibold"
               {...register("employerLiabilityInsurance")}
             />
-
-            {/* 5. Proof of Business Premises */}
-            <Controller
-              name="proofOfBusinessPremisesSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Proof of Business Premises (Tenancy Agreement)"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Proof of Business Permises (Tenancy Agreement)"
               labelPlacement="outside"
               type="file"
-              aria-label="Proof of Business Premises"
               className="text-hrms-blue font-semibold"
               {...register("proofOfBusinessPremises")}
             />
-
-            {/* 6. Copy of Lease or Freehold Property */}
-            <Controller
-              name="copyOfLeaseSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Copy of Lease or Freehold Property"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Copy of Lease or Freehold Property"
               labelPlacement="outside"
               type="file"
-              aria-label="Copy of Lease or Freehold Property"
               className="text-hrms-blue font-semibold"
               {...register("copyOfLease")}
             />
-
-            {/* 7. Business Bank Statement */}
-            <Controller
-              name="businessBankStatementSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Business Bank Statement for last 3 months"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Business Bank Statement for last 1/2/3 months"
               labelPlacement="outside"
               type="file"
-              aria-label="Business Bank Statement for last 3 months"
               className="text-hrms-blue font-semibold"
               {...register("businessBankStatement")}
             />
-
-            {/* 8. Signed Annual Account */}
-            <Controller
-              name="signedAnnualAccountSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Signed Annual Account (If the business is more than 18 months old)"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Signed Annual Account ( If the business is more than 18 months old)"
               labelPlacement="outside"
               type="file"
-              aria-label="Signed Annual Account"
               className="text-hrms-blue font-semibold"
               {...register("signedAnnualAccount")}
             />
-
-            {/* 9. VAT Certificate */}
-            <Controller
-              name="vatCertificateSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="VAT Certificate (If Registered)"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="VAT Certificate (If Registered)"
               labelPlacement="outside"
               type="file"
-              aria-label="VAT Certificate"
               className="text-hrms-blue font-semibold"
               {...register("vatCertificate")}
             />
-
-            {/* 10. Health & Safety Rating */}
-            <Controller
-              name="healthSafetyRatingSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Copy of Health and Safety Star Rating (For food business only)"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
             <Input
               radius="sm"
+              label="Copy of Health and Safty star Rating (Applicable for food business only)"
               labelPlacement="outside"
               type="file"
-              aria-label="Copy of Health and Safety Star Rating"
               className="text-hrms-blue font-semibold"
               {...register("healthSafetyRating")}
             />
-
-            {/* 11. Regulatory Body Certificate */}
-            <Controller
-              name="regulatoryBodyCertificateSelect"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Regulatory Body Certificate (If applicable)"
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  }
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0];
-                    field.onChange(selected);
-                  }}
-                >
-                  {document1.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
+            <Input
+              radius="sm"
+              label="Regulatory Body Certificate (If Applicable for your business)"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("regulatoryBodyCertificate")}
             />
             <Input
               radius="sm"
+              label="Registered business license or certificate"
               labelPlacement="outside"
               type="file"
-              aria-label="Regulatory Body Certificate"
               className="text-hrms-blue font-semibold"
-              {...register("regulatoryBodyCertificate")}
+              {...register("businessLicense")}
+            />
+            <Input
+              radius="sm"
+              label="Franchise Agreement"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("franchiseAgreement")}
+            />
+            <Input
+              radius="sm"
+              label="Governing Body Registration "
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("governingBodyRegistration")}
+            />
+            <Input
+              radius="sm"
+              label="Audited annual account"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("auditedAnnualAccount")}
+            />
+            <Input
+              radius="sm"
+              label="Others Documents"
+              labelPlacement="outside"
+              type="file"
+              className="text-hrms-blue font-semibold"
+              {...register("othersDocuments")}
             />
           </div>
         </div>

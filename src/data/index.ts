@@ -637,7 +637,7 @@ export const deductions = [
 
 // organization file fields
 export const organizationFileFields = [
-  "organizationLogo",
+  "logo",
   "proofOfId",
   "payeeAccountReference",
   "latestRti",
@@ -649,25 +649,9 @@ export const organizationFileFields = [
   "vatCertificate",
   "healthSafetyRating",
   "regulatoryBodyCertificate",
+  "businessLicense",
+  "franchiseAgreement",
+  "governingBodyRegistration",
+  "auditedAnnualAccount",
+  "othersDocuments",
 ];
-
-export const document1 =[
-  { value: " PAYEE And Account Reference Letter From HMRC" },
-  { value: "Latest RTI from Accountant" },
-  { value: " Employer Liability Insurance Certificate" },
-  { value: "Proof of Business Premises (Tenancy Agreement)" },
-  { value: "Copy Of Lease Or Freehold Property" },
-  { value: "Business Bank statement for 1 Month" },
-  { value: "Business Bank statement for 2 Month" },
-  { value: " Business Bank statement for 3 Month" },
-  { value: " SIGNED Annual account (if the business is over 18 months old)" },
-  { value: " VAT Certificate (if registered)" },
-  { value: " Copy of Health and safety star Rating (Applicable for food business only)" },
-  { value: " Audited Annual Account (if you have)" },
-  {value:"Audited Annual Account (if you have)"},
-  {value:"Governing Body Registration"},
-  {value:"Franchise Agreement"},
-  {value:"Registered Business License or Certificate"},
-    { value: " Regulatory body certificate if applicable to your business such as ACCA, FCA , OFCOM, IATA, ARLA" },
-  { value: " Others Document" }
-]
