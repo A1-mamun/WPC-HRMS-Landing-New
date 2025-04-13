@@ -599,68 +599,95 @@ const AddOrgDocuments = () => {
             If Same As Authorised Person
           </Checkbox>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="First Name"
-              labelPlacement="outside"
-              placeholder="Enter first name"
-              type="text"
-              isRequired
-              isDisabled={isKeyPersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonFirstName")}
-            />
-            {/* <input
-              type="text"
-              required
-              className="text-hrms-blue font-semibold border border-hrms-blue-light rounded-md"
-              {...register("keyPersonFirstName")}
-            /> */}
-            <Input
-              radius="sm"
-              label="Last Name"
-              labelPlacement="outside"
-              placeholder="Enter last name"
-              type="text"
-              isRequired
-              isDisabled={isKeyPersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonLastName")}
-            />
-            <Input
-              radius="sm"
-              label="Designation"
-              labelPlacement="outside"
-              placeholder="Enter designation"
-              type="text"
-              isRequired
-              isDisabled={isKeyPersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonDesignation")}
-            />
+            <div className="mb-4">
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                First Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="Enter first name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isKeyPersonSameAsAuthorised}
+                {...register("keyPersonFirstName")}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="keyPersonLastName"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="keyPersonLastName"
+                placeholder="Enter last name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isKeyPersonSameAsAuthorised}
+                {...register("keyPersonLastName")}
+              />
+            </div>
 
-            <Input
-              radius="sm"
-              label="Phone No"
-              labelPlacement="outside"
-              placeholder="Enter phone number"
-              type="text"
-              isRequired
-              isDisabled={isKeyPersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonPhoneNo")}
-            />
-            <Input
-              radius="sm"
-              label="Email"
-              labelPlacement="outside"
-              placeholder="Enter email"
-              type="email"
-              isRequired
-              isDisabled={isKeyPersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonEmail")}
-            />
+            <div className="mb-4">
+              <label
+                htmlFor="keyPersonDesignation"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Designation <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="keyPersonDesignation"
+                placeholder="Enter designation"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isKeyPersonSameAsAuthorised}
+                {...register("keyPersonDesignation")}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="keyPersonPhoneNo"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Phone No <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="keyPersonPhoneNo"
+                placeholder="Enter phone number"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isKeyPersonSameAsAuthorised}
+                {...register("keyPersonPhoneNo")}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="keyPersonEmail"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="keyPersonEmail"
+                placeholder="Enter email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isKeyPersonSameAsAuthorised}
+                {...register("keyPersonEmail")}
+              />
+            </div>
+
             <Input
               radius="sm"
               label="Proof of ID"
@@ -714,62 +741,95 @@ const AddOrgDocuments = () => {
             If Same As Authorised Person
           </Checkbox>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="First Name"
-              labelPlacement="outside"
-              placeholder="Enter first name"
-              type="text"
-              isRequired
-              isDisabled={isLevel1PersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonFirstName")}
-            />
-            <Input
-              radius="sm"
-              label="Last Name"
-              labelPlacement="outside"
-              placeholder="Enter last name"
-              type="text"
-              isRequired
-              isDisabled={isLevel1PersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonLastName")}
-            />
-            <Input
-              radius="sm"
-              label="Designation"
-              labelPlacement="outside"
-              placeholder="Enter designation"
-              type="text"
-              isRequired
-              isDisabled={isLevel1PersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonDesignation")}
-            />
+            <div className="mb-4">
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                First Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="Enter first name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isLevel1PersonSameAsAuthorised}
+                {...register("level1PersonFirstName")}
+              />
+            </div>
 
-            <Input
-              radius="sm"
-              label="Phone No"
-              labelPlacement="outside"
-              placeholder="Enter phone number"
-              type="text"
-              isRequired
-              isDisabled={isLevel1PersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonPhoneNo")}
-            />
-            <Input
-              radius="sm"
-              label="Email"
-              labelPlacement="outside"
-              placeholder="Enter email"
-              type="email"
-              isRequired
-              isDisabled={isLevel1PersonSameAsAuthorised}
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonEmail")}
-            />
+            <div className="mb-4">
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                placeholder="Enter last name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isLevel1PersonSameAsAuthorised}
+                {...register("level1PersonLastName")}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="designation"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Designation <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="designation"
+                placeholder="Enter designation"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isLevel1PersonSameAsAuthorised}
+                {...register("level1PersonDesignation")}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="phoneNo"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Phone No <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="phoneNo"
+                placeholder="Enter phone number"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isLevel1PersonSameAsAuthorised}
+                {...register("level1PersonPhoneNo")}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-hrms-blue mb-1"
+              >
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+                disabled={isLevel1PersonSameAsAuthorised}
+                {...register("level1PersonEmail")}
+              />
+            </div>
+
             <Input
               radius="sm"
               label="Proof of ID"
