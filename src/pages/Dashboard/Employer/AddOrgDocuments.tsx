@@ -56,7 +56,7 @@ const AddOrgDocuments = () => {
       setValue("keyPersonProofOfId", null);
       setValue("keyPersonCriminalHistory", "");
     }
-  }, [isKeyPersonSameAsAuthorised, watchAuthorisedPerson]);
+  }, [isKeyPersonSameAsAuthorised]);
 
   // update level 1 user details when checkbox is checked
   useEffect(() => {
@@ -77,7 +77,7 @@ const AddOrgDocuments = () => {
       setValue("level1PersonProofOfId", null);
       setValue("level1PersonCriminalHistory", "");
     }
-  }, [isLevel1PersonSameAsAuthorised, watchAuthorisedPerson]);
+  }, [isLevel1PersonSameAsAuthorised]);
 
   const handleSubmitForm = async (data: FieldValues) => {
     // Create FormData object for file uploads
@@ -249,7 +249,7 @@ const AddOrgDocuments = () => {
   };
 
   return (
-    <main className="dashboard-padding">
+    <main className="dashboard-padding ">
       <h1 className="text-2xl font-medium pb-2 border-b border-hrms-blue-light">
         Add Organaisation Documents
       </h1>
@@ -610,7 +610,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="firstName"
                 placeholder="Enter first name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonFirstName")}
@@ -627,7 +627,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="keyPersonLastName"
                 placeholder="Enter last name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonLastName")}
@@ -645,7 +645,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="keyPersonDesignation"
                 placeholder="Enter designation"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonDesignation")}
@@ -663,7 +663,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="keyPersonPhoneNo"
                 placeholder="Enter phone number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonPhoneNo")}
@@ -681,7 +681,7 @@ const AddOrgDocuments = () => {
                 type="email"
                 id="keyPersonEmail"
                 placeholder="Enter email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonEmail")}
@@ -752,7 +752,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="firstName"
                 placeholder="Enter first name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonFirstName")}
@@ -770,7 +770,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="lastName"
                 placeholder="Enter last name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonLastName")}
@@ -787,7 +787,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="designation"
                 placeholder="Enter designation"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonDesignation")}
@@ -805,7 +805,7 @@ const AddOrgDocuments = () => {
                 type="text"
                 id="phoneNo"
                 placeholder="Enter phone number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonPhoneNo")}
@@ -823,7 +823,7 @@ const AddOrgDocuments = () => {
                 type="email"
                 id="email"
                 placeholder="Enter email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-hrms-blue font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
                 required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonEmail")}

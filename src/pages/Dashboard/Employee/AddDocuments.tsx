@@ -33,7 +33,6 @@ import { useState } from "react";
 
 const AddDocuments = () => {
   const { register, control, handleSubmit } = useForm();
-  const [loading, setLoading] = useState(false);
   const [educationalDetails, setEducationalDetails] = useState([
     {
       qualification: "",
@@ -58,8 +57,6 @@ const AddDocuments = () => {
       responsibilities: "",
     },
   ]);
-
-  const [submittedData, setSubmittedData] = useState<any>(null);
 
   const handleAddRow = () => {
     setEducationalDetails([
@@ -102,31 +99,161 @@ const AddDocuments = () => {
 
   const handleSubmitForm = async (data: FieldValues) => {
     console.log("Form submission triggered");
-    setLoading(true);
+    // setLoading(true);
 
     const formData = new FormData();
 
     const formattedData = {
-      ...data,
+      personalDetails: {
+        employeeCode: data.employeeCode,
+        firstName: data.firstName,
+        middleName: data.middleName,
+        lastName: data.lastName,
+        gender: data.gender,
+        niNumber: data.niNumber,
+        dateOfBirth: data.dateOfBirth,
+        maritalStatus: data.maritalStatus,
+        nationality: data.nationality,
+        email: data.email,
+        contactNo: data.contactNumber,
+        alternativeNo: data.alternativeNumber,
+      },
+      serviceDetails: {
+        department: data.department,
+        designation: data.designation,
+        dateOfJoining: data.dateOfJoining,
+        employeeType: data.employeeType,
+        dateOfConfirmation: data.dateOfConfirmation,
+        contractStartDate: data.contractStartDate,
+        contractEndDate: data.contractEndDate,
+        jobLocation: data.jobLocation,
+        profilePicture: data.profilePicture,
+      },
+      trainingDetails: {
+        department: data.department,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        jobDescription: data.jobDescription,
+      },
+      nextOfKinDetails: {
+        nextOfKinContactName: data.nextOfKinContactName,
+        nextOfKinContactRelationship: data.nextOfKinContactRelationship,
+        nextOfKinContactEmail: data.nextOfKinContactEmail,
+        nextOfKinContactNumber: data.nextOfKinContactNumber,
+        nextOfKinContactAddress: data.nextOfKinContactAddress,
+      },
+      certifiedMembership: {
+        licenseTitle: data.titleCertifiedLicense,
+        licenseNo: data.licenseNumber,
+        issueDate: data.issueDate,
+        expiryDate: data.expiryDate,
+      },
+      contactiInfo: {
+        postCode: data.postCode,
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        addressLine3: data.addressLine3,
+        city: data.city,
+        country: data.country,
+        proofOfAddress: data.proofOfAddress,
+      },
+      pasportDetails: {
+        passportNo: data.passportNumber,
+        nationality: data.passportNationality,
+        placeOfBirth: data.placeOfBirth,
+        issuedBy: data.passportIssuedBy,
+        issueDate: data.passportIssueDate,
+        expiryDate: data.passportExpiryDate,
+        eligibleReviewDate: data.passportEligibleReviewDate,
+        document: data.passportDocument,
+        remarks: data.passportRemarks,
+        isCurrentStatus: data.passportStatus,
+      },
+      visaDetails: {
+        visaNo: data.visaNumber,
+        nationality: data.visaNationality,
+        countryOfResidence: data.countryOfResidence,
+        issuedBy: data.visaIssuedBy,
+        issueDate: data.visaIssueDate,
+        expiryDate: data.visaExpiryDate,
+        eligibleReviewDate: data.visaEligibleReviewDate,
+        frontsideDocument: data.visaFrontsideDocument,
+        backsideDocument: data.visaBacksideDocument,
+        remarks: data.visaRemarks,
+        isCurrentStatus: data.visaStatus,
+      },
+      eussDetails: {
+        referenceNo: data.eussReferenceNumber,
+        nationality: data.eussNationality,
+        issueDate: data.eussIssueDate,
+        expiryDate: data.eussExpiryDate,
+        eligibleReviewDate: data.eussEligibleReviewDate,
+        document: data.eussDocument,
+        remarks: data.eussRemarks,
+        isCurrentStatus: data.eussStatus,
+      },
+      dbsDetails: {
+        type: data.dbsType,
+        referenceNo: data.dbsReferenceNumber,
+        nationality: data.dbsNationality,
+        issueDate: data.dbsIssueDate,
+        expiryDate: data.dbsExpiryDate,
+        eligibleReviewDate: data.dbsEligibleReviewDate,
+        document: data.dbsDocument,
+        remarks: data.dbsRemarks,
+        isCurrentStatus: data.dbsStatus,
+      },
+      nationalIdDetails: {
+        nationalIdNo: data.nationalIdNumber,
+        nationality: data.nationalIdNationality,
+        countryOfResidence: data.nationalIdCountryOfResidence,
+        issueDate: data.nationalIdIssueDate,
+        expiryDate: data.nationalIdExpiryDate,
+        eligibleReviewDate: data.nationalIdEligibleReviewDate,
+        document: data.nationalIdDocument,
+        remarks: data.nationalIdRemarks,
+        isCurrentStatus: data.nationalIdStatus,
+      },
+      payDetails: {
+        paymentGroup: data.payGroup,
+        wedgesPaymentMode: data.wedgesPayMode,
+        annualPay: data.annualPay,
+        paymentType: data.paymentType,
+        basicDailyWedges: data.basicDailyWedges,
+        minWorkingHour: data.minWorkingHour,
+        rate: data.rate,
+        taxCode: data.taxCode,
+        taxReference: data.taxReference,
+        paymentMode: data.paymentMode,
+        bankName: data.bankName,
+        branchName: data.branchName,
+        accountNo: data.accountNo,
+        sortCode: data.sortCode,
+        paymentCurrency: data.paymentCurrency,
+      },
+      payStructure: {
+        taxablePayment: data.taxables,
+        deductions: data.deductions,
+      },
       educationDetails: educationalDetails,
       jobDetails: jobDetails,
     };
+    console.log("Form Data:", formattedData);
 
-    formData.append("data", JSON.stringify(formattedData));
+    // formData.append("data", JSON.stringify(formattedData));
 
-    try {
-      // Example: await axios.post('/api/submit', formData);
-      console.log("Form Data:", formattedData);
-      console.log("Education Details:", educationalDetails);
-      console.log("Job Details:", jobDetails);
+    // try {
+    //   // Example: await axios.post('/api/submit', formData);
+    //   // console.log("Education Details:", educationalDetails);
+    //   // console.log("Job Details:", jobDetails);
 
-      setSubmittedData(formattedData);
-      // reset(); // Optional
-    } catch (error) {
-      console.error("Submission error:", error);
-    } finally {
-      setLoading(false);
-    }
+    //   setSubmittedData(formattedData);
+    //   // reset(); // Optional
+    // } catch (error) {
+    //   console.error("Submission error:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -136,7 +263,7 @@ const AddDocuments = () => {
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         {/* Employee personal details */}
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Personal Details
           </h1>
@@ -186,6 +313,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Gender"
                   radius="sm"
                   label="Gender"
                   className="text-hrms-blue font-semibold"
@@ -223,25 +351,23 @@ const AddDocuments = () => {
             <Controller
               name="dateOfBirth"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Date of Birth"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Date of Birth"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -251,6 +377,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Marital Status"
                   radius="sm"
                   label="Marital Status"
                   className="text-hrms-blue font-semibold"
@@ -276,6 +403,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="Nationality"
                   radius="sm"
                   label="Nationality"
                   className="text-hrms-blue font-semibold"
@@ -330,8 +458,9 @@ const AddDocuments = () => {
             />
           </div>
         </div>
+
         {/* Service details */}
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Service Details
           </h1>
@@ -357,25 +486,23 @@ const AddDocuments = () => {
             <Controller
               name="dateOfJoining"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Date of Joining"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Date of Joining"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                   // Don't pass ref to DatePicker
                 />
               )}
@@ -385,6 +512,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Employee Type"
                   radius="sm"
                   label="Employee Type"
                   className="text-hrms-blue font-semibold"
@@ -408,78 +536,69 @@ const AddDocuments = () => {
             <Controller
               name="dateOfConfirmation"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Date of Confirmation"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Date of Confirmation"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
-                  // Don't pass ref to DatePicker
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
             <Controller
               name="contractStartDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Contract Start Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Contract Start Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
-                  // Don't pass ref to DatePicker
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
             <Controller
               name="contractEndDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Contract End Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Contract End Date (if applicable)"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
-                  // Don't pass ref to DatePicker
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -500,7 +619,7 @@ const AddDocuments = () => {
               className="text-hrms-blue font-semibold"
               {...register("profilePicture")}
             />
-            <Input
+            {/* <Input
               radius="sm"
               label="Reporting Authority"
               labelPlacement="outside"
@@ -517,12 +636,12 @@ const AddDocuments = () => {
               type="text"
               className="text-hrms-blue font-semibold"
               {...register("leaveSanctionAuthority")}
-            />
+            /> */}
           </div>
         </div>
-        {/* Educational details */}
 
-        <div>
+        {/* Educational details */}
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Educational Details
           </h1>
@@ -681,7 +800,7 @@ const AddDocuments = () => {
         </div>
 
         {/* Job Details */}
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Job Details
           </h1>
@@ -800,8 +919,7 @@ const AddDocuments = () => {
         </div>
 
         {/* training details details */}
-
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Training Details
           </h1>
@@ -819,25 +937,23 @@ const AddDocuments = () => {
               name="startDate"
               control={control}
               rules={{ required: "Start Date is required" }}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Start Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Start Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -846,25 +962,23 @@ const AddDocuments = () => {
               name="endDate"
               control={control}
               rules={{ required: "End Date is required" }}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="End Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="End Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -876,12 +990,13 @@ const AddDocuments = () => {
               maxRows={5}
               minRows={5}
               className="text-hrms-blue font-semibold col-span-1 row-span-2"
+              {...register("jobDescription")}
             />
           </div>
         </div>
 
         {/*  Next of Kin Information */}
-        <div>
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Emergency / Next of Kin Contact Details
           </h1>
@@ -893,6 +1008,7 @@ const AddDocuments = () => {
               placeholder="Enter name"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("nextOfKinContactName")}
             />
             <Input
               radius="sm"
@@ -901,6 +1017,7 @@ const AddDocuments = () => {
               placeholder="Enter relationship"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("nextOfKinContactRelationship")}
             />
             <Input
               radius="sm"
@@ -909,6 +1026,7 @@ const AddDocuments = () => {
               placeholder="Enter contact email"
               type="tel"
               className="text-hrms-blue font-semibold"
+              {...register("nextOfKinContactEmail")}
             />
             <Input
               radius="sm"
@@ -917,6 +1035,7 @@ const AddDocuments = () => {
               placeholder="Enter contact number"
               type="tel"
               className="text-hrms-blue font-semibold"
+              {...register("nextOfKinContactNumber")}
             />
             <Input
               radius="sm"
@@ -925,12 +1044,13 @@ const AddDocuments = () => {
               placeholder="Enter address"
               type="text"
               className="text-hrms-blue font-semibold"
+              {...register("nextOfKinContactAddress")}
             />
           </div>
         </div>
-        {/* Certified Membership */}
 
-        <div>
+        {/* Certified Membership */}
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Certified Membership
           </h1>
@@ -956,25 +1076,23 @@ const AddDocuments = () => {
             <Controller
               name="issueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-lable="Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -983,25 +1101,23 @@ const AddDocuments = () => {
             <Controller
               name="expiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1057,13 +1173,14 @@ const AddDocuments = () => {
               placeholder="Enter city / county"
               type="text"
               className="text-hrms-blue font-semibold"
-              {...register("cityCounty")}
+              {...register("city")}
             />
             <Controller
               name="country"
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Country"
                   radius="sm"
                   label="Country"
                   className="text-hrms-blue font-semibold"
@@ -1115,6 +1232,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="Passport Nationlity"
                   radius="sm"
                   label="Nationality (Passport)"
                   className="text-hrms-blue font-semibold"
@@ -1162,6 +1280,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <DatePicker
+                  aria-label="Passport Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Passport Issue Date"
@@ -1185,6 +1304,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <DatePicker
+                  aria-label="Passport Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Passport Expiry Date"
@@ -1208,6 +1328,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <DatePicker
+                  aria-label="Passport Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Passport Eligible Review Date"
@@ -1244,29 +1365,19 @@ const AddDocuments = () => {
               {...register("passportRemarks")}
             />
             <Controller
-              name="isCurrentPassport"
+              name="passportStatus"
               control={control}
               render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Is this your current passport?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
+                <RadioGroup
+                  aria-label="Is this your current status?"
+                  label="Is this your current status?"
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
               )}
             />
           </div>
@@ -1292,6 +1403,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="Visa Nationality"
                   radius="sm"
                   label="Nationality"
                   className="text-hrms-blue font-semibold"
@@ -1320,6 +1432,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Country of Residence"
                   radius="sm"
                   label="Country of Residence"
                   className="text-hrms-blue font-semibold"
@@ -1353,25 +1466,23 @@ const AddDocuments = () => {
             <Controller
               name="visaIssueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-lable="Visa Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Visa Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1380,25 +1491,23 @@ const AddDocuments = () => {
             <Controller
               name="visaExpiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Visa Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Visa Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1407,25 +1516,23 @@ const AddDocuments = () => {
             <Controller
               name="visaEligibleReviewDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Visa Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Visa Eligible Review Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1455,29 +1562,19 @@ const AddDocuments = () => {
               {...register("visaRemarks")}
             />
             <Controller
-              name="isCurrentVisa"
+              name="visaStatus"
               control={control}
               render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Is this your current Visa?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
+                <RadioGroup
+                  aria-label="Is this your current status?"
+                  label="Is this your current status?"
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
               )}
             />
           </div>
@@ -1503,6 +1600,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="EUSS Nationality"
                   radius="sm"
                   label="Nationality"
                   className="text-hrms-blue font-semibold"
@@ -1531,25 +1629,23 @@ const AddDocuments = () => {
             <Controller
               name="eussIssueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="EUSS Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1558,25 +1654,23 @@ const AddDocuments = () => {
             <Controller
               name="eussExpiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="EUSS Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1585,25 +1679,23 @@ const AddDocuments = () => {
             <Controller
               name="eussEligibleReviewDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="EUSS Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Eligible Review Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1625,29 +1717,19 @@ const AddDocuments = () => {
               {...register("eussRemarks")}
             />
             <Controller
-              name="isCurrentEussStatus"
+              name="eussStatus"
               control={control}
               render={({ field }) => (
-                <Select
-                  radius="sm"
+                <RadioGroup
+                  aria-label="Is this your current status?"
                   label="Is this your current status?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
               )}
             />
           </div>
@@ -1664,6 +1746,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="DBS Type"
                   radius="sm"
                   label="DBS Type"
                   className="text-hrms-blue font-semibold"
@@ -1705,79 +1788,71 @@ const AddDocuments = () => {
             <Controller
               name="dbsIssueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="DBS Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
 
-            {/* DBS Expiry Date */}
             <Controller
               name="dbsExpiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="DBS Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
 
-            {/* Note: There was a duplicate dbsExpiryDate which I'm assuming should be dbsEligibleReviewDate */}
             <Controller
               name="dbsEligibleReviewDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="DBS Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Eligible Review Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1799,29 +1874,19 @@ const AddDocuments = () => {
               {...register("dbsRemarks")}
             />
             <Controller
-              name="isCurrentDbsStatus"
+              name="dbsStatus"
               control={control}
               render={({ field }) => (
-                <Select
-                  radius="sm"
+                <RadioGroup
+                  aria-label="Is this your current status?"
                   label="Is this your current status?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
               )}
             />
           </div>
@@ -1847,6 +1912,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="National Id Nationality"
                   radius="sm"
                   label="Nationality"
                   className="text-hrms-blue font-semibold"
@@ -1875,6 +1941,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Country of Residence"
                   radius="sm"
                   label="Country of Residence"
                   className="text-hrms-blue font-semibold"
@@ -1899,25 +1966,23 @@ const AddDocuments = () => {
             <Controller
               name="nationalIdIssueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="National Id Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1925,25 +1990,23 @@ const AddDocuments = () => {
             <Controller
               name="nationalIdExpiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Visa Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Visa Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1951,25 +2014,23 @@ const AddDocuments = () => {
             <Controller
               name="nationalIdEligibleReviewDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Visa Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Visa Eligible Review Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -1979,15 +2040,7 @@ const AddDocuments = () => {
               labelPlacement="outside"
               type="file"
               className="text-hrms-blue font-semibold"
-              {...register("nationalIdDocumentFrontSide")}
-            />
-            <Input
-              radius="sm"
-              label="National Id Document Back Side"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("nationalIdDocumentBackSide")}
+              {...register("nationalIdDocument")}
             />
             <Input
               radius="sm"
@@ -1999,29 +2052,19 @@ const AddDocuments = () => {
               {...register("nationalIdRemarks")}
             />
             <Controller
-              name="isCurrentNationalIdStatus"
+              name="nationalIdStatus"
               control={control}
               render={({ field }) => (
-                <Select
-                  radius="sm"
+                <RadioGroup
+                  aria-label="Is this your current status?"
                   label="Is this your current status?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
+                  orientation="horizontal"
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
               )}
             />
           </div>
@@ -2040,7 +2083,7 @@ const AddDocuments = () => {
               placeholder="Enter Document name."
               type="text"
               className="text-hrms-blue font-semibold"
-              {...register("documentName")}
+              {...register("othersDocumentName")}
             />
             <Input
               radius="sm"
@@ -2049,13 +2092,14 @@ const AddDocuments = () => {
               placeholder="Enter document reference number."
               type="text"
               className="text-hrms-blue font-semibold"
-              {...register("documentReferenceNumber")}
+              {...register("othersDocumentReferenceNumber")}
             />
             <Controller
-              name="nationalIdNationality"
+              name="othersNationality"
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-lable="Others Document Nationality"
                   radius="sm"
                   label="Nationality"
                   className="text-hrms-blue font-semibold"
@@ -2081,81 +2125,75 @@ const AddDocuments = () => {
             />
 
             <Controller
-              name="issueDate"
+              name="othersIssueDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Others Document Issue Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Issue Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
 
             {/* Expiry Date */}
             <Controller
-              name="expiryDate"
+              name="othersExpiryDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Others Document Expiry Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Expiry Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
 
             {/* Eligible Review Date */}
             <Controller
-              name="eligibleReviewDate"
+              name="othersEligibleReviewDate"
               control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
+              render={({ field }) => (
                 <DatePicker
+                  aria-label="Eligible Review Date"
                   radius="sm"
                   className="text-hrms-blue font-semibold"
                   label="Eligible Review Date"
                   labelPlacement="outside"
-                  name={name}
-                  onChange={(date) => {
-                    if (date) {
-                      onChange(
-                        format(
-                          new Date(date.year, date.month - 1, date.day),
-                          "dd-MM-yyyy"
-                        )
-                      );
-                    } else {
-                      onChange("");
-                    }
-                  }}
+                  onChange={(date) =>
+                    field.onChange(
+                      date
+                        ? format(
+                            new Date(date.year, date.month - 1, date.day),
+                            "dd-MM-yyyy"
+                          )
+                        : ""
+                    )
+                  }
                 />
               )}
             />
@@ -2166,14 +2204,23 @@ const AddDocuments = () => {
               labelPlacement="outside"
               type="file"
               className="text-hrms-blue font-semibold"
-              {...register("uploadDocument")}
+              {...register("othersUploadDocument")}
             />
-
+            <Input
+              radius="sm"
+              label="Remarks"
+              labelPlacement="outside"
+              placeholder="Enter remarks"
+              type="text"
+              className="text-hrms-blue font-semibold"
+              {...register("remarks")}
+            />
             <Controller
-              name="status"
+              name="othersStatus"
               control={control}
               render={({ field }) => (
                 <RadioGroup
+                  aria-label="Is this your current status?"
                   label="Is this your current status?"
                   orientation="horizontal"
                   value={field.value}
@@ -2183,16 +2230,6 @@ const AddDocuments = () => {
                   <Radio value="no">No</Radio>
                 </RadioGroup>
               )}
-            />
-
-            <Input
-              radius="sm"
-              label="Remarks"
-              labelPlacement="outside"
-              placeholder="Enter remarks"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("remarks")}
             />
           </div>
         </div>
@@ -2208,6 +2245,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Pay Group"
                   radius="sm"
                   label="Pay Group"
                   className="text-hrms-blue font-semibold"
@@ -2229,10 +2267,11 @@ const AddDocuments = () => {
               )}
             />
             <Controller
-              name="wedgesPaymode"
+              name="wedgesPayMode"
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Wedges Pay Mode"
                   radius="sm"
                   label="Wedges pay mode"
                   className="text-hrms-blue font-semibold"
@@ -2261,6 +2300,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Annual Pay"
                   radius="sm"
                   label="Annual Pay"
                   className="text-hrms-blue font-semibold"
@@ -2286,6 +2326,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Payment Type"
                   radius="sm"
                   label="Payment Type"
                   className="text-hrms-blue font-semibold"
@@ -2342,6 +2383,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Tax Code"
                   radius="sm"
                   label="Tax Code"
                   className="text-hrms-blue font-semibold"
@@ -2374,7 +2416,7 @@ const AddDocuments = () => {
 
             <Input
               radius="sm"
-              label="Remarks"
+              label="Tax Percentage"
               labelPlacement="outside"
               placeholder="Tax Percentage"
               type="text"
@@ -2386,6 +2428,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Payment Mode"
                   radius="sm"
                   label="Payment Mode"
                   className="text-hrms-blue font-semibold"
@@ -2414,6 +2457,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Bank Name"
                   radius="sm"
                   label="Bank Name"
                   className="text-hrms-blue font-semibold"
@@ -2467,6 +2511,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Payment Currency"
                   radius="sm"
                   label="Payment Currency"
                   className="text-hrms-blue font-semibold"
@@ -2493,7 +2538,7 @@ const AddDocuments = () => {
           </div>
         </div>
 
-        {/* other Details */}
+        {/* pay straucture */}
         <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Pay Structure
@@ -2504,6 +2549,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <CheckboxGroup
+                  aria-label="Payment (Taxable)"
                   label="Payment (Taxable)"
                   orientation="horizontal"
                   value={field.value}
@@ -2518,11 +2564,12 @@ const AddDocuments = () => {
               )}
             />
             <Controller
-              name="deductio"
+              name="deductions"
               control={control}
               render={({ field }) => (
                 <CheckboxGroup
-                  label="Deductio"
+                  aria-label="Deduction"
+                  label="Deductions"
                   orientation="horizontal"
                   value={field.value}
                   onValueChange={field.onChange}
@@ -2549,6 +2596,7 @@ const AddDocuments = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  aria-label="Verification Status"
                   radius="sm"
                   label="Verification Status"
                   className="text-hrms-blue font-semibold"
@@ -2582,10 +2630,9 @@ const AddDocuments = () => {
             <Button
               type="submit"
               color="primary"
-              disabled={loading}
               className="bg-hrms-blue text-white"
             >
-              {loading ? "Submitting..." : "Submit"}
+              Submit
             </Button>
           </div>
           <h5 className="text-lg font-medium text-red-600">
