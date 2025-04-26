@@ -533,7 +533,9 @@ const AddOrgDocuments = () => {
                 className="text-hrms-blue font-semibold"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  setValue("logo", file, { shouldValidate: true }); // trigger validation manually
+                  if (file) {
+                    setValue("logo", file, { shouldValidate: true });
+                  }
                 }}
               />
 
