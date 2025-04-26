@@ -1,5 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Checkbox, Input, Select, SelectItem } from "@heroui/react";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Radio,
+  RadioGroup,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 import {
   countries,
   organizationFileFields,
@@ -8,11 +16,16 @@ import {
   tradingPeriods,
 } from "../../../data";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAddOrgDocumentsMutation } from "../../../redux/features/employer/addOrgDocumentsApi";
 import { toast } from "sonner";
-// import { useAppSelector } from "../../../redux/hooks";
-// import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  addOrgDocumentsSchema,
+  FormSchemaType,
+} from "../../../schemas/addOrgDocumentsSchema";
+import { useAppSelector } from "../../../redux/hooks";
+import { useCurrentUser } from "../../../redux/features/auth/authSlice";
 
 const AddOrgDocuments = () => {
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
@@ -20,11 +33,22 @@ const AddOrgDocuments = () => {
   const [isLevel1PersonSameAsAuthorised, setIsLevel1PersonSameAsAuthorised] =
     useState(false);
 
-  const { register, control, handleSubmit, watch, setValue } = useForm();
+  const user = useAppSelector(useCurrentUser);
+
+  const formSchema = useMemo(() => addOrgDocumentsSchema(user?.email), [user]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+  });
 
   const [addOrgDocuments] = useAddOrgDocumentsMutation();
-  // const user = useAppSelector(useCurrentUser);
-  // console.log("user", user?.email);
 
   // watch authorise person details
   const watchAuthorisedPerson = watch([
@@ -87,12 +111,12 @@ const AddOrgDocuments = () => {
     const formattedData = {
       // Organization Details section
       organisationDetails: {
-        name: data.organizationName,
-        type: data.organizationType,
+        name: data.organisationName,
+        type: data.organisationType,
         registrationNo: data.registrationNumber,
         contactNo: data.contactNumber,
         loginEmail: data.loginEmail,
-        organisationEmail: data.organizationEmail,
+        organisationEmail: data.organisationEmail,
         websiteURL: data.websiteURL,
         landlineNo: data.landlineNumber,
         tradingName: data.tradingName,
@@ -110,6 +134,7 @@ const AddOrgDocuments = () => {
         phoneNo: data.phoneNo,
         email: data.email,
         criminalHistory: data.criminalHistory,
+        proofOfId: "",
       },
 
       // Key Contact Person section
@@ -120,6 +145,7 @@ const AddOrgDocuments = () => {
         phoneNo: data.keyPersonPhoneNo,
         email: data.keyPersonEmail,
         criminalHistory: data.keyPersonCriminalHistory,
+        proofOfId: "",
       },
 
       // Level 1 User section
@@ -130,6 +156,7 @@ const AddOrgDocuments = () => {
         phoneNo: data.level1PersonPhoneNo,
         email: data.level1PersonEmail,
         criminalHistory: data.level1PersonCriminalHistory,
+        proofOfId: "",
       },
 
       // Organisation Address section
@@ -208,23 +235,24 @@ const AddOrgDocuments = () => {
       },
     };
 
-    console.log("Formatted Data:", formattedData);
+    // console.log("Formatted Data:", formattedData);
     //append formattedData to formData as a JSON string
     formData.append("data", JSON.stringify(formattedData));
 
-    // Append files to FormData
+    // // Append files to FormData
     organizationFileFields.forEach((field) => {
-      const file = data[field]?.[0];
+      const file = data[field];
+
       if (file) {
         formData.append(field, file);
       }
     });
 
     if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
-      formData.append("keyPersonProofOfId", data.keyPersonProofOfId?.[0]);
+      formData.append("keyPersonProofOfId", data.keyPersonProofOfId);
     }
     if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
-      formData.append("level1PersonProofOfId", data.level1PersonProofOfId?.[0]);
+      formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
     }
 
     // console.log("FormData entries:");
@@ -235,15 +263,15 @@ const AddOrgDocuments = () => {
     const toastId = toast.loading("Adding organisation documents...");
 
     try {
-      const res = await addOrgDocuments(formData).unwrap();
+      await addOrgDocuments(formData).unwrap();
       // const res = await addOrgDocuments(formattedData).unwrap();
-      console.log("Response:", res);
+      // console.log("Response:", res);
       toast.success("Organisation documents added successfully", {
         id: toastId,
         duration: 2000,
       });
     } catch (err: any) {
-      console.log("Error:", err);
+      // console.log("Error:", err);
       toast.error(err.data.message, { id: toastId, duration: 2000 });
     }
   };
@@ -260,233 +288,311 @@ const AddOrgDocuments = () => {
             Organisation Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="Organisation Name"
-              labelPlacement="outside"
-              placeholder="Enter organisation name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("organizationName")}
-            />
-            <Controller
-              name="organizationType"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Type of Organisation"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Select organisation type"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  {organizationTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.value}
-                    </SelectItem>
-                  ))}
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="Organisation Name"
+                labelPlacement="outside"
+                placeholder="Enter organisation name"
+                type="text"
+                // isRequired
+                className="text-hrms-blue font-semibold"
+                {...register("organisationName")}
+              />
+              {errors.organisationName && (
+                <small className="text-red-700 font-medium">
+                  {errors.organisationName?.message}
+                </small>
               )}
-            />
+            </div>
 
-            <Input
-              radius="sm"
-              label="Registration Number"
-              labelPlacement="outside"
-              placeholder="Enter organisation registration number"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("registrationNumber")}
-            />
-
-            <Input
-              radius="sm"
-              label="Contact No"
-              labelPlacement="outside"
-              placeholder="Enter organisation contact number"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("contactNumber")}
-            />
-            <Input
-              radius="sm"
-              label="LogIn Email"
-              labelPlacement="outside"
-              placeholder="Enter LogIn email"
-              type="email"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("loginEmail")}
-            />
-            <Input
-              radius="sm"
-              label="Organisation Email"
-              labelPlacement="outside"
-              placeholder="Enter organisation email"
-              type="email"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("organizationEmail")}
-            />
-            <Input
-              radius="sm"
-              label="Website URL"
-              labelPlacement="outside"
-              placeholder="Enter organisation website URL"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("websiteURL")}
-            />
-
-            <Input
-              radius="sm"
-              label="Landline No"
-              labelPlacement="outside"
-              placeholder="Enter organisation landline number"
-              type="text"
-              required
-              className="text-hrms-blue font-semibold"
-              {...register("landlineNumber")}
-            />
-            <Input
-              radius="sm"
-              label="Trading Name"
-              labelPlacement="outside"
-              placeholder="Enter organisation trading name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("tradingName")}
-            />
-            <Controller
-              name="tradingPeriod"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Trading Period"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Select trading period"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  {tradingPeriods.map((period) => (
-                    <SelectItem key={period.value} value={period.value}>
-                      {period.value}
-                    </SelectItem>
-                  ))}
-                </Select>
+            <div>
+              <Controller
+                name="organisationType"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    radius="sm"
+                    label="Type of Organisation"
+                    className="text-hrms-blue font-semibold"
+                    labelPlacement="outside"
+                    placeholder="Select organisation type"
+                    selectedKeys={
+                      field.value ? new Set([field.value]) : new Set()
+                    } // Ensure proper binding
+                    onSelectionChange={(keys) =>
+                      field.onChange(Array.from(keys)[0])
+                    } // Extract single value from Set
+                  >
+                    {organizationTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.value}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+              />
+              {errors.organisationType && (
+                <small className="text-red-700 font-medium">
+                  {errors.organisationType?.message}
+                </small>
               )}
-            />
+            </div>
 
-            <Controller
-              name="sector"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Name of Sector"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Select sector"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  {sectorsName.map((sector) => (
-                    <SelectItem key={sector.value} value={sector.value}>
-                      {sector.value}
-                    </SelectItem>
-                  ))}
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="Registration Number"
+                labelPlacement="outside"
+                placeholder="Enter organisation registration number"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("registrationNumber")}
+              />
+              {errors.registrationNumber && (
+                <small className="text-red-700 font-medium">
+                  {errors.registrationNumber?.message}
+                </small>
               )}
-            />
+            </div>
 
-            <Input
-              radius="sm"
-              label="Organisation Logo"
-              labelPlacement="outside"
-              type="file"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("logo")}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-5 pt-5">
-            <Controller
-              name="nameChangeLast5Years"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                  className="text-hrms-blue font-semibold"
-                  placeholder="Select Yes or No"
-                  isRequired
-                  labelPlacement="outside"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="Contact No"
+                labelPlacement="outside"
+                placeholder="Enter organisation contact number"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("contactNumber")}
+              />
+              {errors.contactNumber && (
+                <small className="text-red-700 font-medium">
+                  {errors.contactNumber?.message}
+                </small>
               )}
-            />
+            </div>
 
-            <Controller
-              name="penaltyLast3Years"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="LogIn Email"
+                labelPlacement="outside"
+                placeholder="Enter LogIn email"
+                type="email"
+                className="text-hrms-blue font-semibold"
+                {...register("loginEmail")}
+              />
+              {errors.loginEmail && (
+                <small className="text-red-700 font-medium">
+                  {errors.loginEmail?.message}
+                </small>
               )}
-            />
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Organisation Email"
+                labelPlacement="outside"
+                placeholder="Enter organisation email"
+                type="email"
+                className="text-hrms-blue font-semibold"
+                {...register("organisationEmail")}
+              />
+              {errors.organisationEmail && (
+                <small className="text-red-700 font-medium">
+                  {errors.organisationEmail?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Website URL"
+                labelPlacement="outside"
+                placeholder="Enter organisation website URL"
+                type="url"
+                className="text-hrms-blue font-semibold"
+                {...register("websiteURL")}
+              />
+              {errors.websiteURL && (
+                <small className="text-red-700 font-medium">
+                  {errors.websiteURL?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Landline No"
+                labelPlacement="outside"
+                placeholder="Enter organisation landline number"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("landlineNumber")}
+              />
+              {errors.landlineNumber && (
+                <small className="text-red-700 font-medium">
+                  {errors.landlineNumber?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Trading Name"
+                labelPlacement="outside"
+                placeholder="Enter organisation trading name"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("tradingName")}
+              />
+              {errors.tradingName && (
+                <small className="text-red-700 font-medium">
+                  {errors.tradingName?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Controller
+                name="tradingPeriod"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    radius="sm"
+                    label="Trading Period"
+                    className="text-hrms-blue font-semibold"
+                    labelPlacement="outside"
+                    placeholder="Select trading period"
+                    selectedKeys={
+                      field.value ? new Set([field.value]) : new Set()
+                    } // Ensure proper binding
+                    onSelectionChange={(keys) =>
+                      field.onChange(Array.from(keys)[0])
+                    } // Extract single value from Set
+                  >
+                    {tradingPeriods.map((period) => (
+                      <SelectItem key={period.value} value={period.value}>
+                        {period.value}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+              />
+              {errors.tradingPeriod && (
+                <small className="text-red-700 font-medium">
+                  {errors.tradingPeriod?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Controller
+                name="sector"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    radius="sm"
+                    label="Name of Sector"
+                    className="text-hrms-blue font-semibold"
+                    labelPlacement="outside"
+                    placeholder="Select sector"
+                    selectedKeys={
+                      field.value ? new Set([field.value]) : new Set()
+                    } // Ensure proper binding
+                    onSelectionChange={(keys) =>
+                      field.onChange(Array.from(keys)[0])
+                    } // Extract single value from Set
+                  >
+                    {sectorsName.map((sector) => (
+                      <SelectItem key={sector.value} value={sector.value}>
+                        {sector.value}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+              />
+              {errors.sector && (
+                <small className="text-red-700 font-medium">
+                  {errors.sector?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Organisation Logo"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  setValue("logo", file, { shouldValidate: true }); // trigger validation manually
+                }}
+              />
+
+              {errors.logo && (
+                <small className="text-red-700 font-medium">
+                  {String(errors.logo.message)}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Controller
+                name="nameChangeLast5Years"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    aria-label="Have you changed Organisation Name/Trading Name in the last 5 years?"
+                    label="Have you changed Organisation Name/Trading Name in the last 5 years?"
+                    orientation="horizontal"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="text-base font-medium "
+                  >
+                    <Radio value="Yes">Yes</Radio>
+                    <Radio value="No">No</Radio>
+                  </RadioGroup>
+                )}
+              />
+              {errors.nameChangeLast5Years && (
+                <small className="text-red-700 font-medium">
+                  {errors.nameChangeLast5Years?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Controller
+                name="penaltyLast3Years"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    aria-label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
+                    label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
+                    orientation="horizontal"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="text-base font-medium "
+                  >
+                    <Radio value="Yes">Yes</Radio>
+                    <Radio value="No">No</Radio>
+                  </RadioGroup>
+                )}
+              />
+              {errors.penaltyLast3Years && (
+                <small className="text-red-700 font-medium">
+                  {errors.penaltyLast3Years?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
 
@@ -496,93 +602,138 @@ const AddOrgDocuments = () => {
             Authorised Person Details
           </h3>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="First Name"
-              labelPlacement="outside"
-              placeholder="Enter first name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("firstName")}
-            />
-            <Input
-              radius="sm"
-              label="Last Name"
-              labelPlacement="outside"
-              placeholder="Enter last name"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("lastName")}
-            />
-            <Input
-              radius="sm"
-              label="Designation"
-              labelPlacement="outside"
-              placeholder="Enter designation"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("designation")}
-            />
-
-            <Input
-              radius="sm"
-              label="Phone No"
-              labelPlacement="outside"
-              placeholder="Enter phone number"
-              type="text"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("phoneNo")}
-            />
-            <Input
-              radius="sm"
-              label="Email"
-              labelPlacement="outside"
-              placeholder="Enter email"
-              type="email"
-              isRequired
-              className="text-hrms-blue font-semibold"
-              {...register("email")}
-            />
-            <Input
-              radius="sm"
-              label="Proof of ID"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("proofOfId")}
-            />
-
-            <Controller
-              name="criminalHistory"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Do you have a histroy of criminal conviction/Bankrupty/Disqualification?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="First Name"
+                labelPlacement="outside"
+                placeholder="Enter first name"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("firstName")}
+              />
+              {errors.firstName && (
+                <small className="text-red-700 font-medium">
+                  {errors.firstName?.message}
+                </small>
               )}
-            />
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Last Name"
+                labelPlacement="outside"
+                placeholder="Enter last name"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("lastName")}
+              />
+              {errors.lastName && (
+                <small className="text-red-700 font-medium">
+                  {errors.lastName?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Designation"
+                labelPlacement="outside"
+                placeholder="Enter designation"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("designation")}
+              />
+              {errors.designation && (
+                <small className="text-red-700 font-medium">
+                  {errors.designation?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Phone No"
+                labelPlacement="outside"
+                placeholder="Enter phone number"
+                type="text"
+                className="text-hrms-blue font-semibold"
+                {...register("phoneNo")}
+              />
+              {errors.phoneNo && (
+                <small className="text-red-700 font-medium">
+                  {errors.phoneNo?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Email"
+                labelPlacement="outside"
+                placeholder="Enter email"
+                type="email"
+                className="text-hrms-blue font-semibold"
+                {...register("email")}
+              />
+              {errors.email && (
+                <small className="text-red-700 font-medium">
+                  {errors.email?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Proof of ID"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("proofOfId", file, { shouldValidate: true });
+                  }
+                }}
+              />
+              {errors.penaltyLast3Years && (
+                <small className="text-red-700 font-medium">
+                  {errors.proofOfId?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Controller
+                name="criminalHistory"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    aria-label="Do you have a history of Criminal
+conviction/Bankruptcy/Disqualification?"
+                    label="Do you have a history of Criminal
+conviction/Bankruptcy/Disqualification?"
+                    orientation="horizontal"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="text-base font-medium "
+                  >
+                    <Radio value="Yes">Yes</Radio>
+                    <Radio value="No">No</Radio>
+                  </RadioGroup>
+                )}
+              />
+              {errors.criminalHistory && (
+                <small className="text-red-700 font-medium">
+                  {errors.criminalHistory?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
 
@@ -599,132 +750,165 @@ const AddOrgDocuments = () => {
             If Same As Authorised Person
           </Checkbox>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="firstName"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                First Name <span className="text-red-500">*</span>
+                First Name
               </label>
               <input
                 type="text"
                 id="firstName"
                 placeholder="Enter first name"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonFirstName")}
               />
+              {errors.keyPersonFirstName && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonFirstName?.message}
+                </small>
+              )}
             </div>
-            <div className="mb-4">
+
+            <div>
               <label
                 htmlFor="keyPersonLastName"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Last Name <span className="text-red-500">*</span>
+                Last Name
               </label>
               <input
                 type="text"
                 id="keyPersonLastName"
                 placeholder="Enter last name"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonLastName")}
               />
+              {errors.keyPersonLastName && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonLastName?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="keyPersonDesignation"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Designation <span className="text-red-500">*</span>
+                Designation
               </label>
               <input
                 type="text"
                 id="keyPersonDesignation"
                 placeholder="Enter designation"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonDesignation")}
               />
+              {errors.keyPersonDesignation && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonDesignation?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="keyPersonPhoneNo"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Phone No <span className="text-red-500">*</span>
+                Phone No
               </label>
               <input
                 type="text"
                 id="keyPersonPhoneNo"
                 placeholder="Enter phone number"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonPhoneNo")}
               />
+              {errors.keyPersonPhoneNo && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonPhoneNo?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="keyPersonEmail"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Email <span className="text-red-500">*</span>
+                Email
               </label>
               <input
                 type="email"
                 id="keyPersonEmail"
                 placeholder="Enter email"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isKeyPersonSameAsAuthorised}
                 {...register("keyPersonEmail")}
               />
+              {errors.keyPersonEmail && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonEmail?.message}
+                </small>
+              )}
             </div>
 
-            <Input
-              radius="sm"
-              label="Proof of ID"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("keyPersonProofOfId")}
-            />
-
-            <Controller
-              name="keyPersonCriminalHistory"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Do you have a histroy of criminal conviction/Bankrupty/Disqualification?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  isDisabled={isKeyPersonSameAsAuthorised}
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="Proof of ID"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("keyPersonProofOfId", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.keyPersonProofOfId && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonProofOfId?.message}
+                </small>
               )}
-            />
+            </div>
+
+            <div>
+              <Controller
+                name="keyPersonCriminalHistory"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    aria-label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+                    label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+                    orientation="horizontal"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="text-base font-medium "
+                  >
+                    <Radio value="Yes">Yes</Radio>
+                    <Radio value="No">No</Radio>
+                  </RadioGroup>
+                )}
+              />
+              {errors.keyPersonCriminalHistory && (
+                <small className="text-red-700 font-medium">
+                  {errors.keyPersonCriminalHistory?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
 
@@ -741,132 +925,165 @@ const AddOrgDocuments = () => {
             If Same As Authorised Person
           </Checkbox>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="firstName"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                First Name <span className="text-red-500">*</span>
+                First Name
               </label>
               <input
                 type="text"
                 id="firstName"
                 placeholder="Enter first name"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonFirstName")}
               />
+              {errors.level1PersonFirstName && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonFirstName?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="lastName"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Last Name <span className="text-red-500">*</span>
+                Last Name
               </label>
               <input
                 type="text"
                 id="lastName"
                 placeholder="Enter last name"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonLastName")}
               />
+              {errors.level1PersonLastName && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonLastName?.message}
+                </small>
+              )}
             </div>
-            <div className="mb-4">
+
+            <div>
               <label
                 htmlFor="designation"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Designation <span className="text-red-500">*</span>
+                Designation
               </label>
               <input
                 type="text"
                 id="designation"
                 placeholder="Enter designation"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonDesignation")}
               />
+              {errors.level1PersonDesignation && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonDesignation?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="phoneNo"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Phone No <span className="text-red-500">*</span>
+                Phone No
               </label>
               <input
                 type="text"
                 id="phoneNo"
                 placeholder="Enter phone number"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonPhoneNo")}
               />
+              {errors.level1PersonPhoneNo && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonPhoneNo?.message}
+                </small>
+              )}
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="email"
                 className="block text-sm font-semibold text-hrms-blue mb-1"
               >
-                Email <span className="text-red-500">*</span>
+                Email
               </label>
               <input
                 type="email"
                 id="email"
                 placeholder="Enter email"
                 className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                required
                 disabled={isLevel1PersonSameAsAuthorised}
                 {...register("level1PersonEmail")}
               />
+              {errors.level1PersonEmail && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonEmail?.message}
+                </small>
+              )}
             </div>
 
-            <Input
-              radius="sm"
-              label="Proof of ID"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("level1PersonProofOfId")}
-            />
-
-            <Controller
-              name="level1PersonCriminalHistory"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Do you have a histroy of criminal conviction/Bankrupty/Disqualification?"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  isRequired
-                  isDisabled={isLevel1PersonSameAsAuthorised}
-                  placeholder="Select Yes or No"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    Yes
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    No
-                  </SelectItem>
-                </Select>
+            <div>
+              <Input
+                radius="sm"
+                label="Proof of ID"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("level1PersonProofOfId", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.level1PersonProofOfId && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonProofOfId?.message}
+                </small>
               )}
-            />
+            </div>
+
+            <div>
+              <Controller
+                name="level1PersonCriminalHistory"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup
+                    aria-label="Do you have a history of Criminal conviction
+/Bankruptcy/Disqualification?"
+                    label="Do you have a history of Criminal conviction
+/Bankruptcy/Disqualification?"
+                    orientation="horizontal"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="text-base font-medium "
+                  >
+                    <Radio value="Yes">Yes</Radio>
+                    <Radio value="No">No</Radio>
+                  </RadioGroup>
+                )}
+              />
+              {errors.level1PersonCriminalHistory && (
+                <small className="text-red-700 font-medium">
+                  {errors.level1PersonCriminalHistory?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
 
@@ -1303,126 +1520,350 @@ const AddOrgDocuments = () => {
             Upload Documents
           </h1>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="PAYEE And Account Reference Letter From HMRC"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("payeeAccountReference")}
-            />
-            <Input
-              radius="sm"
-              label="Latest RTI from accountant"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("latestRti")}
-            />
-            <Input
-              radius="sm"
-              label="Employer Liability Insurance Certificate"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("employerLiabilityInsurance")}
-            />
-            <Input
-              radius="sm"
-              label="Proof of Business Permises (Tenancy Agreement)"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("proofOfBusinessPremises")}
-            />
-            <Input
-              radius="sm"
-              label="Copy of Lease or Freehold Property"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("copyOfLease")}
-            />
-            <Input
-              radius="sm"
-              label="Business Bank Statement for last 1/2/3 months"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("businessBankStatement")}
-            />
-            <Input
-              radius="sm"
-              label="Signed Annual Account ( If the business is more than 18 months old)"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("signedAnnualAccount")}
-            />
-            <Input
-              radius="sm"
-              label="VAT Certificate (If Registered)"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("vatCertificate")}
-            />
-            <Input
-              radius="sm"
-              label="Copy of Health and Safty star Rating (Applicable for food business only)"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("healthSafetyRating")}
-            />
-            <Input
-              radius="sm"
-              label="Regulatory Body Certificate (If Applicable for your business)"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("regulatoryBodyCertificate")}
-            />
-            <Input
-              radius="sm"
-              label="Registered business license or certificate"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("businessLicense")}
-            />
-            <Input
-              radius="sm"
-              label="Franchise Agreement"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("franchiseAgreement")}
-            />
-            <Input
-              radius="sm"
-              label="Governing Body Registration "
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("governingBodyRegistration")}
-            />
-            <Input
-              radius="sm"
-              label="Audited annual account"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("auditedAnnualAccount")}
-            />
-            <Input
-              radius="sm"
-              label="Others Documents"
-              labelPlacement="outside"
-              type="file"
-              className="text-hrms-blue font-semibold"
-              {...register("othersDocuments")}
-            />
+            <div>
+              <Input
+                radius="sm"
+                label="PAYEE And Account Reference Letter From HMRC"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("payeeAccountReference", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.payeeAccountReference && (
+                <small className="text-red-700 font-medium">
+                  {errors.payeeAccountReference?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Latest RTI from accountant"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("latestRti", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.latestRti && (
+                <small className="text-red-700 font-medium">
+                  {errors.latestRti?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Employer Liability Insurance Certificate"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("employerLiabilityInsurance", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.employerLiabilityInsurance && (
+                <small className="text-red-700 font-medium">
+                  {errors.employerLiabilityInsurance?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Proof of Business Permises (Tenancy Agreement)"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("proofOfBusinessPremises", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.proofOfBusinessPremises && (
+                <small className="text-red-700 font-medium">
+                  {errors.proofOfBusinessPremises?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Copy of Lease or Freehold Property"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("copyOfLease", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.copyOfLease && (
+                <small className="text-red-700 font-medium">
+                  {errors.copyOfLease?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Business Bank Statement for last 1/2/3 months"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("businessBankStatement", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.businessBankStatement && (
+                <small className="text-red-700 font-medium">
+                  {errors.businessBankStatement?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Signed Annual Account ( If the business is more than 18 months old)"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("signedAnnualAccount", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.signedAnnualAccount && (
+                <small className="text-red-700 font-medium">
+                  {errors.signedAnnualAccount?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="VAT Certificate (If Registered)"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("vatCertificate", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.vatCertificate && (
+                <small className="text-red-700 font-medium">
+                  {errors.vatCertificate?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Copy of Health and Safty star Rating (Applicable for food business only)"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("healthSafetyRating", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.healthSafetyRating && (
+                <small className="text-red-700 font-medium">
+                  {errors.healthSafetyRating?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Regulatory Body Certificate (If Applicable for your business)"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("regulatoryBodyCertificate", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.regulatoryBodyCertificate && (
+                <small className="text-red-700 font-medium">
+                  {errors.regulatoryBodyCertificate?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Registered business license or certificate"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("businessLicense", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.businessLicense && (
+                <small className="text-red-700 font-medium">
+                  {errors.businessLicense?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Franchise Agreement"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("franchiseAgreement", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.franchiseAgreement && (
+                <small className="text-red-700 font-medium">
+                  {errors.franchiseAgreement?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Governing Body Registration"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("governingBodyRegistration", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.governingBodyRegistration && (
+                <small className="text-red-700 font-medium">
+                  {errors.governingBodyRegistration?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Audited annual account"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("auditedAnnualAccount", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.auditedAnnualAccount && (
+                <small className="text-red-700 font-medium">
+                  {errors.auditedAnnualAccount?.message}
+                </small>
+              )}
+            </div>
+
+            <div>
+              <Input
+                radius="sm"
+                label="Others Documents"
+                labelPlacement="outside"
+                type="file"
+                className="text-hrms-blue font-semibold"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setValue("othersDocuments", file, {
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+              />
+              {errors.othersDocuments && (
+                <small className="text-red-700 font-medium">
+                  {errors.othersDocuments?.message}
+                </small>
+              )}
+            </div>
           </div>
         </div>
 
@@ -1434,9 +1875,6 @@ const AddOrgDocuments = () => {
           >
             Submit
           </Button>
-          <h5 className="text-lg font-medium text-red-600">
-            (*) Marked fields are mandatory fields
-          </h5>
         </div>
       </form>
     </main>
