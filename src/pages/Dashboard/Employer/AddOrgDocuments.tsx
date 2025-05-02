@@ -13,7 +13,6 @@ import { useAddOrgDocumentsMutation } from "../../../redux/features/employer/add
 import { toast } from "sonner";
 // import { useAppSelector } from "../../../redux/hooks";
 // import { useCurrentUser } from "../../../redux/features/auth/authSlice";
-
 const AddOrgDocuments = () => {
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
     useState(false);
