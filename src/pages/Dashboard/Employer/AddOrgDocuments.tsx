@@ -259,7 +259,7 @@ const AddOrgDocuments = () => {
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
             Organisation Details
           </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
             <Input
               radius="sm"
               label="Organisation Name"
@@ -431,7 +431,7 @@ const AddOrgDocuments = () => {
               {...register("logo")}
             />
           </div>
-          <div className="grid grid-cols-2 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 pt-5">
             <Controller
               name="nameChangeLast5Years"
               control={control}
@@ -495,7 +495,7 @@ const AddOrgDocuments = () => {
           <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Authorised Person Details
           </h3>
-          <div className="grid grid-cols-3 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
             <Input
               radius="sm"
               label="First Name"
@@ -598,7 +598,7 @@ const AddOrgDocuments = () => {
           >
             If Same As Authorised Person
           </Checkbox>
-          <div className="grid grid-cols-3 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
             <div className="mb-4">
               <label
                 htmlFor="firstName"
@@ -740,7 +740,7 @@ const AddOrgDocuments = () => {
           >
             If Same As Authorised Person
           </Checkbox>
-          <div className="grid grid-cols-3 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
             <div className="mb-4">
               <label
                 htmlFor="firstName"
@@ -875,7 +875,7 @@ const AddOrgDocuments = () => {
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Organisation Address
           </h1>
-          <div className="grid grid-cols-3 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
             <Input
               radius="sm"
               label="Post Code"
@@ -954,7 +954,7 @@ const AddOrgDocuments = () => {
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Trading Hours
           </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
             <div className="space-y-3">
               <Input
                 radius="sm"
@@ -1302,7 +1302,7 @@ const AddOrgDocuments = () => {
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Upload Documents
           </h1>
-          <div className="grid grid-cols-3 gap-5 pt-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
             <Input
               radius="sm"
               label="PAYEE And Account Reference Letter From HMRC"
