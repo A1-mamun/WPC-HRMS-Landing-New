@@ -581,20 +581,23 @@ export const dbsTypes = [
 //pay type
 
 export const payGroups = [{ value: "Group 1" }, { value: "Group 2" }];
-export const wedgesPaymodes = [{ value: "Pay 1" }, { value: "Pay 2" }];
-export const annualPays = [{ value: "Pay 1" }, { value: "Pay 2" }];
-export const paymentTypes = [{ value: "Pay 1" }, { value: "Pay 2" }];
+export const wedgesPayModes = [{ value: "Pay 1" }, { value: "Pay 2" }];
+export const annualPays = [
+  { value: "Annual Pay 1" },
+  { value: "Annual Pay 2" },
+];
+export const paymentTypes = [
+  { value: "Annualy" },
+  { value: "Monthly" },
+  { value: "Weekly" },
+  { value: "Bi-Weekly" },
+  { value: "Daily" },
+  { value: "Hourly" },
+  { value: "Commission" },
+];
 
-export const taxCodes = [
-  { value: "2341" },
-  { value: "5342" },
-  { value: "5312" },
-];
-export const paymentModes = [
-  { value: "Mode 1" },
-  { value: "Mode 2" },
-  { value: "Mode 3" },
-];
+export const taxCodes = [{ value: "Tax Code 1" }, { value: "Tax Code 2" }];
+export const paymentModes = [{ value: "Mode 1" }, { value: "Mode 2" }];
 
 export const bankNames = [
   { value: "Chase Bank (USA)", label: "chase" },
@@ -654,4 +657,23 @@ export const organizationFileFields = [
   "governingBodyRegistration",
   "auditedAnnualAccount",
   "othersDocuments",
+];
+
+export const kinRelationships = [
+  { value: "Father" },
+  { value: "Mother" },
+  { value: "Brother" },
+  { value: "Sister" },
+  { value: "Spouse" },
+  { value: "Son" },
+  { value: "Daughter" },
+  { value: "Uncle" },
+  { value: "Aunt" },
+  { value: "Cousin" },
+  { value: "Grandfather" },
+  { value: "Grandmother" },
+  { value: "Friend" },
+  { value: "Partner" },
+  { value: "Guardian" },
+  { value: "Other" },
 ];

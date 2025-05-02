@@ -460,4 +460,6 @@ export const addOrgDocumentsSchema = (logedInEmail: string | undefined) =>
       .optional(),
   });
 
-export type FormSchemaType = z.infer<ReturnType<typeof addOrgDocumentsSchema>>;
+export type EmployerFormSchemaType = z.infer<
+  ReturnType<typeof addOrgDocumentsSchema>
+>;

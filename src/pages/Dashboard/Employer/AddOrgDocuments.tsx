@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   addOrgDocumentsSchema,
-  FormSchemaType,
+  EmployerFormSchemaType,
 } from "../../../schemas/addOrgDocumentsSchema";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
@@ -35,6 +35,7 @@ const AddOrgDocuments = () => {
 
   const user = useAppSelector(useCurrentUser);
 
+  // console.log("User", user);
   const formSchema = useMemo(() => addOrgDocumentsSchema(user?.email), [user]);
 
   const {
@@ -44,7 +45,7 @@ const AddOrgDocuments = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormSchemaType>({
+  } = useForm<EmployerFormSchemaType>({
     resolver: zodResolver(formSchema),
   });
 
