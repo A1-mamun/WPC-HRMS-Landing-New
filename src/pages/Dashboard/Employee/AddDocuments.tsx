@@ -63,12 +63,21 @@ const AddDocuments = () => {
 
   const [jobDetails, setJobDetails] = useState([
     {
-      jobTitle: "",
+      title: "",
       startDate: "",
       endDate: "",
-      yearsOfExperience: "",
-      jobDescription: "",
+      experience: "",
+      description: "",
       responsibilities: "",
+    },
+  ]);
+
+  const [trainingDetails, setTrainingDetails] = useState([
+    {
+      title: "",
+      startDate: "",
+      endDate: "",
+      description: "",
     },
   ]);
 
@@ -97,11 +106,11 @@ const AddDocuments = () => {
     setJobDetails([
       ...jobDetails,
       {
-        jobTitle: "",
+        title: "",
         startDate: "",
         endDate: "",
-        yearsOfExperience: "",
-        jobDescription: "",
+        experience: "",
+        description: "",
         responsibilities: "",
       },
     ]);
@@ -111,148 +120,167 @@ const AddDocuments = () => {
     setJobDetails(jobDetails.filter((_, i) => i !== index));
   };
 
+  const handleAddTrainingRow = () => {
+    setTrainingDetails([
+      ...trainingDetails,
+      {
+        title: "",
+        startDate: "",
+        endDate: "",
+        description: "",
+      },
+    ]);
+  };
+
+  const handleRemoveTrainingRow = (index: any) => {
+    setTrainingDetails(trainingDetails.filter((_, i) => i !== index));
+  };
+
   const handleSubmitForm = async (data: FieldValues) => {
-    console.log("Form submission triggered");
+    console.log("Form submission triggered", data);
     // setLoading(true);
 
-    const formData = new FormData();
-
     const formattedData = {
-      personalDetails: {
-        employeeCode: data.employeeCode,
-        firstName: data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-        gender: data.gender,
-        niNumber: data.niNumber,
-        dateOfBirth: data.dateOfBirth,
-        maritalStatus: data.maritalStatus,
-        nationality: data.nationality,
-        email: data.email,
-        contactNo: data.contactNumber,
-        alternativeNo: data.alternativeNumber,
-      },
-      serviceDetails: {
-        department: data.department,
-        designation: data.designation,
-        dateOfJoining: data.dateOfJoining,
-        employeeType: data.employeeType,
-        dateOfConfirmation: data.dateOfConfirmation,
-        contractStartDate: data.contractStartDate,
-        contractEndDate: data.contractEndDate,
-        jobLocation: data.jobLocation,
-        profilePicture: data.profilePicture,
-      },
-      trainingDetails: {
-        department: data.department,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        jobDescription: data.jobDescription,
-      },
-      nextOfKinDetails: {
-        nextOfKinContactName: data.nextOfKinContactName,
-        nextOfKinContactRelationship: data.nextOfKinContactRelationship,
-        nextOfKinContactEmail: data.nextOfKinContactEmail,
-        nextOfKinContactNumber: data.nextOfKinContactNumber,
-        nextOfKinContactAddress: data.nextOfKinContactAddress,
-      },
-      certifiedMembership: {
-        licenseTitle: data.titleCertifiedLicense,
-        licenseNo: data.licenseNumber,
-        issueDate: data.issueDate,
-        expiryDate: data.expiryDate,
-      },
-      contactiInfo: {
-        postCode: data.postCode,
-        addressLine1: data.addressLine1,
-        addressLine2: data.addressLine2,
-        addressLine3: data.addressLine3,
-        city: data.city,
-        country: data.country,
-        proofOfAddress: data.proofOfAddress,
-      },
-      pasportDetails: {
-        passportNo: data.passportNumber,
-        nationality: data.passportNationality,
-        placeOfBirth: data.placeOfBirth,
-        issuedBy: data.passportIssuedBy,
-        issueDate: data.passportIssueDate,
-        expiryDate: data.passportExpiryDate,
-        eligibleReviewDate: data.passportEligibleReviewDate,
-        document: data.passportDocument,
-        remarks: data.passportRemarks,
-        isCurrentStatus: data.passportStatus,
-      },
-      visaDetails: {
-        visaNo: data.visaNumber,
-        nationality: data.visaNationality,
-        countryOfResidence: data.countryOfResidence,
-        issuedBy: data.visaIssuedBy,
-        issueDate: data.visaIssueDate,
-        expiryDate: data.visaExpiryDate,
-        eligibleReviewDate: data.visaEligibleReviewDate,
-        frontsideDocument: data.visaFrontsideDocument,
-        backsideDocument: data.visaBacksideDocument,
-        remarks: data.visaRemarks,
-        isCurrentStatus: data.visaStatus,
-      },
-      eussDetails: {
-        referenceNo: data.eussReferenceNumber,
-        nationality: data.eussNationality,
-        issueDate: data.eussIssueDate,
-        expiryDate: data.eussExpiryDate,
-        eligibleReviewDate: data.eussEligibleReviewDate,
-        document: data.eussDocument,
-        remarks: data.eussRemarks,
-        isCurrentStatus: data.eussStatus,
-      },
-      dbsDetails: {
-        type: data.dbsType,
-        referenceNo: data.dbsReferenceNumber,
-        nationality: data.dbsNationality,
-        issueDate: data.dbsIssueDate,
-        expiryDate: data.dbsExpiryDate,
-        eligibleReviewDate: data.dbsEligibleReviewDate,
-        document: data.dbsDocument,
-        remarks: data.dbsRemarks,
-        isCurrentStatus: data.dbsStatus,
-      },
-      nationalIdDetails: {
-        nationalIdNo: data.nationalIdNumber,
-        nationality: data.nationalIdNationality,
-        countryOfResidence: data.nationalIdCountryOfResidence,
-        issueDate: data.nationalIdIssueDate,
-        expiryDate: data.nationalIdExpiryDate,
-        eligibleReviewDate: data.nationalIdEligibleReviewDate,
-        document: data.nationalIdDocument,
-        remarks: data.nationalIdRemarks,
-        isCurrentStatus: data.nationalIdStatus,
-      },
-      payDetails: {
-        paymentGroup: data.payGroup,
-        wedgesPaymentMode: data.wedgesPayMode,
-        annualPay: data.annualPay,
-        paymentType: data.paymentType,
-        basicDailyWedges: data.basicDailyWedges,
-        minWorkingHour: data.minWorkingHour,
-        rate: data.rate,
-        taxCode: data.taxCode,
-        taxReference: data.taxReference,
-        paymentMode: data.paymentMode,
-        bankName: data.bankName,
-        branchName: data.branchName,
-        accountNo: data.accountNo,
-        sortCode: data.sortCode,
-        paymentCurrency: data.paymentCurrency,
-      },
-      payStructure: {
-        taxablePayment: data.taxables,
-        deductions: data.deductions,
-      },
-      educationDetails: educationalDetails,
-      jobDetails: jobDetails,
+      educationalDetails: { ...data.educationalDetails },
     };
-    console.log("Form Data:", formattedData);
+    // const formData = new FormData();
+
+    // const formattedData = {
+    //   personalDetails: {
+    //     employeeCode: data.employeeCode,
+    //     firstName: data.firstName,
+    //     middleName: data.middleName,
+    //     lastName: data.lastName,
+    //     gender: data.gender,
+    //     niNumber: data.niNumber,
+    //     dateOfBirth: data.dateOfBirth,
+    //     maritalStatus: data.maritalStatus,
+    //     nationality: data.nationality,
+    //     email: data.email,
+    //     contactNo: data.contactNumber,
+    //     alternativeNo: data.alternativeNumber,
+    //   },
+    //   serviceDetails: {
+    //     department: data.department,
+    //     designation: data.designation,
+    //     dateOfJoining: data.dateOfJoining,
+    //     employeeType: data.employeeType,
+    //     dateOfConfirmation: data.dateOfConfirmation,
+    //     contractStartDate: data.contractStartDate,
+    //     contractEndDate: data.contractEndDate,
+    //     jobLocation: data.jobLocation,
+    //     profilePicture: data.profilePicture,
+    //   },
+    //   trainingDetails: {
+    //     department: data.department,
+    //     startDate: data.startDate,
+    //     endDate: data.endDate,
+    //     jobDescription: data.jobDescription,
+    //   },
+    //   nextOfKinDetails: {
+    //     nextOfKinContactName: data.nextOfKinContactName,
+    //     nextOfKinContactRelationship: data.nextOfKinContactRelationship,
+    //     nextOfKinContactEmail: data.nextOfKinContactEmail,
+    //     nextOfKinContactNumber: data.nextOfKinContactNumber,
+    //     nextOfKinContactAddress: data.nextOfKinContactAddress,
+    //   },
+    //   certifiedMembership: {
+    //     licenseTitle: data.titleCertifiedLicense,
+    //     licenseNo: data.licenseNumber,
+    //     issueDate: data.issueDate,
+    //     expiryDate: data.expiryDate,
+    //   },
+    //   contactiInfo: {
+    //     postCode: data.postCode,
+    //     addressLine1: data.addressLine1,
+    //     addressLine2: data.addressLine2,
+    //     addressLine3: data.addressLine3,
+    //     city: data.city,
+    //     country: data.country,
+    //     proofOfAddress: data.proofOfAddress,
+    //   },
+    //   pasportDetails: {
+    //     passportNo: data.passportNumber,
+    //     nationality: data.passportNationality,
+    //     placeOfBirth: data.placeOfBirth,
+    //     issuedBy: data.passportIssuedBy,
+    //     issueDate: data.passportIssueDate,
+    //     expiryDate: data.passportExpiryDate,
+    //     eligibleReviewDate: data.passportEligibleReviewDate,
+    //     document: data.passportDocument,
+    //     remarks: data.passportRemarks,
+    //     isCurrentStatus: data.passportStatus,
+    //   },
+    //   visaDetails: {
+    //     visaNo: data.visaNumber,
+    //     nationality: data.visaNationality,
+    //     countryOfResidence: data.countryOfResidence,
+    //     issuedBy: data.visaIssuedBy,
+    //     issueDate: data.visaIssueDate,
+    //     expiryDate: data.visaExpiryDate,
+    //     eligibleReviewDate: data.visaEligibleReviewDate,
+    //     frontsideDocument: data.visaFrontsideDocument,
+    //     backsideDocument: data.visaBacksideDocument,
+    //     remarks: data.visaRemarks,
+    //     isCurrentStatus: data.visaStatus,
+    //   },
+    //   eussDetails: {
+    //     referenceNo: data.eussReferenceNumber,
+    //     nationality: data.eussNationality,
+    //     issueDate: data.eussIssueDate,
+    //     expiryDate: data.eussExpiryDate,
+    //     eligibleReviewDate: data.eussEligibleReviewDate,
+    //     document: data.eussDocument,
+    //     remarks: data.eussRemarks,
+    //     isCurrentStatus: data.eussStatus,
+    //   },
+    //   dbsDetails: {
+    //     type: data.dbsType,
+    //     referenceNo: data.dbsReferenceNumber,
+    //     nationality: data.dbsNationality,
+    //     issueDate: data.dbsIssueDate,
+    //     expiryDate: data.dbsExpiryDate,
+    //     eligibleReviewDate: data.dbsEligibleReviewDate,
+    //     document: data.dbsDocument,
+    //     remarks: data.dbsRemarks,
+    //     isCurrentStatus: data.dbsStatus,
+    //   },
+    //   nationalIdDetails: {
+    //     nationalIdNo: data.nationalIdNumber,
+    //     nationality: data.nationalIdNationality,
+    //     countryOfResidence: data.nationalIdCountryOfResidence,
+    //     issueDate: data.nationalIdIssueDate,
+    //     expiryDate: data.nationalIdExpiryDate,
+    //     eligibleReviewDate: data.nationalIdEligibleReviewDate,
+    //     document: data.nationalIdDocument,
+    //     remarks: data.nationalIdRemarks,
+    //     isCurrentStatus: data.nationalIdStatus,
+    //   },
+    //   payDetails: {
+    //     paymentGroup: data.payGroup,
+    //     wedgesPaymentMode: data.wedgesPayMode,
+    //     annualPay: data.annualPay,
+    //     paymentType: data.paymentType,
+    //     basicDailyWedges: data.basicDailyWedges,
+    //     minWorkingHour: data.minWorkingHour,
+    //     rate: data.rate,
+    //     taxCode: data.taxCode,
+    //     taxReference: data.taxReference,
+    //     paymentMode: data.paymentMode,
+    //     bankName: data.bankName,
+    //     branchName: data.branchName,
+    //     accountNo: data.accountNo,
+    //     sortCode: data.sortCode,
+    //     paymentCurrency: data.paymentCurrency,
+    //   },
+    //   payStructure: {
+    //     taxablePayment: data.taxables,
+    //     deductions: data.deductions,
+    //   },
+    //   educationDetails: educationalDetails,
+    //   jobDetails: jobDetails,
+    // };
+    // console.log("Form Data:", formattedData);
 
     // formData.append("data", JSON.stringify(formattedData));
 
@@ -277,7 +305,7 @@ const AddDocuments = () => {
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         {/* Employee personal details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Personal Details
           </h1>
@@ -555,10 +583,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Service details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Service Details
           </h1>
@@ -792,13 +820,14 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Educational details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Educational Details
           </h1>
+
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -816,93 +845,106 @@ const AddDocuments = () => {
               </tr>
             </thead>
             <tbody>
-              {educationalDetails.map((detail, index) => (
+              {educationalDetails.map((_, index) => (
                 <tr key={index}>
                   <td className="border p-2">{index + 1}</td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.qualification}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].qualification = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.qualification`)}
                     />
+                    {errors.educationalDetails?.[index]?.qualification && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].qualification.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.subject}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].subject = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.subject`)}
                     />
+                    {errors.educationalDetails?.[index]?.subject && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].subject.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.institutionName}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].institutionName = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(
+                        `educationalDetails.${index}.institutionName`
+                      )}
                     />
+                    {errors.educationalDetails?.[index]?.institutionName && (
+                      <p className="text-xs text-red-500">
+                        {
+                          errors.educationalDetails[index].institutionName
+                            .message
+                        }
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.awardingBody}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].awardingBody = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.awardingBody`)}
                     />
+                    {errors.educationalDetails?.[index]?.awardingBody && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].awardingBody.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.yearOfPassing}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].yearOfPassing = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.yearOfPassing`)}
                     />
+                    {errors.educationalDetails?.[index]?.yearOfPassing && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].yearOfPassing.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.percentage}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].percentage = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.percentage`)}
                     />
+                    {errors.educationalDetails?.[index]?.percentage && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].percentage.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <input
                       type="text"
                       className="w-full p-1 border rounded"
-                      value={detail.grade}
-                      onChange={(e) => {
-                        const newDetails = [...educationalDetails];
-                        newDetails[index].grade = e.target.value;
-                        setEducationalDetails(newDetails);
-                      }}
+                      {...register(`educationalDetails.${index}.grade`)}
                     />
+                    {errors.educationalDetails?.[index]?.grade && (
+                      <p className="text-xs text-red-500">
+                        {errors.educationalDetails[index].grade.message}
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <Input
                       radius="sm"
@@ -910,10 +952,28 @@ const AddDocuments = () => {
                       type="file"
                       className="text-hrms-blue font-semibold"
                       onChange={(e) => {
-                        // File handling is excluded as per requirements
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setValue(
+                            `educationalDetails.${index}.transcriptDocument`,
+                            file,
+                            {
+                              shouldValidate: true,
+                            }
+                          );
+                        }
                       }}
                     />
+                    {errors.educationalDetails?.[index]?.transcriptDocument && (
+                      <p className="text-xs text-red-500">
+                        {
+                          errors.educationalDetails[index].transcriptDocument
+                            .message
+                        }
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2">
                     <Input
                       radius="sm"
@@ -921,10 +981,29 @@ const AddDocuments = () => {
                       type="file"
                       className="text-hrms-blue font-semibold"
                       onChange={(e) => {
-                        // File handling is excluded as per requirements
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setValue(
+                            `educationalDetails.${index}.certificateDocument`,
+                            file,
+                            {
+                              shouldValidate: true,
+                            }
+                          );
+                        }
                       }}
                     />
+                    {errors.educationalDetails?.[index]
+                      ?.certificateDocument && (
+                      <p className="text-xs text-red-500">
+                        {
+                          errors.educationalDetails[index].certificateDocument
+                            .message
+                        }
+                      </p>
+                    )}
                   </td>
+
                   <td className="border p-2 flex gap-2">
                     {index === educationalDetails.length - 1 && (
                       <button
@@ -951,17 +1030,17 @@ const AddDocuments = () => {
               ))}
             </tbody>
           </table>
-        </div> */}
+        </div>
 
         {/* Job Details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Job Details
           </h1>
           <div className="mt-5">
             {jobDetails.map((detail, index) => (
               <div key={index} className="mb-6">
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-4 gap-5">
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Job Title
@@ -969,13 +1048,13 @@ const AddDocuments = () => {
                     <input
                       type="text"
                       className="w-full p-2 border rounded"
-                      value={detail.jobTitle}
-                      onChange={(e) => {
-                        const newDetails = [...jobDetails];
-                        newDetails[index].jobTitle = e.target.value;
-                        setJobDetails(newDetails);
-                      }}
+                      {...register(`jobDetails.${index}.title`)}
                     />
+                    {errors.jobDetails?.[index]?.title && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].title.message}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">
@@ -984,13 +1063,13 @@ const AddDocuments = () => {
                     <input
                       type="date"
                       className="w-full p-2 border rounded"
-                      value={detail.startDate}
-                      onChange={(e) => {
-                        const newDetails = [...jobDetails];
-                        newDetails[index].startDate = e.target.value;
-                        setJobDetails(newDetails);
-                      }}
+                      {...register(`jobDetails.${index}.startDate`)}
                     />
+                    {errors.jobDetails?.[index]?.startDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].startDate.message}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">
@@ -999,29 +1078,21 @@ const AddDocuments = () => {
                     <input
                       type="date"
                       className="w-full p-2 border rounded"
-                      value={detail.endDate}
-                      onChange={(e) => {
-                        const newDetails = [...jobDetails];
-                        newDetails[index].endDate = e.target.value;
-                        setJobDetails(newDetails);
-                      }}
+                      {...register(`jobDetails.${index}.endDate`)}
                     />
+                    {errors.jobDetails?.[index]?.endDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].endDate.message}
+                      </p>
+                    )}
                   </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-5 mt-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Year of Experience
                     </label>
                     <select
                       className="w-full p-2 border rounded"
-                      value={detail.yearsOfExperience}
-                      onChange={(e) => {
-                        const newDetails = [...jobDetails];
-                        newDetails[index].yearsOfExperience = e.target.value;
-                        setJobDetails(newDetails);
-                      }}
+                      {...register(`jobDetails.${index}.experience`)}
                     >
                       <option value="">Select</option>
                       <option value="0-1">0-1 years</option>
@@ -1030,6 +1101,29 @@ const AddDocuments = () => {
                       <option value="5-10">5-10 years</option>
                       <option value="10+">10+ years</option>
                     </select>
+                    {errors.jobDetails?.[index]?.experience && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].experience.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-4 gap-5 mt-4">
+                  <div className="col-span-1 relative">
+                    <label className="block text-sm font-medium mb-1">
+                      Key Responsibilities
+                    </label>
+                    <textarea
+                      className="w-full p-2 border rounded"
+                      rows={3}
+                      {...register(`jobDetails.${index}.responsibilities`)}
+                    />
+                    {errors.jobDetails?.[index]?.responsibilities && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].responsibilities.message}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-2 relative">
                     <label className="block text-sm font-medium mb-1">
@@ -1037,19 +1131,21 @@ const AddDocuments = () => {
                     </label>
                     <textarea
                       className="w-full p-2 border rounded"
-                      rows={5}
-                      value={detail.jobDescription}
-                      onChange={(e) => {
-                        const newDetails = [...jobDetails];
-                        newDetails[index].jobDescription = e.target.value;
-                        setJobDetails(newDetails);
-                      }}
+                      rows={3}
+                      {...register(`jobDetails.${index}.description`)}
                     />
+                    {errors.jobDetails?.[index]?.description && (
+                      <p className="text-xs text-red-500">
+                        {errors.jobDetails[index].description.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-span-1 flex justify-start items-end pb-2">
                     {index === jobDetails.length - 1 && (
                       <button
                         type="button"
                         onClick={handleAddJobRow}
-                        className="absolute right-0 top-0 bg-green-500 text-white p-1 w-6 h-6 flex items-center justify-center rounded"
+                        className=" bg-green-500 text-white p-3 w-8 h-8 flex items-center justify-center rounded text-xl font-bold"
                         aria-label="Add job"
                       >
                         +
@@ -1059,7 +1155,7 @@ const AddDocuments = () => {
                       <button
                         type="button"
                         onClick={() => handleRemoveJobRow(index)}
-                        className="absolute right-8 top-0 bg-red-500 text-white p-1  w-6 h-6 flex items-center justify-center rounded"
+                        className=" bg-red-500 text-white p-3 w-8 h-8 flex items-center justify-center rounded text-xl font-bold"
                         aria-label="Remove job"
                       >
                         -
@@ -1070,9 +1166,108 @@ const AddDocuments = () => {
               </div>
             ))}
           </div>
-        </div> */}
+        </div>
 
         {/* training details details */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
+            Training Details
+          </h1>
+          <div className="mt-5">
+            {trainingDetails.map((_, index) => (
+              <div key={index} className="mb-6">
+                <div className="grid grid-cols-3 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border rounded"
+                      {...register(`trainingDetails.${index}.title`)}
+                    />
+                    {errors.trainingDetails?.[index]?.title && (
+                      <p className="text-xs text-red-500">
+                        {errors.trainingDetails[index].title.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full p-2 border rounded"
+                      {...register(`trainingDetails.${index}.startDate`)}
+                    />
+                    {errors.trainingDetails?.[index]?.startDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.trainingDetails[index].startDate.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full p-2 border rounded"
+                      {...register(`trainingDetails.${index}.endDate`)}
+                    />
+                    {errors.trainingDetails?.[index]?.endDate && (
+                      <p className="text-xs text-red-500">
+                        {errors.trainingDetails[index].endDate.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-5 mt-4">
+                  <div className="col-span-2 relative">
+                    <label className="block text-sm font-medium mb-1">
+                      Description
+                    </label>
+                    <textarea
+                      className="w-full p-2 border rounded"
+                      rows={3}
+                      {...register(`trainingDetails.${index}.description`)}
+                    />
+                    {errors.trainingDetails?.[index]?.description && (
+                      <p className="text-xs text-red-500">
+                        {errors.trainingDetails[index].description.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="col-span-1 flex justify-start items-end pb-2">
+                    {index === trainingDetails.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={handleAddTrainingRow}
+                        className=" bg-green-500 text-white p-3 w-8 h-8 flex items-center justify-center rounded text-xl font-bold"
+                        aria-label="Add job"
+                      >
+                        +
+                      </button>
+                    )}
+                    {trainingDetails.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTrainingRow(index)}
+                        className=" bg-red-500 text-white p-3 w-8 h-8 flex items-center justify-center rounded text-xl font-bold"
+                        aria-label="Remove job"
+                      >
+                        -
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Training Details
@@ -1150,7 +1345,7 @@ const AddDocuments = () => {
         </div> */}
 
         {/*  Next of Kin Information */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Emergency / Next of Kin Contact Details
           </h1>
@@ -1257,10 +1452,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Certified Membership */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
             Certified Membership
           </h1>
@@ -1361,10 +1556,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Contact Information  */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Contact Information (Correspondence Address)
           </h1>
@@ -1510,10 +1705,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* passport details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Passport Details
           </h1>
@@ -1764,10 +1959,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/*  Visa Information */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Visa/BRP Details
           </h1>
@@ -2059,10 +2254,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/*EUSS (European Union Settlement Scheme) / Time Limit Details  */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             EUSS/Time Limit Details
           </h1>
@@ -2278,10 +2473,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* DBS (Disclosure and Barring Service) Information */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             DBS (Disclosure and Barring Service) Information
           </h1>
@@ -2531,10 +2726,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* National ID Details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             National ID Details
           </h1>
@@ -2784,10 +2979,10 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* other Details */}
-        {/* <div className="pt-5">
+        <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Other Details
           </h1>
@@ -3020,7 +3215,7 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Pay Details */}
         <div className="pt-5">
@@ -3249,21 +3444,6 @@ const AddDocuments = () => {
               )}
             </div>
 
-            {/* <div>
-              <Input
-                radius="sm"
-                label="Tax Reference"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                {...register("taxReference")}
-              />
-              {errors.taxReference && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.taxReference.message}
-                </p>
-              )}
-            </div> */}
             <div>
               <Input
                 radius="sm"
@@ -3536,7 +3716,7 @@ const AddDocuments = () => {
               )}
             />
           </div>
-        </div> */}
+        </div>  */}
 
         {/* submit button */}
         <div className="flex justify-between items-center pt-5 pb-10">
@@ -3549,9 +3729,6 @@ const AddDocuments = () => {
               Submit
             </Button>
           </div>
-          <h5 className="text-lg font-medium text-red-600">
-            (*) Marked fields are mandatory fields
-          </h5>
         </div>
       </form>
     </main>
@@ -3559,24 +3736,3 @@ const AddDocuments = () => {
 };
 
 export default AddDocuments;
-
-{
-  /* <Input
-              radius="sm"
-              label="Reporting Authority"
-              labelPlacement="outside"
-              placeholder="Enter reporting authority"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("reportingAuthority")}
-            />
-            <Input
-              radius="sm"
-              label="Leave Sanction Authority"
-              labelPlacement="outside"
-              placeholder="Enter leave sanction authority"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("leaveSanctionAuthority")}
-            /> */
-}
