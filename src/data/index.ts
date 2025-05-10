@@ -638,27 +638,6 @@ export const deductions = [
   { value: "Prof Tax" },
 ];
 
-// organization file fields
-export const organizationFileFields = [
-  "logo",
-  "proofOfId",
-  "payeeAccountReference",
-  "latestRti",
-  "employerLiabilityInsurance",
-  "proofOfBusinessPremises",
-  "copyOfLease",
-  "businessBankStatement",
-  "signedAnnualAccount",
-  "vatCertificate",
-  "healthSafetyRating",
-  "regulatoryBodyCertificate",
-  "businessLicense",
-  "franchiseAgreement",
-  "governingBodyRegistration",
-  "auditedAnnualAccount",
-  "othersDocuments",
-];
-
 export const kinRelationships = [
   { value: "Father" },
   { value: "Mother" },

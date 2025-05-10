@@ -238,3 +238,16 @@ export const paymentCurrencies = [
   "AUD - Australian Dollar (Australia)",
   "CNY - Chinese Yuan (China)",
 ];
+
+// employee file fields
+export const employeeFileFields = [
+  "profilePicture",
+  "proofOfAddress",
+  "passportDocument",
+  "visaDocumentFrontSide",
+  "visaDocumentBackSide",
+  "eussDocument",
+  "dbsDocument",
+  "nationalIdDocument",
+  "othersUploadDocument",
+];

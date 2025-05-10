@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
@@ -10,7 +11,6 @@ import {
 } from "@heroui/react";
 import {
   countries,
-  organizationFileFields,
   organizationTypes,
   sectorsName,
   tradingPeriods,
@@ -26,6 +26,7 @@ import {
 } from "../../../schemas/addOrgDocumentsSchema";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+import { organizationFileFields } from "../../../constants/organisation";
 
 const AddOrgDocuments = () => {
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =

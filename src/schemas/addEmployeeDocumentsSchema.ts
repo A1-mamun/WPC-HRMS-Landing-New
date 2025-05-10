@@ -13,8 +13,9 @@ import {
   taxCodes,
   wadgesPayModes,
 } from "../constants/employee";
-import { countries } from "../constants/organisation";
+import { countries } from "../constants/common";
 
+// educational details schema
 const educationalDetailsSchema = z.object({
   qualification: z.string().optional(),
   subject: z.string().optional(),
@@ -55,6 +56,7 @@ const educationalDetailsSchema = z.object({
     .optional(),
 });
 
+// job details schema
 const jobDetailsSchema = z.object({
   title: z.string().optional(),
   startDate: z.string().optional(),
@@ -64,6 +66,7 @@ const jobDetailsSchema = z.object({
   responsibilities: z.string().optional(),
 });
 
+// training details schema
 const trainingDetailsSchema = z.object({
   title: z.string().optional(),
   startDate: z.string().optional(),
@@ -72,6 +75,7 @@ const trainingDetailsSchema = z.object({
 });
 
 export const addEmployeeDocumentsSchema = z.object({
+  // personal details
   employeeCode: z.string().min(1, "Employee code is required"),
   firstName: z
     .string()
@@ -102,6 +106,8 @@ export const addEmployeeDocumentsSchema = z.object({
     .email({ message: "Invalid email address" }),
   contactNumber: z.string().min(1, "Contact number is required"),
   alternativeNumber: z.string().optional(),
+
+  // services details
   department: z.string().optional(),
   designation: z.string().optional(),
   dateOfJoining: z.string().optional(),
@@ -123,10 +129,17 @@ export const addEmployeeDocumentsSchema = z.object({
       message: "Only JPG or PNG  allowed",
     })
     .optional(),
+
+  // educational details
   educationalDetails: z.array(educationalDetailsSchema).optional(),
+
+  // job details
   jobDetails: z.array(jobDetailsSchema).optional(),
 
+  // training details
   trainingDetails: z.array(trainingDetailsSchema).optional(),
+
+  // emergency / next of kin contact details
   nextOfKinContactName: z.string().optional(),
   nextOfKinContactRelationship: z
     .enum([...kinRelationships] as [string, ...string[]])
@@ -138,10 +151,14 @@ export const addEmployeeDocumentsSchema = z.object({
     .or(z.literal("")),
   nextOfKinContactNumber: z.string().optional(),
   nextOfKinContactAddress: z.string().optional(),
+
+  // certified membership details
   titleCertifiedLicense: z.string().optional(),
   licenseNumber: z.string().optional(),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
+
+  // contact information
   postCode: z.string().optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
@@ -163,73 +180,82 @@ export const addEmployeeDocumentsSchema = z.object({
       }
     )
     .optional(),
-  passportNumber: z.string().optional(),
-  passportNationality: z
-    .enum([...nationalies] as [string, ...string[]])
-    .optional(),
-  placeOfBirth: z.string().optional(),
-  passportIssuedBy: z.string().optional(),
-  passportIssueDate: z.string().optional(),
-  passportExpiryDate: z.string().optional(),
-  passportEligibleReviewDate: z.string().optional(),
+
+  // passport details
+  passportNumber: z.string().min(1, "Passport number is required"),
+  passportNationality: z.enum([...nationalies] as [string, ...string[]], {
+    required_error: "Nationality is required",
+  }),
+  placeOfBirth: z.string().min(1, "Place of birth is required"),
+  passportIssuedBy: z
+    .string()
+    .min(1, "Issued by is required")
+    .regex(/^[A-Z]/, {
+      message: "Must start with a capital letter",
+    }),
+  passportIssueDate: z.string({ required_error: "Issue date is required" }),
+  passportExpiryDate: z.string({ required_error: "Expiry date is required" }),
+  passportEligibleReviewDate: z.string({
+    required_error: "Eligible review date is required",
+  }),
   passportDocument: z
     .custom<File>((val) => val instanceof File && val.size > 0, {
       message: "Document is required",
     })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
+    .refine((file) => file.size <= 2 * 1024 * 1024, {
+      message: "Max file size is 2MB",
     })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
-    .optional(),
-  passportRemarks: z.string().optional(),
-  passportStatus: z.enum(["yes", "no"]).optional(),
-  visaNumber: z.string().optional(),
-  visaNationality: z.enum([...nationalies] as [string, ...string[]]).optional(),
-  countryOfResidence: z
-    .enum([...countries] as [string, ...string[]])
-    .optional(),
-  visaIssuedBy: z.string().optional(),
-  visaIssueDate: z.string().optional(),
-  visaExpiryDate: z.string().optional(),
-  visaEligibleReviewDate: z.string().optional(),
+    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
+      message: "Only JPG or PNG  allowed",
+    }),
+  passportRemarks: z.string().min(1, "Remarks is required"),
+  passportStatus: z.enum(["yes", "no"], {
+    required_error: "Status is required",
+  }),
+
+  // visa details
+  visaNumber: z.string().min(1, "Visa number is required"),
+  visaNationality: z.enum([...nationalies] as [string, ...string[]], {
+    required_error: "Nationality is required",
+  }),
+  countryOfResidence: z.enum([...countries] as [string, ...string[]], {
+    required_error: "Country of residence is required",
+  }),
+  visaIssuedBy: z
+    .string()
+    .min(1, "Issued by is required")
+    .regex(/^[A-Z]/, {
+      message: "Must start with a capital letter",
+    }),
+  visaIssueDate: z.string({ required_error: "Issue date is required" }),
+  visaExpiryDate: z.string({ required_error: "Expiry date is required" }),
+  visaEligibleReviewDate: z.string({
+    required_error: "Eligible review date is required",
+  }),
   visaDocumentFrontSide: z
     .custom<File>((val) => val instanceof File && val.size > 0, {
       message: "Document is required",
     })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
+    .refine((file) => file.size <= 2 * 1024 * 1024, {
+      message: "Max file size is 2MB",
     })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
-    .optional(),
+    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
+      message: "Only JPG or PNG  allowed",
+    }),
   visaDocumentBackSide: z
     .custom<File>((val) => val instanceof File && val.size > 0, {
       message: "Document is required",
     })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
+    .refine((file) => file.size <= 2 * 1024 * 1024, {
+      message: "Max file size is 2MB",
     })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
-    .optional(),
-  visaRemarks: z.string().optional(),
-  visaStatus: z.enum(["yes", "no"]).optional(),
+    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
+      message: "Only JPG or PNG  allowed",
+    }),
+  visaRemarks: z.string().min(1, "Remarks is required"),
+  visaStatus: z.enum(["yes", "no"], { required_error: "Status is required" }),
+
+  // euss / time limit details
   eussReferenceNumber: z.string().optional(),
   eussNationality: z.enum([...nationalies] as [string, ...string[]]).optional(),
   eussIssueDate: z.string().optional(),
@@ -252,6 +278,8 @@ export const addEmployeeDocumentsSchema = z.object({
     .optional(),
   eussRemarks: z.string().optional(),
   eussStatus: z.enum(["yes", "no"]).optional(),
+
+  // dbs details
   dbsType: z.enum(["Basic", "Standard", "Advanced"]).optional(),
   dbsReferenceNumber: z.string().optional(),
   dbsNationality: z.enum([...nationalies] as [string, ...string[]]).optional(),
@@ -275,6 +303,8 @@ export const addEmployeeDocumentsSchema = z.object({
     .optional(),
   dbsRemarks: z.string().optional(),
   dbsStatus: z.enum(["yes", "no"]).optional(),
+
+  // national id details
   nationalIdNumber: z.string().optional(),
   nationalIdNationality: z
     .enum([...nationalies] as [string, ...string[]])
@@ -302,31 +332,35 @@ export const addEmployeeDocumentsSchema = z.object({
     .optional(),
   nationalIdRemarks: z.string().optional(),
   nationalIdStatus: z.enum(["yes", "no"]).optional(),
-  othersDocumentName: z.string().optional(),
-  othersDocumentReferenceNumber: z.string().optional(),
-  othersNationality: z
-    .enum([...nationalies] as [string, ...string[]])
-    .optional(),
-  othersIssueDate: z.string().optional(),
-  othersExpiryDate: z.string().optional(),
-  othersEligibleReviewDate: z.string().optional(),
-  othersUploadDocument: z
-    .custom<File>((val) => val instanceof File && val.size > 0, {
-      message: "Document is required",
-    })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
-    })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
-    .optional(),
-  remarks: z.string().optional(),
-  othersStatus: z.enum(["yes", "no"]).optional(),
+
+  // others details
+  // othersDocumentName: z.string().optional(),
+  // othersDocumentReferenceNumber: z.string().optional(),
+  // othersNationality: z
+  //   .enum([...nationalies] as [string, ...string[]])
+  //   .optional(),
+  // othersIssueDate: z.string().optional(),
+  // othersExpiryDate: z.string().optional(),
+  // othersEligibleReviewDate: z.string().optional(),
+  // othersUploadDocument: z
+  //   .custom<File>((val) => val instanceof File && val.size > 0, {
+  //     message: "Document is required",
+  //   })
+  //   .refine((file) => file.size <= 1 * 1024 * 1024, {
+  //     message: "Max file size is 1MB",
+  //   })
+  //   .refine(
+  //     (file) =>
+  //       ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+  //     {
+  //       message: "Only JPG,PNG or PDF  allowed",
+  //     }
+  //   )
+  //   .optional(),
+  // remarks: z.string().optional(),
+  // othersStatus: z.enum(["yes", "no"]).optional(),
+
+  // pay details
   payGroup: z.enum([...payGroups] as [string, ...string[]]).optional(),
   wedgesPayMode: z
     .enum([...wadgesPayModes] as [string, ...string[]])
@@ -347,6 +381,8 @@ export const addEmployeeDocumentsSchema = z.object({
   paymentCurrency: z
     .enum([...paymentCurrencies] as [string, ...string[]])
     .optional(),
+
+  // pay structure
   taxables: z.array(z.string()).optional(),
   deductions: z.array(z.string()).optional(),
 });

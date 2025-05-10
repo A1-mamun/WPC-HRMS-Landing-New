@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Checkbox,
@@ -8,7 +9,6 @@ import {
   RadioGroup,
   Select,
   SelectItem,
-  Textarea,
 } from "@heroui/react";
 import {
   annualPays,
@@ -36,6 +36,9 @@ import {
   addEmployeeDocumentsSchema,
   EmployeeFormSchemaType,
 } from "../../../schemas/addEmployeeDocumentsSchema";
+import { employeeFileFields } from "../../../constants/employee";
+import { useAddEmployeeDocumentsMutation } from "../../../redux/features/employee/addEmployeeDocumentsApi";
+import { toast } from "sonner";
 
 const AddDocuments = () => {
   const {
@@ -47,6 +50,10 @@ const AddDocuments = () => {
   } = useForm<EmployeeFormSchemaType>({
     resolver: zodResolver(addEmployeeDocumentsSchema),
   });
+
+  const [addEmployeeDocuments] = useAddEmployeeDocumentsMutation();
+
+  // state for managing the expandable educational details fields
   const [educationalDetails, setEducationalDetails] = useState([
     {
       qualification: "",
@@ -61,6 +68,7 @@ const AddDocuments = () => {
     },
   ]);
 
+  // state for managing the expandable job details fields
   const [jobDetails, setJobDetails] = useState([
     {
       title: "",
@@ -72,6 +80,7 @@ const AddDocuments = () => {
     },
   ]);
 
+  // state for managing the expandable training details fields
   const [trainingDetails, setTrainingDetails] = useState([
     {
       title: "",
@@ -81,6 +90,7 @@ const AddDocuments = () => {
     },
   ]);
 
+  // educational details add row fanction
   const handleAddRow = () => {
     setEducationalDetails([
       ...educationalDetails,
@@ -98,10 +108,12 @@ const AddDocuments = () => {
     ]);
   };
 
+  // educational details remove row fanction
   const handleRemoveRow = (index: any) => {
     setEducationalDetails(educationalDetails.filter((_, i) => i !== index));
   };
 
+  // job details add row fanction
   const handleAddJobRow = () => {
     setJobDetails([
       ...jobDetails,
@@ -116,10 +128,12 @@ const AddDocuments = () => {
     ]);
   };
 
+  // job details remove row fanction
   const handleRemoveJobRow = (index: any) => {
     setJobDetails(jobDetails.filter((_, i) => i !== index));
   };
 
+  // training details add row fanction
   const handleAddTrainingRow = () => {
     setTrainingDetails([
       ...trainingDetails,
@@ -132,170 +146,192 @@ const AddDocuments = () => {
     ]);
   };
 
+  // training details remove row fanction
   const handleRemoveTrainingRow = (index: any) => {
     setTrainingDetails(trainingDetails.filter((_, i) => i !== index));
   };
 
+  // console.log(errors);
   const handleSubmitForm = async (data: FieldValues) => {
-    console.log("Form submission triggered", data);
-    // setLoading(true);
+    const formData = new FormData();
 
     const formattedData = {
+      personalDetails: {
+        employeeCode: data.employeeCode,
+        firstName: data.firstName,
+        middleName: data.middleName,
+        lastName: data.lastName,
+        gender: data.gender,
+        niNumber: data.niNumber,
+        dateOfBirth: data.dateOfBirth,
+        maritalStatus: data.maritalStatus,
+        nationality: data.nationality,
+        email: data.email,
+        contactNo: data.contactNumber,
+        alternativeNo: data.alternativeNumber,
+      },
+      serviceDetails: {
+        department: data.department,
+        designation: data.designation,
+        dateOfJoining: data.dateOfJoining,
+        employeeType: data.employeeType,
+        dateOfConfirmation: data.dateOfConfirmation,
+        contractStartDate: data.contractStartDate,
+        contractEndDate: data.contractEndDate,
+        jobLocation: data.jobLocation,
+        profilePicture: "",
+      },
+      nextOfKinDetails: {
+        nextOfKinContactName: data.nextOfKinContactName,
+        nextOfKinContactRelationship: data.nextOfKinContactRelationship,
+        nextOfKinContactEmail: data.nextOfKinContactEmail,
+        nextOfKinContactNumber: data.nextOfKinContactNumber,
+        nextOfKinContactAddress: data.nextOfKinContactAddress,
+      },
+      certifiedMembership: {
+        licenseTitle: data.titleCertifiedLicense,
+        licenseNo: data.licenseNumber,
+        issueDate: data.issueDate,
+        expiryDate: data.expiryDate,
+      },
+      contactiInfo: {
+        postCode: data.postCode,
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        addressLine3: data.addressLine3,
+        city: data.city,
+        country: data.country,
+        proofOfAddress: "",
+      },
+      pasportDetails: {
+        passportNo: data.passportNumber,
+        nationality: data.passportNationality,
+        placeOfBirth: data.placeOfBirth,
+        issuedBy: data.passportIssuedBy,
+        issueDate: data.passportIssueDate,
+        expiryDate: data.passportExpiryDate,
+        eligibleReviewDate: data.passportEligibleReviewDate,
+        document: "",
+        remarks: data.passportRemarks,
+        isCurrentStatus: data.passportStatus,
+      },
+      visaDetails: {
+        visaNo: data.visaNumber,
+        nationality: data.visaNationality,
+        countryOfResidence: data.countryOfResidence,
+        issuedBy: data.visaIssuedBy,
+        issueDate: data.visaIssueDate,
+        expiryDate: data.visaExpiryDate,
+        eligibleReviewDate: data.visaEligibleReviewDate,
+        frontsideDocument: "",
+        backsideDocument: "",
+        remarks: data.visaRemarks,
+        isCurrentStatus: data.visaStatus,
+      },
+      eussDetails: {
+        referenceNo: data.eussReferenceNumber,
+        nationality: data.eussNationality,
+        issueDate: data.eussIssueDate,
+        expiryDate: data.eussExpiryDate,
+        eligibleReviewDate: data.eussEligibleReviewDate,
+        document: "",
+        remarks: data.eussRemarks,
+        isCurrentStatus: data.eussStatus,
+      },
+      dbsDetails: {
+        type: data.dbsType,
+        referenceNo: data.dbsReferenceNumber,
+        nationality: data.dbsNationality,
+        issueDate: data.dbsIssueDate,
+        expiryDate: data.dbsExpiryDate,
+        eligibleReviewDate: data.dbsEligibleReviewDate,
+        document: "",
+        remarks: data.dbsRemarks,
+        isCurrentStatus: data.dbsStatus,
+      },
+      nationalIdDetails: {
+        nationalIdNo: data.nationalIdNumber,
+        nationality: data.nationalIdNationality,
+        countryOfResidence: data.nationalIdCountryOfResidence,
+        issueDate: data.nationalIdIssueDate,
+        expiryDate: data.nationalIdExpiryDate,
+        eligibleReviewDate: data.nationalIdEligibleReviewDate,
+        document: "",
+        remarks: data.nationalIdRemarks,
+        isCurrentStatus: data.nationalIdStatus,
+      },
+      payDetails: {
+        paymentGroup: data.payGroup,
+        wedgesPaymentMode: data.wedgesPayMode,
+        annualPay: data.annualPay,
+        paymentType: data.paymentType,
+        basicDailyWedges: data.basicDailyWedges,
+        minWorkingHour: data.minWorkingHour,
+        rate: data.rate,
+        taxCode: data.taxCode,
+        taxReference: data.taxReference,
+        paymentMode: data.paymentMode,
+        bankName: data.bankName,
+        branchName: data.branchName,
+        accountNo: data.accountNo,
+        sortCode: data.sortCode,
+        paymentCurrency: data.paymentCurrency,
+      },
+      payStructure: {
+        taxablePayment: data.taxables,
+        deductions: data.deductions,
+      },
       educationalDetails: { ...data.educationalDetails },
+      jobDetails: { ...data.jobDetails },
+      trainingDetails: { ...data.trainingDetails },
     };
-    // const formData = new FormData();
-
-    // const formattedData = {
-    //   personalDetails: {
-    //     employeeCode: data.employeeCode,
-    //     firstName: data.firstName,
-    //     middleName: data.middleName,
-    //     lastName: data.lastName,
-    //     gender: data.gender,
-    //     niNumber: data.niNumber,
-    //     dateOfBirth: data.dateOfBirth,
-    //     maritalStatus: data.maritalStatus,
-    //     nationality: data.nationality,
-    //     email: data.email,
-    //     contactNo: data.contactNumber,
-    //     alternativeNo: data.alternativeNumber,
-    //   },
-    //   serviceDetails: {
-    //     department: data.department,
-    //     designation: data.designation,
-    //     dateOfJoining: data.dateOfJoining,
-    //     employeeType: data.employeeType,
-    //     dateOfConfirmation: data.dateOfConfirmation,
-    //     contractStartDate: data.contractStartDate,
-    //     contractEndDate: data.contractEndDate,
-    //     jobLocation: data.jobLocation,
-    //     profilePicture: data.profilePicture,
-    //   },
-    //   trainingDetails: {
-    //     department: data.department,
-    //     startDate: data.startDate,
-    //     endDate: data.endDate,
-    //     jobDescription: data.jobDescription,
-    //   },
-    //   nextOfKinDetails: {
-    //     nextOfKinContactName: data.nextOfKinContactName,
-    //     nextOfKinContactRelationship: data.nextOfKinContactRelationship,
-    //     nextOfKinContactEmail: data.nextOfKinContactEmail,
-    //     nextOfKinContactNumber: data.nextOfKinContactNumber,
-    //     nextOfKinContactAddress: data.nextOfKinContactAddress,
-    //   },
-    //   certifiedMembership: {
-    //     licenseTitle: data.titleCertifiedLicense,
-    //     licenseNo: data.licenseNumber,
-    //     issueDate: data.issueDate,
-    //     expiryDate: data.expiryDate,
-    //   },
-    //   contactiInfo: {
-    //     postCode: data.postCode,
-    //     addressLine1: data.addressLine1,
-    //     addressLine2: data.addressLine2,
-    //     addressLine3: data.addressLine3,
-    //     city: data.city,
-    //     country: data.country,
-    //     proofOfAddress: data.proofOfAddress,
-    //   },
-    //   pasportDetails: {
-    //     passportNo: data.passportNumber,
-    //     nationality: data.passportNationality,
-    //     placeOfBirth: data.placeOfBirth,
-    //     issuedBy: data.passportIssuedBy,
-    //     issueDate: data.passportIssueDate,
-    //     expiryDate: data.passportExpiryDate,
-    //     eligibleReviewDate: data.passportEligibleReviewDate,
-    //     document: data.passportDocument,
-    //     remarks: data.passportRemarks,
-    //     isCurrentStatus: data.passportStatus,
-    //   },
-    //   visaDetails: {
-    //     visaNo: data.visaNumber,
-    //     nationality: data.visaNationality,
-    //     countryOfResidence: data.countryOfResidence,
-    //     issuedBy: data.visaIssuedBy,
-    //     issueDate: data.visaIssueDate,
-    //     expiryDate: data.visaExpiryDate,
-    //     eligibleReviewDate: data.visaEligibleReviewDate,
-    //     frontsideDocument: data.visaFrontsideDocument,
-    //     backsideDocument: data.visaBacksideDocument,
-    //     remarks: data.visaRemarks,
-    //     isCurrentStatus: data.visaStatus,
-    //   },
-    //   eussDetails: {
-    //     referenceNo: data.eussReferenceNumber,
-    //     nationality: data.eussNationality,
-    //     issueDate: data.eussIssueDate,
-    //     expiryDate: data.eussExpiryDate,
-    //     eligibleReviewDate: data.eussEligibleReviewDate,
-    //     document: data.eussDocument,
-    //     remarks: data.eussRemarks,
-    //     isCurrentStatus: data.eussStatus,
-    //   },
-    //   dbsDetails: {
-    //     type: data.dbsType,
-    //     referenceNo: data.dbsReferenceNumber,
-    //     nationality: data.dbsNationality,
-    //     issueDate: data.dbsIssueDate,
-    //     expiryDate: data.dbsExpiryDate,
-    //     eligibleReviewDate: data.dbsEligibleReviewDate,
-    //     document: data.dbsDocument,
-    //     remarks: data.dbsRemarks,
-    //     isCurrentStatus: data.dbsStatus,
-    //   },
-    //   nationalIdDetails: {
-    //     nationalIdNo: data.nationalIdNumber,
-    //     nationality: data.nationalIdNationality,
-    //     countryOfResidence: data.nationalIdCountryOfResidence,
-    //     issueDate: data.nationalIdIssueDate,
-    //     expiryDate: data.nationalIdExpiryDate,
-    //     eligibleReviewDate: data.nationalIdEligibleReviewDate,
-    //     document: data.nationalIdDocument,
-    //     remarks: data.nationalIdRemarks,
-    //     isCurrentStatus: data.nationalIdStatus,
-    //   },
-    //   payDetails: {
-    //     paymentGroup: data.payGroup,
-    //     wedgesPaymentMode: data.wedgesPayMode,
-    //     annualPay: data.annualPay,
-    //     paymentType: data.paymentType,
-    //     basicDailyWedges: data.basicDailyWedges,
-    //     minWorkingHour: data.minWorkingHour,
-    //     rate: data.rate,
-    //     taxCode: data.taxCode,
-    //     taxReference: data.taxReference,
-    //     paymentMode: data.paymentMode,
-    //     bankName: data.bankName,
-    //     branchName: data.branchName,
-    //     accountNo: data.accountNo,
-    //     sortCode: data.sortCode,
-    //     paymentCurrency: data.paymentCurrency,
-    //   },
-    //   payStructure: {
-    //     taxablePayment: data.taxables,
-    //     deductions: data.deductions,
-    //   },
-    //   educationDetails: educationalDetails,
-    //   jobDetails: jobDetails,
-    // };
     // console.log("Form Data:", formattedData);
 
-    // formData.append("data", JSON.stringify(formattedData));
+    formData.append("data", JSON.stringify(formattedData));
 
-    // try {
-    //   // Example: await axios.post('/api/submit', formData);
-    //   // console.log("Education Details:", educationalDetails);
-    //   // console.log("Job Details:", jobDetails);
+    // Append files to FormData
+    employeeFileFields.forEach((field) => {
+      const file = data[field];
 
-    //   setSubmittedData(formattedData);
-    //   // reset(); // Optional
-    // } catch (error) {
-    //   console.error("Submission error:", error);
-    // } finally {
-    //   setLoading(false);
+      if (file) {
+        formData.append(field, file);
+      }
+    });
+
+    // append educational details files
+    data.educationalDetails.forEach((detail: any, index: number) => {
+      if (detail.transcriptDocument) {
+        formData.append(
+          `educationalDetails.${index}.transcriptDocument`,
+          detail.transcriptDocument
+        );
+      }
+      if (detail.certificateDocument) {
+        formData.append(
+          `educationalDetails.${index}.certificateDocument`,
+          detail.certificateDocument
+        );
+      }
+    });
+
+    // console.log("FormData entries:");
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
     // }
+
+    const toastId = toast.loading("Adding documents...");
+    try {
+      await addEmployeeDocuments(formData).unwrap();
+      // const res = await addOrgDocuments(formattedData).unwrap();
+      // console.log("Response:", res);
+      toast.success("Documents added successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (err: any) {
+      // console.log("Error:", err);
+      toast.error(err.data.message, { id: toastId, duration: 2000 });
+    }
   };
 
   return (
@@ -1267,82 +1303,6 @@ const AddDocuments = () => {
             ))}
           </div>
         </div>
-
-        {/* <div className="pt-5">
-          <h1 className="text-xl font-medium py-2 border-b border-hrms-blue-light">
-            Training Details
-          </h1>
-          <div className="grid grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="Department"
-              labelPlacement="outside"
-              placeholder="Enter department"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("department")}
-            />
-            <Controller
-              name="startDate"
-              control={control}
-              rules={{ required: "Start Date is required" }}
-              render={({ field }) => (
-                <DatePicker
-                  aria-label="Start Date"
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  label="Start Date"
-                  labelPlacement="outside"
-                  onChange={(date) =>
-                    field.onChange(
-                      date
-                        ? format(
-                            new Date(date.year, date.month - 1, date.day),
-                            "dd-MM-yyyy"
-                          )
-                        : ""
-                    )
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name="endDate"
-              control={control}
-              rules={{ required: "End Date is required" }}
-              render={({ field }) => (
-                <DatePicker
-                  aria-label="End Date"
-                  radius="sm"
-                  className="text-hrms-blue font-semibold"
-                  label="End Date"
-                  labelPlacement="outside"
-                  onChange={(date) =>
-                    field.onChange(
-                      date
-                        ? format(
-                            new Date(date.year, date.month - 1, date.day),
-                            "dd-MM-yyyy"
-                          )
-                        : ""
-                    )
-                  }
-                />
-              )}
-            />
-            <Textarea
-              radius="sm"
-              label="Job Description"
-              labelPlacement="outside"
-              placeholder="Enter job description"
-              maxRows={5}
-              minRows={5}
-              className="text-hrms-blue font-semibold col-span-1 row-span-2"
-              {...register("jobDescription")}
-            />
-          </div>
-        </div> */}
 
         {/*  Next of Kin Information */}
         <div className="pt-5">
@@ -2982,7 +2942,7 @@ const AddDocuments = () => {
         </div>
 
         {/* other Details */}
-        <div className="pt-5">
+        {/* <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Other Details
           </h1>
@@ -3215,7 +3175,7 @@ const AddDocuments = () => {
               )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Pay Details */}
         <div className="pt-5">
@@ -3678,45 +3638,6 @@ const AddDocuments = () => {
             />
           </div>
         </div>
-
-        {/* Verification Status */}
-        {/* <div>
-          <h1 className="text-xl font-medium py-4 border-b border-hrms-blue-light">
-            Verification Status
-          </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
-            <Controller
-              name="verificationStatus"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  aria-label="Verification Status"
-                  radius="sm"
-                  label="Verification Status"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select verification status"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  <SelectItem key="Pending" value="Pending">
-                    Pending
-                  </SelectItem>
-                  <SelectItem key="Verified" value="Verified">
-                    Verified
-                  </SelectItem>
-                  <SelectItem key="Rejected" value="Rejected">
-                    Rejected
-                  </SelectItem>
-                </Select>
-              )}
-            />
-          </div>
-        </div>  */}
 
         {/* submit button */}
         <div className="flex justify-between items-center pt-5 pb-10">

@@ -1,10 +1,10 @@
 import { z } from "zod";
 import {
-  countries,
   OrganisationTypes,
   SectorsName,
   TradingPeriod,
 } from "../constants/organisation";
+import { countries } from "../constants/common";
 
 export const addOrgDocumentsSchema = (logedInEmail: string | undefined) =>
   z.object({
