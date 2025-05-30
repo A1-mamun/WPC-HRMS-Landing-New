@@ -15,29 +15,27 @@ import {
   sectorsName,
   tradingPeriods,
 } from "../../../data";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
-import { useAddOrgDocumentsMutation } from "../../../redux/features/employer/addOrgDocumentsApi";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   addOrgDocumentsSchema,
   EmployerFormSchemaType,
 } from "../../../schemas/addOrgDocumentsSchema";
-import { useAppSelector } from "../../../redux/hooks";
-import { useCurrentUser } from "../../../redux/features/auth/authSlice";
-import { organizationFileFields } from "../../../constants/organisation";
 
-const AddOrgDocuments = () => {
+import { organizationFileFields } from "../../../constants/organisation";
+import { useCreateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
+
+const CreateOrganisation = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
     useState(false);
   const [isLevel1PersonSameAsAuthorised, setIsLevel1PersonSameAsAuthorised] =
     useState(false);
-
-  const user = useAppSelector(useCurrentUser);
-
-  // console.log("User", user);
-  const formSchema = useMemo(() => addOrgDocumentsSchema(user?.email), [user]);
 
   const {
     register,
@@ -47,10 +45,10 @@ const AddOrgDocuments = () => {
     setValue,
     formState: { errors },
   } = useForm<EmployerFormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(addOrgDocumentsSchema),
   });
 
-  const [addOrgDocuments] = useAddOrgDocumentsMutation();
+  const [createOrganisation] = useCreateOrganisationMutation();
 
   // watch authorise person details
   const watchAuthorisedPerson = watch([
@@ -111,129 +109,136 @@ const AddOrgDocuments = () => {
 
     // Organize form data by sections
     const formattedData = {
-      // Organization Details section
-      organisationDetails: {
-        name: data.organisationName,
-        type: data.organisationType,
-        registrationNo: data.registrationNumber,
-        contactNo: data.contactNumber,
-        loginEmail: data.loginEmail,
-        organisationEmail: data.organisationEmail,
-        websiteURL: data.websiteURL,
-        landlineNo: data.landlineNumber,
-        tradingName: data.tradingName,
-        tradingPeriod: data.tradingPeriod,
-        nameOfSector: data.sector,
-        nameChangeLast5Years: data.nameChangeLast5Years,
-        FacedPenaltyLast3Years: data.penaltyLast3Years,
+      // employer credentials
+      credentials: {
+        email: data.loginEmail,
+        password: data.password,
       },
+      employerData: {
+        // Organization Details section
+        organisationDetails: {
+          name: data.organisationName,
+          type: data.organisationType,
+          registrationNo: data.registrationNumber,
+          contactNo: data.contactNumber,
+          loginEmail: data.loginEmail,
+          organisationEmail: data.organisationEmail,
+          websiteURL: data.websiteURL,
+          landlineNo: data.landlineNumber,
+          tradingName: data.tradingName,
+          tradingPeriod: data.tradingPeriod,
+          nameOfSector: data.sector,
+          nameChangeLast5Years: data.nameChangeLast5Years,
+          FacedPenaltyLast3Years: data.penaltyLast3Years,
+        },
 
-      // Authorised Person Details section
-      authorisedPerson: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        designation: data.designation,
-        phoneNo: data.phoneNo,
-        email: data.email,
-        criminalHistory: data.criminalHistory,
-        proofOfId: "",
-      },
+        // Authorised Person Details section
+        authorisedPerson: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          designation: data.designation,
+          phoneNo: data.phoneNo,
+          email: data.email,
+          criminalHistory: data.criminalHistory,
+          proofOfId: "",
+        },
 
-      // Key Contact Person section
-      keyContactPerson: {
-        firstName: data.keyPersonFirstName,
-        lastName: data.keyPersonLastName,
-        designation: data.keyPersonDesignation,
-        phoneNo: data.keyPersonPhoneNo,
-        email: data.keyPersonEmail,
-        criminalHistory: data.keyPersonCriminalHistory,
-        proofOfId: "",
-      },
+        // Key Contact Person section
+        keyContactPerson: {
+          firstName: data.keyPersonFirstName,
+          lastName: data.keyPersonLastName,
+          designation: data.keyPersonDesignation,
+          phoneNo: data.keyPersonPhoneNo,
+          email: data.keyPersonEmail,
+          criminalHistory: data.keyPersonCriminalHistory,
+          proofOfId: "",
+        },
 
-      // Level 1 User section
-      level1User: {
-        firstName: data.level1PersonFirstName,
-        lastName: data.level1PersonLastName,
-        designation: data.level1PersonDesignation,
-        phoneNo: data.level1PersonPhoneNo,
-        email: data.level1PersonEmail,
-        criminalHistory: data.level1PersonCriminalHistory,
-        proofOfId: "",
-      },
+        // Level 1 User section
+        level1User: {
+          firstName: data.level1PersonFirstName,
+          lastName: data.level1PersonLastName,
+          designation: data.level1PersonDesignation,
+          phoneNo: data.level1PersonPhoneNo,
+          email: data.level1PersonEmail,
+          criminalHistory: data.level1PersonCriminalHistory,
+          proofOfId: "",
+        },
 
-      // Organisation Address section
-      organisationAddress: {
-        postCode: data.postCode,
-        addressLine1: data.addressLine1,
-        addressLine2: data.addressLine2,
-        addressLine3: data.addressLine3,
-        city: data.cityCounty,
-        country: data.country,
-      },
+        // Organisation Address section
+        organisationAddress: {
+          postCode: data.postCode,
+          addressLine1: data.addressLine1,
+          addressLine2: data.addressLine2,
+          addressLine3: data.addressLine3,
+          city: data.cityCounty,
+          country: data.country,
+        },
 
-      // Trading Hours section
-      tradingHours: [
-        {
-          day: "Monday",
-          status: data.mondayStatus,
-          startTime: data.mondayOpeningTime,
-          endTime: data.mondayClosingTime,
-        },
-        {
-          day: "Tuesday",
-          status: data.tuesdayStatus,
-          startTime: data.tuesdayOpeningTime,
-          endTime: data.tuesdayClosingTime,
-        },
-        {
-          day: "Wednesday",
-          status: data.wednesdayStatus,
-          startTime: data.wednesdayOpeningTime,
-          endTime: data.wednesdayClosingTime,
-        },
-        {
-          day: "Thursday",
-          status: data.thursdayStatus,
-          startTime: data.thursdayOpeningTime,
-          endTime: data.thursdayClosingTime,
-        },
-        {
-          day: "Friday",
-          status: data.fridayStatus,
-          startTime: data.fridayOpeningTime,
-          endTime: data.fridayClosingTime,
-        },
-        {
-          day: "Saturday",
-          status: data.saturdayStatus,
-          startTime: data.saturdayOpeningTime,
-          endTime: data.saturdayClosingTime,
-        },
-        {
-          day: "Sunday",
-          status: data.sundayStatus,
-          startTime: data.sundayOpeningTime,
-          endTime: data.sundayClosingTime,
-        },
-      ],
+        // Trading Hours section
+        tradingHours: [
+          {
+            day: "Monday",
+            status: data.mondayStatus,
+            startTime: data.mondayOpeningTime,
+            endTime: data.mondayClosingTime,
+          },
+          {
+            day: "Tuesday",
+            status: data.tuesdayStatus,
+            startTime: data.tuesdayOpeningTime,
+            endTime: data.tuesdayClosingTime,
+          },
+          {
+            day: "Wednesday",
+            status: data.wednesdayStatus,
+            startTime: data.wednesdayOpeningTime,
+            endTime: data.wednesdayClosingTime,
+          },
+          {
+            day: "Thursday",
+            status: data.thursdayStatus,
+            startTime: data.thursdayOpeningTime,
+            endTime: data.thursdayClosingTime,
+          },
+          {
+            day: "Friday",
+            status: data.fridayStatus,
+            startTime: data.fridayOpeningTime,
+            endTime: data.fridayClosingTime,
+          },
+          {
+            day: "Saturday",
+            status: data.saturdayStatus,
+            startTime: data.saturdayOpeningTime,
+            endTime: data.saturdayClosingTime,
+          },
+          {
+            day: "Sunday",
+            status: data.sundayStatus,
+            startTime: data.sundayOpeningTime,
+            endTime: data.sundayClosingTime,
+          },
+        ],
 
-      // documents section
-      documents: {
-        payeeAccountReference: "",
-        latestRti: "",
-        employerLiabilityInsurance: "",
-        proofOfBusinessPremises: "",
-        copyOfLease: "",
-        businessBankStatement: "",
-        signedAnnualAccounts: "",
-        vatCertificate: "",
-        healthSafetyRating: "",
-        regulatoryBodyCertificate: "",
-        businessLicense: "",
-        franchiseAgreement: "",
-        governingBodyRegistration: "",
-        auditedAnnualAccounts: "",
-        othersDocuments: "",
+        // documents section
+        documents: {
+          payeeAccountReference: "",
+          latestRti: "",
+          employerLiabilityInsurance: "",
+          proofOfBusinessPremises: "",
+          copyOfLease: "",
+          businessBankStatement: "",
+          signedAnnualAccounts: "",
+          vatCertificate: "",
+          healthSafetyRating: "",
+          regulatoryBodyCertificate: "",
+          businessLicense: "",
+          franchiseAgreement: "",
+          governingBodyRegistration: "",
+          auditedAnnualAccounts: "",
+          othersDocuments: "",
+        },
       },
     };
 
@@ -257,33 +262,80 @@ const AddOrgDocuments = () => {
       formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
     }
 
-    // console.log("FormData entries:");
-    // for (const [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-
-    const toastId = toast.loading("Adding organisation documents...");
+    const toastId = toast.loading("Creating organisation...");
 
     try {
-      await addOrgDocuments(formData).unwrap();
+      await createOrganisation(formData).unwrap();
       // const res = await addOrgDocuments(formattedData).unwrap();
       // console.log("Response:", res);
-      toast.success("Organisation documents added successfully", {
+      toast.success("Organisation created successfully", {
         id: toastId,
         duration: 2000,
       });
     } catch (err: any) {
-      // console.log("Error:", err);
-      toast.error(err.data.message, { id: toastId, duration: 2000 });
+      console.log("Error:", err);
+      toast.error(err.data.message, { id: toastId, duration: 3000 });
     }
   };
 
   return (
     <main className="dashboard-padding ">
       <h1 className="text-2xl font-medium pb-2 border-b border-hrms-blue-light">
-        Add Organaisation Documents
+        Create Organaisation
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
+        {/* employer credentials */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Employer Credentials
+          </h1>
+          <div className="grid grid-cols-4 gap-5 pt-5">
+            <div>
+              <Input
+                radius="sm"
+                label="Email"
+                labelPlacement="outside"
+                placeholder="Enter email"
+                type="email"
+                className="text-hrms-blue font-semibold"
+                {...register("loginEmail")}
+              />
+              {errors.loginEmail && (
+                <span className="text-red-500 text-sm">
+                  {errors.loginEmail.message}
+                </span>
+              )}
+            </div>
+            <div className="w-full">
+              <Input
+                endContent={
+                  <button
+                    aria-label="toggle password visibility"
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleVisibility}
+                  >
+                    {isVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+                  </button>
+                }
+                radius="sm"
+                label="Password"
+                labelPlacement="outside"
+                placeholder="Enter your password"
+                type={isVisible ? "text" : "password"}
+                {...register("password", {
+                  required: "Please enter your password",
+                })}
+              />
+              {errors.password?.message && (
+                <p className="text-red-500">
+                  {String(errors.password.message)}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Organisation details */}
         <div>
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
@@ -371,23 +423,6 @@ const AddOrgDocuments = () => {
               {errors.contactNumber && (
                 <small className="text-red-700 font-medium">
                   {errors.contactNumber?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="LogIn Email"
-                labelPlacement="outside"
-                placeholder="Enter LogIn email"
-                type="email"
-                className="text-hrms-blue font-semibold"
-                {...register("loginEmail")}
-              />
-              {errors.loginEmail && (
-                <small className="text-red-700 font-medium">
-                  {errors.loginEmail?.message}
                 </small>
               )}
             </div>
@@ -1885,4 +1920,4 @@ conviction/Bankruptcy/Disqualification?"
   );
 };
 
-export default AddOrgDocuments;
+export default CreateOrganisation;

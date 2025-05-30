@@ -8,12 +8,11 @@ import Contact from "../pages/Contact/Contact";
 import { DashboardLayout } from "../components";
 import Leave from "../pages/Dashboard/Employee/Leave";
 import Dashboard from "../pages/Dashboard/Common/Dashboard";
-import AddOrgDocuments from "../pages/Dashboard/Employer/AddOrgDocuments";
 import CreateEmployee from "../pages/Dashboard/Employer/CreateEmployee";
 import ManageEmployee from "../pages/Dashboard/Employer/ManageEmployee";
 import ManagePayroll from "../pages/Dashboard/Employer/ManagePayroll";
 import Attendance from "../pages/Dashboard/Employee/Attendance";
-import AddDocuments from "../pages/Dashboard/Employee/AddDocuments";
+import CreateOrganisation from "../pages/Dashboard/Admin/CreateOrganisation";
 
 const router = createBrowserRouter([
   {
@@ -47,10 +46,7 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
-      {
-        path: "add-employee-documents",
-        element: <AddDocuments />,
-      },
+
       {
         path: "employee-attendance",
         element: <Attendance />,
@@ -60,8 +56,8 @@ const router = createBrowserRouter([
         element: <Leave />,
       },
       {
-        path: "add-org-documents",
-        element: <AddOrgDocuments />,
+        path: "create-organisation",
+        element: <CreateOrganisation />,
       },
       {
         path: "create-employee",

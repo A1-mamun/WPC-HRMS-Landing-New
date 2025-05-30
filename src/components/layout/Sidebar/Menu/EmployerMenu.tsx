@@ -6,11 +6,6 @@ const EmployerMenu = () => {
     <>
       <MenuItem
         icon={<FaUserCog />}
-        label="Add Org Documents"
-        address="add-org-documents"
-      />
-      <MenuItem
-        icon={<FaUserCog />}
         label="Create Employee"
         address="create-employee"
       />

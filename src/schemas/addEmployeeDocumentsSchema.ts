@@ -74,7 +74,39 @@ const trainingDetailsSchema = z.object({
   description: z.string().optional(),
 });
 
+// other details schema
+const otherDetailsSchema = z.object({
+  documentName: z.string().optional(),
+  referenceNo: z.string().optional(),
+  nationality: z.enum([...nationalies] as [string, ...string[]]).optional(),
+  issueDate: z.string().optional(),
+  expiryDate: z.string().optional(),
+  eligibleReviewDate: z.string().optional(),
+  document: z
+    .custom<File>((val) => val instanceof File && val.size > 0, {
+      message: "This Document is required",
+    })
+    .refine((file) => file.size <= 2 * 1024 * 1024, {
+      message: "Max file size is 2MB",
+    })
+    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
+      message: "Only JPG or PNG allowed",
+    })
+    .optional(),
+  remarks: z.string().optional(),
+  isCurrentStatus: z.enum(["yes", "no"]).optional(),
+});
+
 export const addEmployeeDocumentsSchema = z.object({
+  // employee credentials
+  email: z
+    .string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email({ message: "Invalid email address" }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(1, "Password is required"),
+
   // personal details
   employeeCode: z.string().min(1, "Employee code is required"),
   firstName: z
@@ -100,10 +132,7 @@ export const addEmployeeDocumentsSchema = z.object({
   dateOfBirth: z.string().optional(),
   maritalStatus: z.enum([...maritalStatus] as [string, ...string[]]).optional(),
   nationality: z.enum([...nationalies] as [string, ...string[]]).optional(),
-  email: z
-    .string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email({ message: "Invalid email address" }),
+
   contactNumber: z.string().min(1, "Contact number is required"),
   alternativeNumber: z.string().optional(),
 
@@ -334,31 +363,7 @@ export const addEmployeeDocumentsSchema = z.object({
   nationalIdStatus: z.enum(["yes", "no"]).optional(),
 
   // others details
-  // othersDocumentName: z.string().optional(),
-  // othersDocumentReferenceNumber: z.string().optional(),
-  // othersNationality: z
-  //   .enum([...nationalies] as [string, ...string[]])
-  //   .optional(),
-  // othersIssueDate: z.string().optional(),
-  // othersExpiryDate: z.string().optional(),
-  // othersEligibleReviewDate: z.string().optional(),
-  // othersUploadDocument: z
-  //   .custom<File>((val) => val instanceof File && val.size > 0, {
-  //     message: "Document is required",
-  //   })
-  //   .refine((file) => file.size <= 1 * 1024 * 1024, {
-  //     message: "Max file size is 1MB",
-  //   })
-  //   .refine(
-  //     (file) =>
-  //       ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-  //     {
-  //       message: "Only JPG,PNG or PDF  allowed",
-  //     }
-  //   )
-  //   .optional(),
-  // remarks: z.string().optional(),
-  // othersStatus: z.enum(["yes", "no"]).optional(),
+  otherDetails: z.array(otherDetailsSchema).optional(),
 
   // pay details
   payGroup: z.enum([...payGroups] as [string, ...string[]]).optional(),

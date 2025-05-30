@@ -6,6 +6,11 @@ const AdminMenu = () => {
     <>
       <MenuItem
         icon={<FaUserCog />}
+        label="Create Organisation"
+        address="create-organisation"
+      />
+      <MenuItem
+        icon={<FaUserCog />}
         label="Manage Users"
         address="manage-users"
       />
