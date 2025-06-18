@@ -9,6 +9,7 @@ import {
   Pagination,
   getKeyValue,
 } from "@heroui/react";
+import { useGetOrgaisationEmployeesQuery } from "../../../redux/features/employer/createOrganisation";
 const users = [
   {
     key: "1",
@@ -152,6 +153,11 @@ const users = [
 
 const ManageEmployee = () => {
   const [page, setPage] = useState(1);
+
+  // api call to get employees
+  const { data } = useGetOrgaisationEmployeesQuery(undefined);
+  console.log("data", data);
+
   const rowsPerPage = 10;
 
   const pages = Math.ceil(users.length / rowsPerPage);

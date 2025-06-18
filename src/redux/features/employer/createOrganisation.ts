@@ -1,6 +1,6 @@
 import { baseApi } from "../../api/baseApi";
 
-const createOrganisationApi = baseApi.injectEndpoints({
+const organisationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createOrganisation: builder.mutation({
       query: (formData) => ({
@@ -9,6 +9,15 @@ const createOrganisationApi = baseApi.injectEndpoints({
         body: formData,
       }),
     }),
+    getOrgaisationEmployees: builder.query({
+      query: () => ({
+        url: "/employee/organisation-employees",
+        method: "GET",
+      }),
+    }),
   }),
 });
-export const { useCreateOrganisationMutation } = createOrganisationApi;
+export const {
+  useCreateOrganisationMutation,
+  useGetOrgaisationEmployeesQuery,
+} = organisationApi;
