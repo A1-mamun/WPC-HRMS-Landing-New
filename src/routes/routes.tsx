@@ -13,6 +13,7 @@ import ManageEmployee from "../pages/Dashboard/Employer/ManageEmployee";
 import ManagePayroll from "../pages/Dashboard/Employer/ManagePayroll";
 import Attendance from "../pages/Dashboard/Employee/Attendance";
 import CreateOrganisation from "../pages/Dashboard/Admin/CreateOrganisation";
+import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,14 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
-
+      {
+        path: "create-organisation",
+        element: <CreateOrganisation />,
+      },
+      {
+        path: "manage-organisation",
+        element: <ManageEmployer />,
+      },
       {
         path: "employee-attendance",
         element: <Attendance />,
@@ -55,10 +63,7 @@ const router = createBrowserRouter([
         path: "employee-leave",
         element: <Leave />,
       },
-      {
-        path: "create-organisation",
-        element: <CreateOrganisation />,
-      },
+
       {
         path: "create-employee",
         element: <CreateEmployee />,
