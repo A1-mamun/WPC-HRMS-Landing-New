@@ -14,6 +14,7 @@ import ManagePayroll from "../pages/Dashboard/Employer/ManagePayroll";
 import Attendance from "../pages/Dashboard/Employee/Attendance";
 import CreateOrganisation from "../pages/Dashboard/Admin/CreateOrganisation";
 import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
+import EditOrganisation from "../pages/Dashboard/Admin/EditOrganisation";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "manage-organisation",
         element: <ManageEmployer />,
+      },
+      {
+        path: "edit-organisation/:id",
+        element: <EditOrganisation />,
       },
       {
         path: "employee-attendance",

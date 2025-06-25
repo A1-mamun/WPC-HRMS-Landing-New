@@ -8,6 +8,13 @@ const adminApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getOrganisationById: builder.query({
+      query: (id) => ({
+        url: `/employer/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
-export const { useGetOrgaisationsQuery } = adminApi;
+export const { useGetOrgaisationsQuery, useGetOrganisationByIdQuery } =
+  adminApi;

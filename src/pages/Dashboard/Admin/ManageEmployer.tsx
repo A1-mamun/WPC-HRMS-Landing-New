@@ -9,9 +9,12 @@ import {
   TableCell,
   Pagination,
   getKeyValue,
+  Button,
+  Tooltip,
 } from "@heroui/react";
-import { Actions } from "../../../components";
 import { useGetOrgaisationsQuery } from "../../../redux/features/admin/adminApi";
+import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const ManageEmployer = () => {
   const [page, setPage] = useState(1);
@@ -103,7 +106,7 @@ const ManageEmployer = () => {
               </TableColumn>
               <TableColumn
                 className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
-                key="contactNo"
+                key="websiteURL"
               >
                 Website
               </TableColumn>
@@ -128,12 +131,29 @@ const ManageEmployer = () => {
             </TableHeader>
             <TableBody items={items}>
               {(item: any) => (
-                <TableRow key={item.organisationDetails?.name}>
+                <TableRow key={item._id}>
                   {(columnKey) => (
                     <TableCell className="text-xs font-semibold border-r border-gray-200 px-2 py-1  truncate">
                       {columnKey === "action" ? (
                         <div>
-                          <Actions />
+                          <Tooltip
+                            content="Edit"
+                            showArrow
+                            placement="bottom"
+                            color="primary"
+                          >
+                            <Link
+                              to={`/dashboard/edit-organisation/${item._id}`}
+                            >
+                              <Button
+                                size="sm"
+                                isIconOnly
+                                className="bg-hrms-blue-hover text-sm font-jura text-white font-semibold"
+                              >
+                                <FaEdit />
+                              </Button>
+                            </Link>
+                          </Tooltip>
                         </div>
                       ) : (
                         <div className="truncate">
