@@ -383,7 +383,7 @@ const EditOrganisation = () => {
                   labelPlacement="outside"
                   placeholder="Enter organisation name"
                   type="text"
-                  defaultValue={org?.data?.organisationDetails?.name}
+                  // defaultValue={org?.data?.organisationDetails?.name}
                   className="text-hrms-blue font-semibold"
                   {...register("organisationName")}
                 />

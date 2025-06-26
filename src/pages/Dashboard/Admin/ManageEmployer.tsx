@@ -32,7 +32,10 @@ const ManageEmployer = () => {
     if (!data?.data || !rowsPerPage) return [];
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-    return data.data.slice(start, end);
+    return data.data.slice(start, end).map((org: any, i: number) => ({
+      ...org,
+      siNo: start + i + 1,
+    }));
   }, [page, data, rowsPerPage]);
 
   // console.log("items", items);
@@ -87,43 +90,43 @@ const ManageEmployer = () => {
           >
             <TableHeader>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[8%] border-r-2 border-white whitespace-nowrap"
-                key="key"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[2%] border-r-2 border-white whitespace-nowrap"
+                key="siNo"
               >
                 Si. No.
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[12%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[13%] border-r-2 border-white"
                 key="name"
               >
                 Organisation Name
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[8%] border-r-2 border-white whitespace-nowrap"
-                key="dateOfBirth"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[20%] border-r-2 border-white whitespace-nowrap"
+                key="address"
               >
                 Organisation Address
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[15%] border-r-2 border-white"
                 key="websiteURL"
               >
                 Website
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[15%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
                 key="loginEmail"
               >
                 Email
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[3%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
                 key="contactNo"
               >
                 Phone No
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[8%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[5%] border-r-2 border-white"
                 key="action"
               >
                 Action
@@ -155,9 +158,27 @@ const ManageEmployer = () => {
                             </Link>
                           </Tooltip>
                         </div>
+                      ) : columnKey === "siNo" ? (
+                        <span className="text-center">
+                          {item.siNo ?? "N/A"}
+                        </span>
+                      ) : columnKey === "address" ? (
+                        <span className="text-center">
+                          {item.address ?? "N/A"}
+                        </span>
                       ) : (
                         <div className="truncate">
-                          {getKeyValue(item.organisationDetails, columnKey)}
+                          {(() => {
+                            const val = getKeyValue(
+                              item.organisationDetails,
+                              columnKey
+                            );
+                            return val !== undefined &&
+                              val !== null &&
+                              val !== ""
+                              ? val
+                              : "N/A";
+                          })()}
                         </div>
                       )}
                     </TableCell>
