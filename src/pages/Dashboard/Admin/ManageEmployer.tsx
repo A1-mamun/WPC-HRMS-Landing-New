@@ -96,7 +96,7 @@ const ManageEmployer = () => {
                 Si. No.
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[13%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[20%] border-r-2 border-white"
                 key="name"
               >
                 Organisation Name
@@ -114,19 +114,19 @@ const ManageEmployer = () => {
                 Website
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[20%] border-r-2 border-white"
                 key="loginEmail"
               >
                 Email
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[10%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[15%] border-r-2 border-white"
                 key="contactNo"
               >
                 Phone No
               </TableColumn>
               <TableColumn
-                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[5%] border-r-2 border-white"
+                className="bg-hrms-blue-hover text-white text-xs font-semibold w-[8%] border-r-2 border-white"
                 key="action"
               >
                 Action
@@ -161,10 +161,6 @@ const ManageEmployer = () => {
                       ) : columnKey === "siNo" ? (
                         <span className="text-center">
                           {item.siNo ?? "N/A"}
-                        </span>
-                      ) : columnKey === "address" ? (
-                        <span className="text-center">
-                          {item.address ?? "N/A"}
                         </span>
                       ) : (
                         <div className="truncate">
