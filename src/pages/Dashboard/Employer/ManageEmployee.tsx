@@ -91,7 +91,7 @@ const ManageEmployee = () => {
               </TableColumn>
               <TableColumn
                 className="bg-hrms-blue-hover text-white text-xs font-semibold w-[12%] border-r-2 border-white"
-                key="firstName"
+                key="fullName"
               >
                 Name
               </TableColumn>
@@ -133,7 +133,7 @@ const ManageEmployee = () => {
               </TableColumn>
               <TableColumn
                 className="bg-hrms-blue-hover text-white text-xs font-semibold w-[8%] border-r-2 border-white whitespace-nowrap"
-                key="visaExpired"
+                key="visaExpireDate"
               >
                 Visa Exp
               </TableColumn>
@@ -167,7 +167,17 @@ const ManageEmployee = () => {
                         </div>
                       ) : (
                         <div className="truncate">
-                          {getKeyValue(item.personalDetails, columnKey)}
+                          {(() => {
+                            const val = getKeyValue(
+                              item.personalDetails,
+                              columnKey
+                            );
+                            return val !== undefined &&
+                              val !== null &&
+                              val !== ""
+                              ? val
+                              : "N/A";
+                          })()}
                         </div>
                       )}
                     </TableCell>
