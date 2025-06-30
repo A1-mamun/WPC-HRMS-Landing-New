@@ -28,6 +28,8 @@ import { organizationFileFields } from "../../../constants/organisation";
 import { useCreateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
 import { useParams } from "react-router-dom";
 import { useGetOrganisationByIdQuery } from "../../../redux/features/admin/adminApi";
+import { RHFFileInput, RHFInput, RHFRadio } from "../../../components";
+import RHFSelect from "../../../components/input/RHFSelect";
 
 const EditOrganisation = () => {
   const { id } = useParams();
@@ -45,9 +47,10 @@ const EditOrganisation = () => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<EmployerFormSchemaType>({
-    resolver: zodResolver(addOrgDocumentsSchema),
+    // resolver: zodResolver(addOrgDocumentsSchema),
+    defaultValues: {},
   });
 
   const [createOrganisation] = useCreateOrganisationMutation();
@@ -178,180 +181,216 @@ const EditOrganisation = () => {
     }
   }, [isLevel1PersonSameAsAuthorised]);
 
-  const handleSubmitForm = async (data: FieldValues) => {
-    // Create FormData object for file uploads
-    const formData = new FormData();
+  function diff<T extends Record<string, any>>(
+    values: T,
+    dirty: any
+  ): Partial<T> {
+    const changed: Partial<T> = {};
 
-    // Organize form data by sections
-    const formattedData = {
-      // employer credentials
-      credentials: {
-        email: data.loginEmail,
-        password: data.password,
-      },
-      employerData: {
-        // Organization Details section
-        organisationDetails: {
-          name: data.organisationName,
-          type: data.organisationType,
-          registrationNo: data.registrationNumber,
-          contactNo: data.contactNumber,
-          loginEmail: data.loginEmail,
-          organisationEmail: data.organisationEmail,
-          websiteURL: data.websiteURL,
-          landlineNo: data.landlineNumber,
-          tradingName: data.tradingName,
-          tradingPeriod: data.tradingPeriod,
-          nameOfSector: data.sector,
-          nameChangeLast5Years: data.nameChangeLast5Years,
-          FacedPenaltyLast3Years: data.penaltyLast3Years,
-        },
+    // for (const key in dirty) {
+    //   if (dirty[key] === true) {
+    //     changed[key] = values[key]; // primitive or file input
+    //   } else if (typeof dirty[key] === "object" && values[key]) {
+    //     const nested = diff(values[key], dirty[key]);
+    //     if (Object.keys(nested).length > 0) {
+    //       changed[key] = nested; // nested object field
+    //     }
+    //   }
+    // }
 
-        // Authorised Person Details section
-        authorisedPerson: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          designation: data.designation,
-          phoneNo: data.phoneNo,
-          email: data.email,
-          criminalHistory: data.criminalHistory,
-          proofOfId: "",
-        },
-
-        // Key Contact Person section
-        keyContactPerson: {
-          firstName: data.keyPersonFirstName,
-          lastName: data.keyPersonLastName,
-          designation: data.keyPersonDesignation,
-          phoneNo: data.keyPersonPhoneNo,
-          email: data.keyPersonEmail,
-          criminalHistory: data.keyPersonCriminalHistory,
-          proofOfId: "",
-        },
-
-        // Level 1 User section
-        level1User: {
-          firstName: data.level1PersonFirstName,
-          lastName: data.level1PersonLastName,
-          designation: data.level1PersonDesignation,
-          phoneNo: data.level1PersonPhoneNo,
-          email: data.level1PersonEmail,
-          criminalHistory: data.level1PersonCriminalHistory,
-          proofOfId: "",
-        },
-
-        // Organisation Address section
-        organisationAddress: {
-          postCode: data.postCode,
-          addressLine1: data.addressLine1,
-          addressLine2: data.addressLine2,
-          addressLine3: data.addressLine3,
-          city: data.cityCounty,
-          country: data.country,
-        },
-
-        // Trading Hours section
-        tradingHours: [
-          {
-            day: "Monday",
-            status: data.mondayStatus,
-            startTime: data.mondayOpeningTime,
-            endTime: data.mondayClosingTime,
-          },
-          {
-            day: "Tuesday",
-            status: data.tuesdayStatus,
-            startTime: data.tuesdayOpeningTime,
-            endTime: data.tuesdayClosingTime,
-          },
-          {
-            day: "Wednesday",
-            status: data.wednesdayStatus,
-            startTime: data.wednesdayOpeningTime,
-            endTime: data.wednesdayClosingTime,
-          },
-          {
-            day: "Thursday",
-            status: data.thursdayStatus,
-            startTime: data.thursdayOpeningTime,
-            endTime: data.thursdayClosingTime,
-          },
-          {
-            day: "Friday",
-            status: data.fridayStatus,
-            startTime: data.fridayOpeningTime,
-            endTime: data.fridayClosingTime,
-          },
-          {
-            day: "Saturday",
-            status: data.saturdayStatus,
-            startTime: data.saturdayOpeningTime,
-            endTime: data.saturdayClosingTime,
-          },
-          {
-            day: "Sunday",
-            status: data.sundayStatus,
-            startTime: data.sundayOpeningTime,
-            endTime: data.sundayClosingTime,
-          },
-        ],
-
-        // documents section
-        documents: {
-          payeeAccountReference: "",
-          latestRti: "",
-          employerLiabilityInsurance: "",
-          proofOfBusinessPremises: "",
-          copyOfLease: "",
-          businessBankStatement: "",
-          signedAnnualAccounts: "",
-          vatCertificate: "",
-          healthSafetyRating: "",
-          regulatoryBodyCertificate: "",
-          businessLicense: "",
-          franchiseAgreement: "",
-          governingBodyRegistration: "",
-          auditedAnnualAccounts: "",
-          othersDocuments: "",
-        },
-      },
-    };
-
-    // console.log("Formatted Data:", formattedData);
-    //append formattedData to formData as a JSON string
-    formData.append("data", JSON.stringify(formattedData));
-
-    // // Append files to FormData
-    organizationFileFields.forEach((field) => {
-      const file = data[field];
-
-      if (file) {
-        formData.append(field, file);
+    (Object.keys(dirty) as (keyof T)[]).forEach((key) => {
+      if (dirty[key] === true) {
+        changed[key] = values[key]; // primitive or file input
+      } else if (typeof dirty[key] === "object" && values[key]) {
+        const nested = diff(values[key], dirty[key]);
+        if (Object.keys(nested).length) {
+          changed[key] = nested as any;
+        }
       }
     });
+    return changed;
+  }
 
-    if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
-      formData.append("keyPersonProofOfId", data.keyPersonProofOfId);
-    }
-    if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
-      formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
-    }
+  const handleSubmitForm = async (data: FieldValues) => {
+    const changedFields = diff(data, dirtyFields);
 
-    const toastId = toast.loading("Creating organisation...");
-
-    try {
-      await createOrganisation(formData).unwrap();
-      // const res = await addOrgDocuments(formattedData).unwrap();
-      // console.log("Response:", res);
-      toast.success("Organisation created successfully", {
-        id: toastId,
-        duration: 2000,
-      });
-    } catch (err: any) {
-      //   console.log("Error:", err);
-      toast.error(err.data.message, { id: toastId, duration: 3000 });
-    }
+    console.log("Only the changed fields:", changedFields);
   };
+
+  // const handleSubmitForm = async (data: FieldValues) => {
+  //   // Create FormData object for file uploads
+  //   const formData = new FormData();
+
+  //   // Organize form data by sections
+  //   const formattedData = {
+  //     // employer credentials
+  //     credentials: {
+  //       email: data.loginEmail,
+  //       password: data.password,
+  //     },
+  //     employerData: {
+  //       // Organization Details section
+  //       organisationDetails: {
+  //         name: data.organisationName,
+  //         type: data.organisationType,
+  //         registrationNo: data.registrationNumber,
+  //         contactNo: data.contactNumber,
+  //         loginEmail: data.loginEmail,
+  //         organisationEmail: data.organisationEmail,
+  //         websiteURL: data.websiteURL,
+  //         landlineNo: data.landlineNumber,
+  //         tradingName: data.tradingName,
+  //         tradingPeriod: data.tradingPeriod,
+  //         nameOfSector: data.sector,
+  //         nameChangeLast5Years: data.nameChangeLast5Years,
+  //         FacedPenaltyLast3Years: data.penaltyLast3Years,
+  //       },
+
+  //       // Authorised Person Details section
+  //       authorisedPerson: {
+  //         firstName: data.firstName,
+  //         lastName: data.lastName,
+  //         designation: data.designation,
+  //         phoneNo: data.phoneNo,
+  //         email: data.email,
+  //         criminalHistory: data.criminalHistory,
+  //         proofOfId: "",
+  //       },
+
+  //       // Key Contact Person section
+  //       keyContactPerson: {
+  //         firstName: data.keyPersonFirstName,
+  //         lastName: data.keyPersonLastName,
+  //         designation: data.keyPersonDesignation,
+  //         phoneNo: data.keyPersonPhoneNo,
+  //         email: data.keyPersonEmail,
+  //         criminalHistory: data.keyPersonCriminalHistory,
+  //         proofOfId: "",
+  //       },
+
+  //       // Level 1 User section
+  //       level1User: {
+  //         firstName: data.level1PersonFirstName,
+  //         lastName: data.level1PersonLastName,
+  //         designation: data.level1PersonDesignation,
+  //         phoneNo: data.level1PersonPhoneNo,
+  //         email: data.level1PersonEmail,
+  //         criminalHistory: data.level1PersonCriminalHistory,
+  //         proofOfId: "",
+  //       },
+
+  //       // Organisation Address section
+  //       organisationAddress: {
+  //         postCode: data.postCode,
+  //         addressLine1: data.addressLine1,
+  //         addressLine2: data.addressLine2,
+  //         addressLine3: data.addressLine3,
+  //         city: data.cityCounty,
+  //         country: data.country,
+  //       },
+
+  //       // Trading Hours section
+  //       tradingHours: [
+  //         {
+  //           day: "Monday",
+  //           status: data.mondayStatus,
+  //           startTime: data.mondayOpeningTime,
+  //           endTime: data.mondayClosingTime,
+  //         },
+  //         {
+  //           day: "Tuesday",
+  //           status: data.tuesdayStatus,
+  //           startTime: data.tuesdayOpeningTime,
+  //           endTime: data.tuesdayClosingTime,
+  //         },
+  //         {
+  //           day: "Wednesday",
+  //           status: data.wednesdayStatus,
+  //           startTime: data.wednesdayOpeningTime,
+  //           endTime: data.wednesdayClosingTime,
+  //         },
+  //         {
+  //           day: "Thursday",
+  //           status: data.thursdayStatus,
+  //           startTime: data.thursdayOpeningTime,
+  //           endTime: data.thursdayClosingTime,
+  //         },
+  //         {
+  //           day: "Friday",
+  //           status: data.fridayStatus,
+  //           startTime: data.fridayOpeningTime,
+  //           endTime: data.fridayClosingTime,
+  //         },
+  //         {
+  //           day: "Saturday",
+  //           status: data.saturdayStatus,
+  //           startTime: data.saturdayOpeningTime,
+  //           endTime: data.saturdayClosingTime,
+  //         },
+  //         {
+  //           day: "Sunday",
+  //           status: data.sundayStatus,
+  //           startTime: data.sundayOpeningTime,
+  //           endTime: data.sundayClosingTime,
+  //         },
+  //       ],
+
+  //       // documents section
+  //       documents: {
+  //         payeeAccountReference: "",
+  //         latestRti: "",
+  //         employerLiabilityInsurance: "",
+  //         proofOfBusinessPremises: "",
+  //         copyOfLease: "",
+  //         businessBankStatement: "",
+  //         signedAnnualAccounts: "",
+  //         vatCertificate: "",
+  //         healthSafetyRating: "",
+  //         regulatoryBodyCertificate: "",
+  //         businessLicense: "",
+  //         franchiseAgreement: "",
+  //         governingBodyRegistration: "",
+  //         auditedAnnualAccounts: "",
+  //         othersDocuments: "",
+  //       },
+  //     },
+  //   };
+
+  //   // console.log("Formatted Data:", formattedData);
+  //   //append formattedData to formData as a JSON string
+  //   formData.append("data", JSON.stringify(formattedData));
+
+  //   // // Append files to FormData
+  //   organizationFileFields.forEach((field) => {
+  //     const file = data[field];
+
+  //     if (file) {
+  //       formData.append(field, file);
+  //     }
+  //   });
+
+  //   if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
+  //     formData.append("keyPersonProofOfId", data.keyPersonProofOfId);
+  //   }
+  //   if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
+  //     formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
+  //   }
+
+  //   const toastId = toast.loading("Creating organisation...");
+
+  //   try {
+  //     await createOrganisation(formData).unwrap();
+  //     // const res = await addOrgDocuments(formattedData).unwrap();
+  //     // console.log("Response:", res);
+  //     toast.success("Organisation created successfully", {
+  //       id: toastId,
+  //       duration: 2000,
+  //     });
+  //   } catch (err: any) {
+  //     //   console.log("Error:", err);
+  //     toast.error(err.data.message, { id: toastId, duration: 3000 });
+  //   }
+  // };
 
   return (
     <main className="dashboard-padding ">
@@ -376,304 +415,118 @@ const EditOrganisation = () => {
               Organisation Details
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
-              <div>
-                <Input
-                  radius="sm"
-                  label="Organisation Name"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation name"
-                  type="text"
-                  // defaultValue={org?.data?.organisationDetails?.name}
-                  className="text-hrms-blue font-semibold"
-                  {...register("organisationName")}
-                />
-                {errors.organisationName && (
-                  <small className="text-red-700 font-medium">
-                    {errors.organisationName?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="organisationName"
+                control={control}
+                label="Organisation Name"
+                placeholder="Enter organisation name"
+                error={errors.organisationName?.message}
+              />
 
-              <div>
-                <Controller
-                  name="organisationType"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      radius="sm"
-                      label="Type of Organisation"
-                      className="text-hrms-blue font-semibold"
-                      labelPlacement="outside"
-                      placeholder="Select organisation type"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      {organizationTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.value}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-                {errors.organisationType && (
-                  <small className="text-red-700 font-medium">
-                    {errors.organisationType?.message}
-                  </small>
-                )}
-              </div>
+              <RHFSelect
+                name="organisationType"
+                control={control}
+                label="Type of Organisation"
+                placeholder="Select organisation type"
+                options={organizationTypes}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Registration Number"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation registration number"
-                  defaultValue={org?.data?.organisationDetails?.registrationNo}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("registrationNumber")}
-                />
-                {errors.registrationNumber && (
-                  <small className="text-red-700 font-medium">
-                    {errors.registrationNumber?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="registrationNumber"
+                control={control}
+                label="Registration Number"
+                placeholder="Enter registration number"
+                error={errors.registrationNumber?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Contact No"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation contact number"
-                  defaultValue={org?.data?.organisationDetails?.contactNo}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("contactNumber")}
-                />
-                {errors.contactNumber && (
-                  <small className="text-red-700 font-medium">
-                    {errors.contactNumber?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="contactNumber"
+                control={control}
+                label="Contact Number"
+                placeholder="Enter contact number"
+                error={errors.contactNumber?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Organisation Email"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation email"
-                  defaultValue={
-                    org?.data?.organisationDetails?.organisationEmail
-                  }
-                  type="email"
-                  className="text-hrms-blue font-semibold"
-                  {...register("organisationEmail")}
-                />
-                {errors.organisationEmail && (
-                  <small className="text-red-700 font-medium">
-                    {errors.organisationEmail?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="organisationEmail"
+                control={control}
+                label="Organisation Email"
+                placeholder="Enter organisation email"
+                type="email"
+                error={errors.organisationEmail?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Website URL"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation website URL"
-                  defaultValue={org?.data?.organisationDetails?.websiteURL}
-                  type="url"
-                  className="text-hrms-blue font-semibold"
-                  {...register("websiteURL")}
-                />
-                {errors.websiteURL && (
-                  <small className="text-red-700 font-medium">
-                    {errors.websiteURL?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="websiteURL"
+                control={control}
+                label="Website URL"
+                placeholder="Enter website URL"
+                type="url"
+                error={errors.websiteURL?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Landline No"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation landline number"
-                  defaultValue={org?.data?.organisationDetails?.landlineNo}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("landlineNumber")}
-                />
-                {errors.landlineNumber && (
-                  <small className="text-red-700 font-medium">
-                    {errors.landlineNumber?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="landlineNumber"
+                control={control}
+                label="Landline Number"
+                placeholder="Enter landline number"
+                error={errors.landlineNumber?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Trading Name"
-                  labelPlacement="outside"
-                  placeholder="Enter organisation trading name"
-                  defaultValue={org?.data?.organisationDetails?.tradingName}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("tradingName")}
-                />
-                {errors.tradingName && (
-                  <small className="text-red-700 font-medium">
-                    {errors.tradingName?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="tradingName"
+                control={control}
+                label="Trading Name"
+                placeholder="Enter trading name"
+                error={errors.tradingName?.message}
+              />
 
-              <div>
-                <Controller
-                  name="tradingPeriod"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      radius="sm"
-                      label="Trading Period"
-                      className="text-hrms-blue font-semibold"
-                      labelPlacement="outside"
-                      placeholder="Select trading period"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      {tradingPeriods.map((period) => (
-                        <SelectItem key={period.value} value={period.value}>
-                          {period.value}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-                {errors.tradingPeriod && (
-                  <small className="text-red-700 font-medium">
-                    {errors.tradingPeriod?.message}
-                  </small>
-                )}
-              </div>
+              <RHFSelect
+                name="tradingPeriod"
+                control={control}
+                label="Trading Period"
+                placeholder="Select trading period"
+                options={tradingPeriods}
+                error={errors.tradingPeriod?.message}
+              />
 
-              <div>
-                <Controller
-                  name="sector"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      radius="sm"
-                      label="Name of Sector"
-                      className="text-hrms-blue font-semibold"
-                      labelPlacement="outside"
-                      placeholder="Select sector"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      {sectorsName.map((sector) => (
-                        <SelectItem key={sector.value} value={sector.value}>
-                          {sector.value}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-                {errors.sector && (
-                  <small className="text-red-700 font-medium">
-                    {errors.sector?.message}
-                  </small>
-                )}
-              </div>
+              <RHFSelect
+                name="sector"
+                control={control}
+                label="Name of Sector"
+                placeholder="Select sector"
+                options={sectorsName}
+                error={errors.sector?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Organisation Logo"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("logo", file, { shouldValidate: true });
-                    }
-                  }}
-                />
+              <RHFFileInput
+                name="logo"
+                control={control}
+                label="Organisation Logo"
+                error={errors.logo?.message}
+              />
 
-                {errors.logo && (
-                  <small className="text-red-700 font-medium">
-                    {String(errors.logo.message)}
-                  </small>
-                )}
-              </div>
+              <RHFRadio
+                name="nameChangeLast5Years"
+                control={control}
+                label="Have you changed Organisation Name/Trading Name in the last 5 years?"
+                options={[
+                  { value: "Yes", label: "Yes" },
+                  { value: "No", label: "No" },
+                ]}
+                error={errors.nameChangeLast5Years?.message}
+              />
 
-              <div>
-                <Controller
-                  name="nameChangeLast5Years"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      aria-label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                      label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                      orientation="horizontal"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="text-base font-medium "
-                    >
-                      <Radio value="Yes">Yes</Radio>
-                      <Radio value="No">No</Radio>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.nameChangeLast5Years && (
-                  <small className="text-red-700 font-medium">
-                    {errors.nameChangeLast5Years?.message}
-                  </small>
-                )}
-              </div>
-
-              <div>
-                <Controller
-                  name="penaltyLast3Years"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      aria-label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                      label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                      orientation="horizontal"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="text-base font-medium "
-                    >
-                      <Radio value="Yes">Yes</Radio>
-                      <Radio value="No">No</Radio>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.penaltyLast3Years && (
-                  <small className="text-red-700 font-medium">
-                    {errors.penaltyLast3Years?.message}
-                  </small>
-                )}
-              </div>
+              <RHFRadio
+                name="penaltyLast3Years"
+                control={control}
+                label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
+                options={[
+                  { value: "Yes", label: "Yes" },
+                  { value: "No", label: "No" },
+                ]}
+                error={errors.penaltyLast3Years?.message}
+              />
             </div>
           </div>
 
@@ -683,95 +536,46 @@ const EditOrganisation = () => {
               Authorised Person Details
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-              <div>
-                <Input
-                  radius="sm"
-                  label="First Name"
-                  labelPlacement="outside"
-                  placeholder="Enter first name"
-                  defaultValue={org?.data?.authorisedPerson?.firstName}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("firstName")}
-                />
-                {errors.firstName && (
-                  <small className="text-red-700 font-medium">
-                    {errors.firstName?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="firstName"
+                control={control}
+                label="First Name"
+                placeholder="Enter first name"
+                error={errors.firstName?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Last Name"
-                  labelPlacement="outside"
-                  placeholder="Enter last name"
-                  defaultValue={org?.data?.authorisedPerson?.lastName}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("lastName")}
-                />
-                {errors.lastName && (
-                  <small className="text-red-700 font-medium">
-                    {errors.lastName?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="lastName"
+                control={control}
+                label="Last Name"
+                placeholder="Enter last name"
+                error={errors.lastName?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Designation"
-                  labelPlacement="outside"
-                  placeholder="Enter designation"
-                  defaultValue={org?.data?.authorisedPerson?.designation}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("designation")}
-                />
-                {errors.designation && (
-                  <small className="text-red-700 font-medium">
-                    {errors.designation?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="designation"
+                control={control}
+                label="Designation"
+                placeholder="Enter designation"
+                error={errors.designation?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Phone No"
-                  labelPlacement="outside"
-                  placeholder="Enter phone number"
-                  defaultValue={org?.data?.authorisedPerson?.phoneNo}
-                  type="text"
-                  className="text-hrms-blue font-semibold"
-                  {...register("phoneNo")}
-                />
-                {errors.phoneNo && (
-                  <small className="text-red-700 font-medium">
-                    {errors.phoneNo?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="phoneNo"
+                control={control}
+                label="Phone No"
+                placeholder="Enter phone number"
+                error={errors.phoneNo?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Email"
-                  labelPlacement="outside"
-                  placeholder="Enter email"
-                  defaultValue={org?.data?.authorisedPerson?.email}
-                  type="email"
-                  className="text-hrms-blue font-semibold"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <small className="text-red-700 font-medium">
-                    {errors.email?.message}
-                  </small>
-                )}
-              </div>
+              <RHFInput
+                name="email"
+                control={control}
+                label="Email"
+                placeholder="Enter email"
+                type="email"
+                error={errors.email?.message}
+              />
 
               <div>
                 <Input
@@ -824,7 +628,7 @@ conviction/Bankruptcy/Disqualification?"
           </div>
 
           {/* key contact person details */}
-          <div className="pt-5">
+          {/* <div className="pt-5">
             <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
               Key Contact Person
             </h3>
@@ -997,10 +801,10 @@ conviction/Bankruptcy/Disqualification?"
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* level 1 user details */}
-          <div className="pt-5">
+          {/* <div className="pt-5">
             <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
               Level 1 User
             </h3>
@@ -1174,7 +978,7 @@ conviction/Bankruptcy/Disqualification?"
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Organisation Address */}
           <div className="pt-5">
@@ -1182,80 +986,53 @@ conviction/Bankruptcy/Disqualification?"
               Organisation Address
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-              <Input
-                radius="sm"
+              <RHFInput
+                name="postCode"
+                control={control}
                 label="Post Code"
-                labelPlacement="outside"
                 placeholder="Enter post code"
-                defaultValue={org?.data?.organisationAddress?.postCode}
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("postCode")}
+                error={errors.postCode?.message}
               />
-              <Input
-                radius="sm"
+
+              <RHFInput
+                name="addressLine1"
+                control={control}
                 label="Address Line 1"
-                labelPlacement="outside"
                 placeholder="Enter address line 1"
-                defaultValue={org?.data?.organisationAddress?.addressLine1}
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine1")}
+                error={errors.postCode?.message}
               />
-              <Input
-                radius="sm"
+
+              <RHFInput
+                name="addressLine2"
+                control={control}
                 label="Address Line 2"
-                labelPlacement="outside"
                 placeholder="Enter address line 2"
-                defaultValue={org?.data?.organisationAddress?.addressLine2}
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine2")}
+                error={errors.addressLine2?.message}
               />
-              <Input
-                radius="sm"
+
+              <RHFInput
+                name="addressLine3"
+                control={control}
                 label="Address Line 3"
-                labelPlacement="outside"
                 placeholder="Enter address line 3"
-                defaultValue={org?.data?.organisationAddress?.addressLine3}
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine3")}
+                error={errors.addressLine3?.message}
               />
-              <Input
-                radius="sm"
+
+              <RHFInput
+                name="cityCounty"
+                control={control}
                 label="City / County"
-                labelPlacement="outside"
-                placeholder="Enter city / county"
-                defaultValue={org?.data?.organisationAddress?.city}
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("cityCounty")}
+                placeholder="Select city / county"
+                error={errors.cityCounty?.message}
               />
-              <Controller
+
+              <RHFSelect
                 name="country"
                 control={control}
-                render={({ field }) => (
-                  <Select
-                    radius="sm"
-                    label="Country"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select country"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    {countries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        {country.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
+                label="Country"
+                placeholder="Select country"
+                options={countries}
+                error={errors.country?.message}
               />
             </div>
           </div>
@@ -1628,350 +1405,110 @@ conviction/Bankruptcy/Disqualification?"
               Upload Documents
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-              <div>
-                <Input
-                  radius="sm"
-                  label="PAYEE And Account Reference Letter From HMRC"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("payeeAccountReference", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.payeeAccountReference && (
-                  <small className="text-red-700 font-medium">
-                    {errors.payeeAccountReference?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="payeeAccountReference"
+                control={control}
+                label="PAYEE And Account Reference Letter From HMRC"
+                error={errors.payeeAccountReference?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Latest RTI from accountant"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("latestRti", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.latestRti && (
-                  <small className="text-red-700 font-medium">
-                    {errors.latestRti?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="latestRti"
+                control={control}
+                label="Latest RTI from accountant"
+                error={errors.latestRti?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Employer Liability Insurance Certificate"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("employerLiabilityInsurance", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.employerLiabilityInsurance && (
-                  <small className="text-red-700 font-medium">
-                    {errors.employerLiabilityInsurance?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="employerLiabilityInsurance"
+                control={control}
+                label="Employer Liability Insurance Certificate"
+                error={errors.latestRti?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Proof of Business Permises (Tenancy Agreement)"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("proofOfBusinessPremises", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.proofOfBusinessPremises && (
-                  <small className="text-red-700 font-medium">
-                    {errors.proofOfBusinessPremises?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="proofOfBusinessPremises"
+                control={control}
+                label="Proof of Business Premises (Tenancy Agreement)"
+                error={errors.proofOfBusinessPremises?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Copy of Lease or Freehold Property"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("copyOfLease", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.copyOfLease && (
-                  <small className="text-red-700 font-medium">
-                    {errors.copyOfLease?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="copyOfLease"
+                control={control}
+                label="Copy of Lease or Freehold Property"
+                error={errors.copyOfLease?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Business Bank Statement for last 1/2/3 months"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("businessBankStatement", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.businessBankStatement && (
-                  <small className="text-red-700 font-medium">
-                    {errors.businessBankStatement?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="businessBankStatement"
+                control={control}
+                label="Business Bank Statement for last 1/2/3 months"
+                error={errors.businessBankStatement?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Signed Annual Account ( If the business is more than 18 months old)"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("signedAnnualAccount", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.signedAnnualAccount && (
-                  <small className="text-red-700 font-medium">
-                    {errors.signedAnnualAccount?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="signedAnnualAccount"
+                control={control}
+                label="Signed Annual Account (If the business is more than 18 months old)"
+                error={errors.signedAnnualAccount?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="VAT Certificate (If Registered)"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("vatCertificate", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.vatCertificate && (
-                  <small className="text-red-700 font-medium">
-                    {errors.vatCertificate?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="vatCertificate"
+                control={control}
+                label="VAT Certificate (If Registered)"
+                error={errors.vatCertificate?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Copy of Health and Safty star Rating (Applicable for food business only)"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("healthSafetyRating", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.healthSafetyRating && (
-                  <small className="text-red-700 font-medium">
-                    {errors.healthSafetyRating?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="healthSafetyRating"
+                control={control}
+                label="Copy of Health and Safety Star Rating (Applicable for food business only)"
+                error={errors.healthSafetyRating?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Regulatory Body Certificate (If Applicable for your business)"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("regulatoryBodyCertificate", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.regulatoryBodyCertificate && (
-                  <small className="text-red-700 font-medium">
-                    {errors.regulatoryBodyCertificate?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="regulatoryBodyCertificate"
+                control={control}
+                label="Regulatory Body Certificate (If Applicable for your business)"
+                error={errors.regulatoryBodyCertificate?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Registered business license or certificate"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("businessLicense", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.businessLicense && (
-                  <small className="text-red-700 font-medium">
-                    {errors.businessLicense?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="businessLicense"
+                control={control}
+                label="Registered business license or certificate"
+                error={errors.businessLicense?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Franchise Agreement"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("franchiseAgreement", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.franchiseAgreement && (
-                  <small className="text-red-700 font-medium">
-                    {errors.franchiseAgreement?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="franchiseAgreement"
+                control={control}
+                label="Franchise Agreement"
+                error={errors.franchiseAgreement?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Governing Body Registration"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("governingBodyRegistration", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.governingBodyRegistration && (
-                  <small className="text-red-700 font-medium">
-                    {errors.governingBodyRegistration?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="governingBodyRegistration"
+                control={control}
+                label="Governing Body Registration"
+                error={errors.governingBodyRegistration?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Audited annual account"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("auditedAnnualAccount", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.auditedAnnualAccount && (
-                  <small className="text-red-700 font-medium">
-                    {errors.auditedAnnualAccount?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="auditedAnnualAccount"
+                control={control}
+                label="Audited Annual Account"
+                error={errors.auditedAnnualAccount?.message}
+              />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Others Documents"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("othersDocuments", file, {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-                {errors.othersDocuments && (
-                  <small className="text-red-700 font-medium">
-                    {errors.othersDocuments?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="othersDocuments"
+                control={control}
+                label="Others Documents"
+                error={errors.othersDocuments?.message}
+              />
             </div>
           </div>
 
