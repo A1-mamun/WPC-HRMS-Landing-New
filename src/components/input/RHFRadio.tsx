@@ -7,7 +7,7 @@ interface RHFSingleSelectRadioProps<T extends FieldValues> {
   control: Control<T>;
   label: string;
   options: { label: string; value: string }[];
-
+  disabled?: boolean;
   error?: string;
 }
 
@@ -16,6 +16,7 @@ const RHFRadio = <T extends FieldValues>({
   control,
   label,
   options,
+  disabled = false,
   error,
 }: RHFSingleSelectRadioProps<T>) => {
   return (
@@ -29,6 +30,7 @@ const RHFRadio = <T extends FieldValues>({
             label={label}
             orientation="horizontal"
             value={field.value}
+            isDisabled={disabled}
             onValueChange={field.onChange}
             className="text-base font-medium"
           >

@@ -13,7 +13,7 @@ const RHFFileInput = <T extends FieldValues>({
   name,
   control,
   label,
-  disabled,
+  disabled = false,
   error,
 }: RHFFileInputProps<T>) => {
   return (

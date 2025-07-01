@@ -18,6 +18,7 @@ const RHFInput = <T extends FieldValues>({
   type = "text",
   label,
   placeholder,
+  disabled = false,
   error,
   ...rest
 }: RHFInputProps<T>) => (
@@ -32,6 +33,7 @@ const RHFInput = <T extends FieldValues>({
           label={label}
           placeholder={placeholder}
           labelPlacement="outside"
+          isDisabled={disabled}
           radius="sm"
           className="text-hrms-blue font-semibold"
           {...rest}

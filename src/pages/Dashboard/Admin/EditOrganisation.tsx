@@ -42,7 +42,7 @@ const EditOrganisation = () => {
     useState(false);
 
   const {
-    register,
+    // register,
     reset,
     control,
     handleSubmit,
@@ -54,7 +54,6 @@ const EditOrganisation = () => {
     defaultValues: {},
   });
 
-  const [createOrganisation] = useCreateOrganisationMutation();
   const {
     data: org,
     isLoading: orgLoading,
@@ -187,17 +186,6 @@ const EditOrganisation = () => {
     dirty: any
   ): Partial<T> {
     const changed: Partial<T> = {};
-
-    // for (const key in dirty) {
-    //   if (dirty[key] === true) {
-    //     changed[key] = values[key]; // primitive or file input
-    //   } else if (typeof dirty[key] === "object" && values[key]) {
-    //     const nested = diff(values[key], dirty[key]);
-    //     if (Object.keys(nested).length > 0) {
-    //       changed[key] = nested; // nested object field
-    //     }
-    //   }
-    // }
 
     (Object.keys(dirty) as (keyof T)[]).forEach((key) => {
       if (dirty[key] === true) {
@@ -636,6 +624,172 @@ conviction/Bankruptcy/Disqualification?"
                   </small>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* key contact person details */}
+          <div className="pt-5">
+            <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+              Key Contact Person
+            </h3>
+            <Checkbox
+              isSelected={isKeyPersonSameAsAuthorised}
+              onValueChange={(value) => setIsKeyPersonSameAsAuthorised(value)}
+              className="pt-5"
+            >
+              If Same As Authorised Person
+            </Checkbox>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+              <RHFInput
+                name="keyPersonFirstName"
+                control={control}
+                label="First Name"
+                placeholder="Enter first name"
+                disabled={isKeyPersonSameAsAuthorised}
+                error={errors.keyPersonFirstName?.message}
+              />
+
+              <RHFInput
+                name="keyPersonLastName"
+                control={control}
+                label="Last Name"
+                placeholder="Enter last name"
+                disabled={isKeyPersonSameAsAuthorised}
+                error={errors.keyPersonLastName?.message}
+              />
+
+              <RHFInput
+                name="keyPersonDesignation"
+                control={control}
+                label="Designation"
+                placeholder="Enter designation"
+                error={errors.keyPersonDesignation?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+
+              <RHFInput
+                name="keyPersonPhoneNo"
+                control={control}
+                label="Phone No"
+                placeholder="Enter phone number"
+                error={errors.keyPersonPhoneNo?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+
+              <RHFInput
+                name="keyPersonEmail"
+                control={control}
+                label="Email"
+                placeholder="Enter email"
+                type="email"
+                error={errors.keyPersonEmail?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+
+              <RHFFileInput
+                name="keyPersonProofOfId"
+                control={control}
+                label="Proof of ID"
+                error={errors.keyPersonProofOfId?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+
+              <RHFRadio
+                name="keyPersonCriminalHistory"
+                control={control}
+                label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+                options={[
+                  { value: "Yes", label: "Yes" },
+                  { value: "No", label: "No" },
+                ]}
+                error={errors.keyPersonCriminalHistory?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+            </div>
+          </div>
+
+          {/* level 1 user details */}
+          <div className="pt-5">
+            <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+              Level 1 User
+            </h3>
+            <Checkbox
+              isSelected={isLevel1PersonSameAsAuthorised}
+              onValueChange={(value) =>
+                setIsLevel1PersonSameAsAuthorised(value)
+              }
+              className="pt-5"
+            >
+              If Same As Authorised Person
+            </Checkbox>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+              <RHFInput
+                name="level1PersonFirstName"
+                control={control}
+                label="First Name"
+                placeholder="Enter first name"
+                disabled={isLevel1PersonSameAsAuthorised}
+                error={errors.level1PersonFirstName?.message}
+              />
+
+              <RHFInput
+                name="level1PersonLastName"
+                control={control}
+                label="Last Name"
+                placeholder="Enter last name"
+                disabled={isLevel1PersonSameAsAuthorised}
+                error={errors.level1PersonLastName?.message}
+              />
+
+              <RHFInput
+                name="level1PersonDesignation"
+                control={control}
+                label="Designation"
+                placeholder="Enter designation"
+                error={errors.level1PersonDesignation?.message}
+                disabled={isLevel1PersonSameAsAuthorised}
+              />
+
+              <RHFInput
+                name="level1PersonPhoneNo"
+                control={control}
+                label="Phone No"
+                placeholder="Enter phone number"
+                error={errors.level1PersonPhoneNo?.message}
+                disabled={isLevel1PersonSameAsAuthorised}
+              />
+
+              <RHFInput
+                name="level1PersonEmail"
+                control={control}
+                label="Email"
+                placeholder="Enter email"
+                type="email"
+                error={errors.level1PersonEmail?.message}
+                disabled={isLevel1PersonSameAsAuthorised}
+              />
+
+              <RHFFileInput
+                name="level1PersonProofOfId"
+                control={control}
+                label="Proof of ID"
+                error={errors.level1PersonProofOfId?.message}
+                disabled={isLevel1PersonSameAsAuthorised}
+              />
+
+              <RHFRadio
+                name="level1PersonCriminalHistory"
+                control={control}
+                label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+                options={[
+                  { value: "Yes", label: "Yes" },
+                  { value: "No", label: "No" },
+                ]}
+                error={errors.level1PersonCriminalHistory?.message}
+                disabled={isLevel1PersonSameAsAuthorised}
+              />
             </div>
           </div>
 
