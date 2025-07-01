@@ -18,6 +18,7 @@ import {
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   addOrgDocumentsSchema,
@@ -411,9 +412,20 @@ const EditOrganisation = () => {
         <form onSubmit={handleSubmit(handleSubmitForm)}>
           {/* Organisation details */}
           <div>
-            <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
-              Organisation Details
-            </h1>
+            <div className="pb-2 border-b border-hrms-blue-light flex gap-5 items-center justify-between">
+              <h1 className="text-xl font-medium  mt-5">
+                Organisation Details
+              </h1>
+              <Button
+                size="sm"
+                as={Link}
+                target="_blank"
+                to="https://find-and-update.company-information.service.gov.uk/"
+                className="bg-hrms-blue hover:bg-hrms-blue-dark text-white text-base font-bold"
+              >
+                Find
+              </Button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
               <RHFInput
                 name="organisationName"
@@ -1097,303 +1109,176 @@ conviction/Bankruptcy/Disqualification?"
                 />
               </div>
               <div className="space-y-3">
-                <Controller
+                <RHFSelect
                   name="mondayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Monday Status"
-                      radius="sm"
-                      label="Status"
-                      className="text-hrms-blue font-semibold"
-                      labelPlacement="outside"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  label="Status"
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.mondayStatus?.message}
                 />
 
-                <Controller
+                <RHFSelect
                   name="tuesdayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Tuesday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.tuesdayStatus?.message}
                 />
-                <Controller
+
+                <RHFSelect
                   name="wednesdayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Wednesday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.wednesdayStatus?.message}
                 />
-                <Controller
+
+                <RHFSelect
                   name="thursdayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Thursday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.thursdayStatus?.message}
                 />
-                <Controller
+
+                <RHFSelect
                   name="fridayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Friday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.fridayStatus?.message}
                 />
-                <Controller
+
+                <RHFSelect
                   name="saturdayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Saturday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.saturdayStatus?.message}
                 />
-                <Controller
+
+                <RHFSelect
                   name="sundayStatus"
                   control={control}
-                  render={({ field }) => (
-                    <Select
-                      aria-label="Sunday Status"
-                      radius="sm"
-                      className="text-hrms-blue font-semibold"
-                      placeholder="Select status"
-                      selectedKeys={
-                        field.value ? new Set([field.value]) : new Set()
-                      } // Ensure proper binding
-                      onSelectionChange={(keys) =>
-                        field.onChange(Array.from(keys)[0])
-                      } // Extract single value from Set
-                    >
-                      <SelectItem key="Close" value="Close">
-                        Close
-                      </SelectItem>
-                      <SelectItem key="Open" value="Open">
-                        Open
-                      </SelectItem>
-                    </Select>
-                  )}
+                  placeholder="Select status"
+                  options={[
+                    { value: "Close", label: "Close" },
+                    { value: "Open", label: "Open" },
+                  ]}
+                  error={errors.sundayStatus?.message}
                 />
               </div>
               <div className="space-y-3">
-                <Input
-                  radius="sm"
+                <RHFInput
+                  name="mondayOpeningTime"
+                  control={control}
                   label="Opening Time"
-                  labelPlacement="outside"
-                  placeholder="Enter opening time"
-                  defaultValue={org?.data?.tradingHours[0].startTime}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("mondayOpeningTime")}
+                  error={errors.mondayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[1].startTime}
-                  placeholder="Enter opening time"
+
+                <RHFInput
+                  name="tuesdayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("tuesdayOpeningTime")}
+                  error={errors.tuesdayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[2].startTime}
-                  placeholder="Enter opening time"
+
+                <RHFInput
+                  name="wednesdayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("wednesdayOpeningTime")}
+                  error={errors.wednesdayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[3].startTime}
-                  placeholder="Enter opening time"
+                <RHFInput
+                  name="thursdayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("thursdayOpeningTime")}
+                  error={errors.thursdayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  placeholder="Enter opening time"
-                  defaultValue={org?.data?.tradingHours[4].startTime}
+                <RHFInput
+                  name="fridayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("fridayOpeningTime")}
+                  error={errors.fridayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  placeholder="Enter opening time"
-                  defaultValue={org?.data?.tradingHours[5].startTime}
+                <RHFInput
+                  name="saturdayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("saturdayOpeningTime")}
+                  error={errors.saturdayOpeningTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  placeholder="Enter opening time"
-                  defaultValue={org?.data?.tradingHours[6].startTime}
+                <RHFInput
+                  name="sundayOpeningTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("sundayOpeningTime")}
+                  error={errors.sundayOpeningTime?.message}
                 />
               </div>
               <div className="space-y-3">
-                <Input
-                  radius="sm"
+                <RHFInput
+                  name="mondayClosingTime"
+                  control={control}
                   label="Closing Time"
-                  labelPlacement="outside"
-                  defaultValue={org?.data?.tradingHours[0].startTime}
-                  placeholder="Enter closing time"
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("mondayClosingTime")}
+                  error={errors.mondayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[1].startTime}
-                  placeholder="Enter closing time"
+
+                <RHFInput
+                  name="tuesdayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("tuesdayClosingTime")}
+                  error={errors.tuesdayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[2].startTime}
-                  placeholder="Enter closing time"
+
+                <RHFInput
+                  name="wednesdayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("wednesdayClosingTime")}
+                  error={errors.wednesdayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[3].startTime}
-                  placeholder="Enter closing time"
+                <RHFInput
+                  name="thursdayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("thursdayClosingTime")}
+                  error={errors.thursdayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[4].startTime}
-                  placeholder="Enter closing time"
+                <RHFInput
+                  name="fridayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("fridayClosingTime")}
+                  error={errors.fridayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[5].startTime}
-                  placeholder="Enter closing time"
+                <RHFInput
+                  name="saturdayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("saturdayClosingTime")}
+                  error={errors.saturdayClosingTime?.message}
                 />
-                <Input
-                  radius="sm"
-                  defaultValue={org?.data?.tradingHours[6].startTime}
-                  placeholder="Enter closing time"
+                <RHFInput
+                  name="sundayClosingTime"
+                  control={control}
                   type="time"
-                  className="text-hrms-blue font-semibold"
-                  {...register("sundayClosingTime")}
+                  error={errors.sundayClosingTime?.message}
                 />
               </div>
             </div>

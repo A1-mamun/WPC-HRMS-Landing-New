@@ -27,6 +27,7 @@ import {
 
 import { organizationFileFields } from "../../../constants/organisation";
 import { useCreateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
+import { Link } from "react-router-dom";
 
 const CreateOrganisation = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -338,9 +339,19 @@ const CreateOrganisation = () => {
 
         {/* Organisation details */}
         <div>
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light mt-5">
-            Organisation Details
-          </h1>
+          <div className="pb-2 border-b border-hrms-blue-light flex gap-5 items-center justify-between">
+            <h1 className="text-xl font-medium  mt-5">Organisation Details</h1>
+            <Button
+              size="sm"
+              as={Link}
+              target="_blank"
+              to="https://find-and-update.company-information.service.gov.uk/"
+              className="bg-hrms-blue hover:bg-hrms-blue-dark text-white text-base font-bold"
+            >
+              Find
+            </Button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
             <div>
               <Input
