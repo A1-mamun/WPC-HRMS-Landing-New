@@ -20,7 +20,7 @@ const ManageEmployer = () => {
   const [page, setPage] = useState(1);
 
   // api call to get employees
-  const { data } = useGetOrgaisationsQuery(undefined);
+  const { data, isError } = useGetOrgaisationsQuery(undefined);
   // console.log("data", data);
 
   const rowsPerPage = data?.meta?.limit;
@@ -183,8 +183,12 @@ const ManageEmployer = () => {
               )}
             </TableBody>
           </Table>
+        ) : isError ? (
+          <div className="p-4 text-center text-xl font-bold text-red-700">
+            Something went wrong. Please try again later.
+          </div>
         ) : (
-          <div className="p-4 text-center text-gray-500">
+          <div className="p-4 text-center text-xl font-bold text-gray-500">
             Loading employees...
           </div>
         )}
