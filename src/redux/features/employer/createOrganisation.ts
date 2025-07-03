@@ -15,9 +15,17 @@ const organisationApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    updateOrganisation: builder.mutation({
+      query: ({ organisationId, data }) => ({
+        url: `/employer/${organisationId}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
 export const {
   useCreateOrganisationMutation,
   useGetOrgaisationEmployeesQuery,
+  useUpdateOrganisationMutation,
 } = organisationApi;

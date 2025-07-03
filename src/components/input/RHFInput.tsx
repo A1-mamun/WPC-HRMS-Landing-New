@@ -6,6 +6,7 @@ interface RHFInputProps<T extends FieldValues> {
   name: FieldPath<T>;
   control: Control<T>;
   label?: string;
+  ariaLabel?: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
   disabled?: boolean;
@@ -17,6 +18,7 @@ const RHFInput = <T extends FieldValues>({
   control,
   type = "text",
   label,
+  ariaLabel,
   placeholder,
   disabled = false,
   error,
@@ -29,8 +31,10 @@ const RHFInput = <T extends FieldValues>({
       render={({ field }) => (
         <Input
           {...field}
+          value={field.value ?? ""}
           type={type}
           label={label}
+          aria-label={label ? undefined : ariaLabel}
           placeholder={placeholder}
           labelPlacement="outside"
           isDisabled={disabled}

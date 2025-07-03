@@ -26,10 +26,9 @@ const RHFRadio = <T extends FieldValues>({
         control={control}
         render={({ field }) => (
           <RadioGroup
-            aria-label={label}
+            value={field.value ?? ""}
             label={label}
             orientation="horizontal"
-            value={field.value}
             isDisabled={disabled}
             onValueChange={field.onChange}
             className="text-base font-medium"

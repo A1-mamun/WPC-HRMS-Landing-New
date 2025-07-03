@@ -12,6 +12,7 @@ interface RHFSelectProps<T extends FieldValues> {
   name: FieldPath<T>;
   control: Control<T>;
   label?: string;
+  ariaLabel?: string;
   placeholder?: string;
   options: Option[];
   error?: string;
@@ -22,6 +23,7 @@ const RHFSelect = <T extends FieldValues>({
   name,
   control,
   label,
+  ariaLabel,
   placeholder,
   options,
   disabled = false,
@@ -33,9 +35,11 @@ const RHFSelect = <T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <Select
+          value={field.value ?? ""}
           label={label}
+          aria-label={label ? undefined : ariaLabel}
           placeholder={placeholder}
-          selectedKeys={field.value ? new Set([field.value]) : new Set()}
+          selectedKeys={new Set([field.value ?? ""])}
           onSelectionChange={(keys) => field.onChange(Array.from(keys)[0])}
           labelPlacement="outside"
           isDisabled={disabled}

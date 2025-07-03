@@ -1,36 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Button,
-  Checkbox,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectItem,
-} from "@heroui/react";
+import { Button, Checkbox, Input } from "@heroui/react";
 import {
   countries,
   organizationTypes,
   sectorsName,
   tradingPeriods,
 } from "../../../data";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addOrgDocumentsSchema,
-  EmployerFormSchemaType,
-} from "../../../schemas/addOrgDocumentsSchema";
 
 import { organizationFileFields } from "../../../constants/organisation";
-import { useCreateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
+
 import { useParams } from "react-router-dom";
 import { useGetOrganisationByIdQuery } from "../../../redux/features/admin/adminApi";
 import { RHFFileInput, RHFInput, RHFRadio } from "../../../components";
 import RHFSelect from "../../../components/input/RHFSelect";
+import { useUpdateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
+import {
+  EmployerUpdateFormSchemaType,
+  updateOrgDocumentsSchema,
+} from "../../../schemas/updateOrganisationSchema";
 
 const EditOrganisation = () => {
   const { id } = useParams();
@@ -48,17 +41,23 @@ const EditOrganisation = () => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, dirtyFields },
-  } = useForm<EmployerFormSchemaType>({
-    // resolver: zodResolver(addOrgDocumentsSchema),
-    defaultValues: {},
+    formState: { errors },
+  } = useForm<EmployerUpdateFormSchemaType>({
+    resolver: zodResolver(updateOrgDocumentsSchema),
+    // defaultValues: {},
   });
+
+  // console.log("Form Errors:", errors);
 
   const {
     data: org,
     isLoading: orgLoading,
     error: orgError,
   } = useGetOrganisationByIdQuery(id);
+
+  const [updateOrganisation] = useUpdateOrganisationMutation();
+
+  // console.log("Organisation Data:", org);
 
   useEffect(() => {
     if (org?.data) {
@@ -78,24 +77,28 @@ const EditOrganisation = () => {
           org?.data?.organisationDetails.nameChangeLast5Years,
         penaltyLast3Years:
           org?.data?.organisationDetails.FacedPenaltyLast3Years,
+
         firstName: org?.data?.authorisedPerson.firstName,
         lastName: org?.data?.authorisedPerson.lastName,
         designation: org?.data?.authorisedPerson.designation,
         phoneNo: org?.data?.authorisedPerson.phoneNo,
         email: org?.data?.authorisedPerson.email,
         criminalHistory: org?.data?.authorisedPerson.criminalHistory,
+
         keyPersonFirstName: org?.data?.keyContactPerson.firstName,
         keyPersonLastName: org?.data?.keyContactPerson.lastName,
         keyPersonDesignation: org?.data?.keyContactPerson.designation,
         keyPersonPhoneNo: org?.data?.keyContactPerson.phoneNo,
         keyPersonEmail: org?.data?.keyContactPerson.email,
         keyPersonCriminalHistory: org?.data?.keyContactPerson.criminalHistory,
+
         level1PersonFirstName: org?.data?.level1User.firstName,
         level1PersonLastName: org?.data?.level1User.lastName,
         level1PersonDesignation: org?.data?.level1User.designation,
         level1PersonPhoneNo: org?.data?.level1User.phoneNo,
         level1PersonEmail: org?.data?.level1User.email,
         level1PersonCriminalHistory: org?.data?.level1User.criminalHistory,
+
         postCode: org?.data?.organisationAddress.postCode,
         addressLine1: org?.data?.organisationAddress.addressLine1,
         addressLine2: org?.data?.organisationAddress.addressLine2,
@@ -181,205 +184,210 @@ const EditOrganisation = () => {
     }
   }, [isLevel1PersonSameAsAuthorised]);
 
-  function diff<T extends Record<string, any>>(
-    values: T,
-    dirty: any
-  ): Partial<T> {
-    const changed: Partial<T> = {};
+  // function diff<T extends Record<string, any>>(
+  //   values: T,
+  //   dirty: any
+  // ): Partial<T> {
+  //   const changed: Partial<T> = {};
 
-    (Object.keys(dirty) as (keyof T)[]).forEach((key) => {
-      if (dirty[key] === true) {
-        changed[key] = values[key]; // primitive or file input
-      } else if (typeof dirty[key] === "object" && values[key]) {
-        const nested = diff(values[key], dirty[key]);
-        if (Object.keys(nested).length) {
-          changed[key] = nested as any;
-        }
-      }
-    });
-    return changed;
-  }
-
-  const handleSubmitForm = async (data: FieldValues) => {
-    const changedFields = diff(data, dirtyFields);
-
-    console.log("Only the changed fields:", changedFields);
-  };
-
-  // const handleSubmitForm = async (data: FieldValues) => {
-  //   // Create FormData object for file uploads
-  //   const formData = new FormData();
-
-  //   // Organize form data by sections
-  //   const formattedData = {
-  //     // employer credentials
-  //     credentials: {
-  //       email: data.loginEmail,
-  //       password: data.password,
-  //     },
-  //     employerData: {
-  //       // Organization Details section
-  //       organisationDetails: {
-  //         name: data.organisationName,
-  //         type: data.organisationType,
-  //         registrationNo: data.registrationNumber,
-  //         contactNo: data.contactNumber,
-  //         loginEmail: data.loginEmail,
-  //         organisationEmail: data.organisationEmail,
-  //         websiteURL: data.websiteURL,
-  //         landlineNo: data.landlineNumber,
-  //         tradingName: data.tradingName,
-  //         tradingPeriod: data.tradingPeriod,
-  //         nameOfSector: data.sector,
-  //         nameChangeLast5Years: data.nameChangeLast5Years,
-  //         FacedPenaltyLast3Years: data.penaltyLast3Years,
-  //       },
-
-  //       // Authorised Person Details section
-  //       authorisedPerson: {
-  //         firstName: data.firstName,
-  //         lastName: data.lastName,
-  //         designation: data.designation,
-  //         phoneNo: data.phoneNo,
-  //         email: data.email,
-  //         criminalHistory: data.criminalHistory,
-  //         proofOfId: "",
-  //       },
-
-  //       // Key Contact Person section
-  //       keyContactPerson: {
-  //         firstName: data.keyPersonFirstName,
-  //         lastName: data.keyPersonLastName,
-  //         designation: data.keyPersonDesignation,
-  //         phoneNo: data.keyPersonPhoneNo,
-  //         email: data.keyPersonEmail,
-  //         criminalHistory: data.keyPersonCriminalHistory,
-  //         proofOfId: "",
-  //       },
-
-  //       // Level 1 User section
-  //       level1User: {
-  //         firstName: data.level1PersonFirstName,
-  //         lastName: data.level1PersonLastName,
-  //         designation: data.level1PersonDesignation,
-  //         phoneNo: data.level1PersonPhoneNo,
-  //         email: data.level1PersonEmail,
-  //         criminalHistory: data.level1PersonCriminalHistory,
-  //         proofOfId: "",
-  //       },
-
-  //       // Organisation Address section
-  //       organisationAddress: {
-  //         postCode: data.postCode,
-  //         addressLine1: data.addressLine1,
-  //         addressLine2: data.addressLine2,
-  //         addressLine3: data.addressLine3,
-  //         city: data.cityCounty,
-  //         country: data.country,
-  //       },
-
-  //       // Trading Hours section
-  //       tradingHours: [
-  //         {
-  //           day: "Monday",
-  //           status: data.mondayStatus,
-  //           startTime: data.mondayOpeningTime,
-  //           endTime: data.mondayClosingTime,
-  //         },
-  //         {
-  //           day: "Tuesday",
-  //           status: data.tuesdayStatus,
-  //           startTime: data.tuesdayOpeningTime,
-  //           endTime: data.tuesdayClosingTime,
-  //         },
-  //         {
-  //           day: "Wednesday",
-  //           status: data.wednesdayStatus,
-  //           startTime: data.wednesdayOpeningTime,
-  //           endTime: data.wednesdayClosingTime,
-  //         },
-  //         {
-  //           day: "Thursday",
-  //           status: data.thursdayStatus,
-  //           startTime: data.thursdayOpeningTime,
-  //           endTime: data.thursdayClosingTime,
-  //         },
-  //         {
-  //           day: "Friday",
-  //           status: data.fridayStatus,
-  //           startTime: data.fridayOpeningTime,
-  //           endTime: data.fridayClosingTime,
-  //         },
-  //         {
-  //           day: "Saturday",
-  //           status: data.saturdayStatus,
-  //           startTime: data.saturdayOpeningTime,
-  //           endTime: data.saturdayClosingTime,
-  //         },
-  //         {
-  //           day: "Sunday",
-  //           status: data.sundayStatus,
-  //           startTime: data.sundayOpeningTime,
-  //           endTime: data.sundayClosingTime,
-  //         },
-  //       ],
-
-  //       // documents section
-  //       documents: {
-  //         payeeAccountReference: "",
-  //         latestRti: "",
-  //         employerLiabilityInsurance: "",
-  //         proofOfBusinessPremises: "",
-  //         copyOfLease: "",
-  //         businessBankStatement: "",
-  //         signedAnnualAccounts: "",
-  //         vatCertificate: "",
-  //         healthSafetyRating: "",
-  //         regulatoryBodyCertificate: "",
-  //         businessLicense: "",
-  //         franchiseAgreement: "",
-  //         governingBodyRegistration: "",
-  //         auditedAnnualAccounts: "",
-  //         othersDocuments: "",
-  //       },
-  //     },
-  //   };
-
-  //   // console.log("Formatted Data:", formattedData);
-  //   //append formattedData to formData as a JSON string
-  //   formData.append("data", JSON.stringify(formattedData));
-
-  //   // // Append files to FormData
-  //   organizationFileFields.forEach((field) => {
-  //     const file = data[field];
-
-  //     if (file) {
-  //       formData.append(field, file);
+  //   (Object.keys(dirty) as (keyof T)[]).forEach((key) => {
+  //     if (dirty[key] === true) {
+  //       changed[key] = values[key]; // primitive or file input
+  //     } else if (typeof dirty[key] === "object" && values[key]) {
+  //       const nested = diff(values[key], dirty[key]);
+  //       if (Object.keys(nested).length) {
+  //         changed[key] = nested as any;
+  //       }
   //     }
   //   });
+  //   return changed;
+  // }
 
-  //   if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
-  //     formData.append("keyPersonProofOfId", data.keyPersonProofOfId);
-  //   }
-  //   if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
-  //     formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
-  //   }
+  // const handleSubmitForm = async (data: FieldValues) => {
+  //   const changedFields = diff(data, dirtyFields);
 
-  //   const toastId = toast.loading("Creating organisation...");
-
-  //   try {
-  //     await createOrganisation(formData).unwrap();
-  //     // const res = await addOrgDocuments(formattedData).unwrap();
-  //     // console.log("Response:", res);
-  //     toast.success("Organisation created successfully", {
-  //       id: toastId,
-  //       duration: 2000,
-  //     });
-  //   } catch (err: any) {
-  //     //   console.log("Error:", err);
-  //     toast.error(err.data.message, { id: toastId, duration: 3000 });
-  //   }
+  //   console.log("Only the changed fields:", changedFields);
   // };
+
+  const handleSubmitForm = async (data: FieldValues) => {
+    // Create FormData object for file uploads
+    const formData = new FormData();
+
+    // Organize form data by sections
+    const formattedData = {
+      employerData: {
+        // Organization Details section
+        organisationDetails: {
+          name: data.organisationName,
+          type: data.organisationType,
+          registrationNo: data.registrationNumber,
+          contactNo: data.contactNumber,
+
+          organisationEmail: data.organisationEmail,
+          websiteURL: data.websiteURL,
+          landlineNo: data.landlineNumber,
+          tradingName: data.tradingName,
+          tradingPeriod: data.tradingPeriod,
+          nameOfSector: data.sector,
+          nameChangeLast5Years: data.nameChangeLast5Years,
+          FacedPenaltyLast3Years: data.penaltyLast3Years,
+          logo: org?.data?.organisationDetails.logo,
+        },
+
+        // Authorised Person Details section
+        authorisedPerson: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          designation: data.designation,
+          phoneNo: data.phoneNo,
+          email: data.email,
+          criminalHistory: data.criminalHistory,
+          proofOfId: org?.data?.authorisedPerson.proofOfId,
+        },
+
+        // Key Contact Person section
+        keyContactPerson: {
+          firstName: data.keyPersonFirstName,
+          lastName: data.keyPersonLastName,
+          designation: data.keyPersonDesignation,
+          phoneNo: data.keyPersonPhoneNo,
+          email: data.keyPersonEmail,
+          criminalHistory: data.keyPersonCriminalHistory,
+          proofOfId: org?.data?.keyContactPerson.proofOfId,
+        },
+
+        // Level 1 User section
+        level1User: {
+          firstName: data.level1PersonFirstName,
+          lastName: data.level1PersonLastName,
+          designation: data.level1PersonDesignation,
+          phoneNo: data.level1PersonPhoneNo,
+          email: data.level1PersonEmail,
+          criminalHistory: data.level1PersonCriminalHistory,
+          proofOfId: org?.data?.level1User.proofOfId,
+        },
+
+        // Organisation Address section
+        organisationAddress: {
+          postCode: data.postCode,
+          addressLine1: data.addressLine1,
+          addressLine2: data.addressLine2,
+          addressLine3: data.addressLine3,
+          city: data.cityCounty,
+          country: data.country,
+        },
+
+        // Trading Hours section
+        tradingHours: [
+          {
+            day: "Monday",
+            status: data.mondayStatus,
+            startTime: data.mondayOpeningTime,
+            endTime: data.mondayClosingTime,
+          },
+          {
+            day: "Tuesday",
+            status: data.tuesdayStatus,
+            startTime: data.tuesdayOpeningTime,
+            endTime: data.tuesdayClosingTime,
+          },
+          {
+            day: "Wednesday",
+            status: data.wednesdayStatus,
+            startTime: data.wednesdayOpeningTime,
+            endTime: data.wednesdayClosingTime,
+          },
+          {
+            day: "Thursday",
+            status: data.thursdayStatus,
+            startTime: data.thursdayOpeningTime,
+            endTime: data.thursdayClosingTime,
+          },
+          {
+            day: "Friday",
+            status: data.fridayStatus,
+            startTime: data.fridayOpeningTime,
+            endTime: data.fridayClosingTime,
+          },
+          {
+            day: "Saturday",
+            status: data.saturdayStatus,
+            startTime: data.saturdayOpeningTime,
+            endTime: data.saturdayClosingTime,
+          },
+          {
+            day: "Sunday",
+            status: data.sundayStatus,
+            startTime: data.sundayOpeningTime,
+            endTime: data.sundayClosingTime,
+          },
+        ],
+
+        // documents section
+        documents: {
+          payeeAccountReference: org?.data?.documents.payeeAccountReference,
+          latestRti: org?.data?.documents.latestRti,
+          employerLiabilityInsurance:
+            org?.data?.documents.employerLiabilityInsurance,
+          proofOfBusinessPremises: org?.data?.documents.proofOfBusinessPremises,
+          copyOfLease: org?.data?.documents.copyOfLease,
+          businessBankStatement: org?.data?.documents.businessBankStatement,
+          signedAnnualAccount: org?.data?.documents.signedAnnualAccount,
+          vatCertificate: org?.data?.documents.vatCertificate,
+          healthSafetyRating: org?.data?.documents.healthSafetyRating,
+          regulatoryBodyCertificate:
+            org?.data?.documents.regulatoryBodyCertificate,
+          businessLicense: org?.data?.documents.businessLicense,
+          franchiseAgreement: org?.data?.documents.franchiseAgreement,
+          governingBodyRegistration:
+            org?.data?.documents.governingBodyRegistration,
+          auditedAnnualAccount: org?.data?.documents.auditedAnnualAccount,
+          othersDocuments: org?.data?.documents.othersDocuments,
+        },
+      },
+    };
+
+    // console.log("Formatted Data:", formattedData);
+    //append formattedData to formData as a JSON string
+    formData.append("data", JSON.stringify(formattedData));
+
+    // // Append files to FormData
+    organizationFileFields.forEach((field) => {
+      const file = data[field];
+
+      if (file) {
+        formData.append(field, file);
+      }
+    });
+
+    if (!isKeyPersonSameAsAuthorised && data.keyPersonProofOfId) {
+      formData.append("keyPersonProofOfId", data.keyPersonProofOfId);
+    }
+    if (!isLevel1PersonSameAsAuthorised && data.level1PersonProofOfId) {
+      formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
+    }
+
+    // console.log("FormData entries:");
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+
+    const toastId = toast.loading("Updating organisation...");
+    // console.log("id:", id);
+
+    try {
+      await updateOrganisation({ organisationId: id, data: formData }).unwrap();
+      // const res = await addOrgDocuments(formattedData).unwrap();
+      // console.log("Response:", res);
+      toast.success("Organisation updated successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (err: any) {
+      // console.log("Error:", err);
+      toast.error(err.data.message, { id: toastId, duration: 3000 });
+    }
+  };
 
   return (
     <main className="dashboard-padding ">
@@ -388,12 +396,14 @@ const EditOrganisation = () => {
       </h1>
       {orgLoading ? (
         <div className="flex justify-center items-center h-64">
-          <p className="text-lg font-semibold text-gray-500">Loading...</p>
+          <p className="text-lg font-semibold text-gray-500">
+            Loading Organisation Details...
+          </p>
         </div>
       ) : orgError ? (
         <div className="flex justify-center items-center h-64">
           <p className="text-lg font-semibold text-red-500">
-            Error fetching organisation details. Please try again later.
+            Internal server error! Please try again later.
           </p>
         </div>
       ) : (
@@ -577,53 +587,25 @@ const EditOrganisation = () => {
                 error={errors.email?.message}
               />
 
-              <div>
-                <Input
-                  radius="sm"
-                  label="Proof of ID"
-                  labelPlacement="outside"
-                  type="file"
-                  className="text-hrms-blue font-semibold"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setValue("proofOfId", file, { shouldValidate: true });
-                    }
-                  }}
-                />
-                {errors.penaltyLast3Years && (
-                  <small className="text-red-700 font-medium">
-                    {errors.proofOfId?.message}
-                  </small>
-                )}
-              </div>
-
-              <div>
-                <Controller
-                  name="criminalHistory"
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      aria-label="Do you have a history of Criminal
-conviction/Bankruptcy/Disqualification?"
-                      label="Do you have a history of Criminal
-conviction/Bankruptcy/Disqualification?"
-                      orientation="horizontal"
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="text-base font-medium "
-                    >
-                      <Radio value="Yes">Yes</Radio>
-                      <Radio value="No">No</Radio>
-                    </RadioGroup>
-                  )}
-                />
-                {errors.criminalHistory && (
-                  <small className="text-red-700 font-medium">
-                    {errors.criminalHistory?.message}
-                  </small>
-                )}
-              </div>
+              <RHFFileInput
+                name="proofOfId"
+                control={control}
+                label="Proof of ID"
+                error={errors.keyPersonProofOfId?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
+              <RHFRadio
+                name="criminalHistory"
+                control={control}
+                label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+                options={[
+                  { value: "Yes", label: "Yes" },
+                  { value: "No", label: "No" },
+                ]}
+                error={errors.keyPersonCriminalHistory?.message}
+                disabled={isKeyPersonSameAsAuthorised}
+              />
             </div>
           </div>
 
@@ -1144,7 +1126,7 @@ conviction/Bankruptcy/Disqualification?"
                 )}
               </div>
             </div>
-          </div> */}
+          </div>  */}
 
           {/* Organisation Address */}
           <div className="pt-5">
@@ -1222,6 +1204,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Tuesday"
+                  aria-label="Tuesday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1229,6 +1212,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Wednesday"
+                  aria-label="Wednesday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1236,6 +1220,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Thursday"
+                  aria-label="Thursday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1243,6 +1228,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Friday"
+                  aria-label="Friday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1250,6 +1236,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Saturday"
+                  aria-label="Saturday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1257,6 +1244,7 @@ conviction/Bankruptcy/Disqualification?"
                 <Input
                   radius="sm"
                   placeholder="Sunday"
+                  aria-label="Sunday"
                   type="text"
                   isReadOnly
                   className="text-hrms-blue font-semibold"
@@ -1279,6 +1267,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="tuesdayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Tuesday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1290,6 +1279,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="wednesdayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Wednesday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1301,6 +1291,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="thursdayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Thursday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1312,6 +1303,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="fridayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Friday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1323,6 +1315,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="saturdayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Saturday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1334,6 +1327,7 @@ conviction/Bankruptcy/Disqualification?"
                   name="sundayStatus"
                   control={control}
                   placeholder="Select status"
+                  ariaLabel="Sunday Status"
                   options={[
                     { value: "Close", label: "Close" },
                     { value: "Open", label: "Open" },
@@ -1353,6 +1347,7 @@ conviction/Bankruptcy/Disqualification?"
                 <RHFInput
                   name="tuesdayOpeningTime"
                   control={control}
+                  ariaLabel="Tuesday Opening Time"
                   type="time"
                   error={errors.tuesdayOpeningTime?.message}
                 />
@@ -1360,30 +1355,35 @@ conviction/Bankruptcy/Disqualification?"
                 <RHFInput
                   name="wednesdayOpeningTime"
                   control={control}
+                  ariaLabel="Wednesday Opening Time"
                   type="time"
                   error={errors.wednesdayOpeningTime?.message}
                 />
                 <RHFInput
                   name="thursdayOpeningTime"
                   control={control}
+                  ariaLabel="Thursday Opening Time"
                   type="time"
                   error={errors.thursdayOpeningTime?.message}
                 />
                 <RHFInput
                   name="fridayOpeningTime"
                   control={control}
+                  ariaLabel="Friday Opening Time"
                   type="time"
                   error={errors.fridayOpeningTime?.message}
                 />
                 <RHFInput
                   name="saturdayOpeningTime"
                   control={control}
+                  ariaLabel="Saturday Opening Time"
                   type="time"
                   error={errors.saturdayOpeningTime?.message}
                 />
                 <RHFInput
                   name="sundayOpeningTime"
                   control={control}
+                  ariaLabel="Sunday Opening Time"
                   type="time"
                   error={errors.sundayOpeningTime?.message}
                 />
@@ -1400,6 +1400,7 @@ conviction/Bankruptcy/Disqualification?"
                 <RHFInput
                   name="tuesdayClosingTime"
                   control={control}
+                  ariaLabel="Tuesday Closing Time"
                   type="time"
                   error={errors.tuesdayClosingTime?.message}
                 />
@@ -1407,30 +1408,35 @@ conviction/Bankruptcy/Disqualification?"
                 <RHFInput
                   name="wednesdayClosingTime"
                   control={control}
+                  ariaLabel="Wednesday Closing Time"
                   type="time"
                   error={errors.wednesdayClosingTime?.message}
                 />
                 <RHFInput
                   name="thursdayClosingTime"
                   control={control}
+                  ariaLabel="Thursday Closing Time"
                   type="time"
                   error={errors.thursdayClosingTime?.message}
                 />
                 <RHFInput
                   name="fridayClosingTime"
                   control={control}
+                  ariaLabel="Friday Closing Time"
                   type="time"
                   error={errors.fridayClosingTime?.message}
                 />
                 <RHFInput
                   name="saturdayClosingTime"
                   control={control}
+                  ariaLabel="Saturday Closing Time"
                   type="time"
                   error={errors.saturdayClosingTime?.message}
                 />
                 <RHFInput
                   name="sundayClosingTime"
                   control={control}
+                  ariaLabel="Sunday Closing Time"
                   type="time"
                   error={errors.sundayClosingTime?.message}
                 />
