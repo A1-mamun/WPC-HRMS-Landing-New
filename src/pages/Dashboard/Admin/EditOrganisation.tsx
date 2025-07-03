@@ -66,7 +66,6 @@ const EditOrganisation = () => {
         organisationType: org?.data?.organisationDetails.type,
         registrationNumber: org?.data?.organisationDetails.registrationNo,
         contactNumber: org?.data?.organisationDetails.contactNo,
-        loginEmail: org?.data?.organisationDetails.loginEmail,
         organisationEmail: org?.data?.organisationDetails.organisationEmail,
         websiteURL: org?.data?.organisationDetails.websiteURL,
         landlineNumber: org?.data?.organisationDetails.landlineNo,
