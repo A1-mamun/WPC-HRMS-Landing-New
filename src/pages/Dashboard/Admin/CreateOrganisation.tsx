@@ -1,22 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Button,
-  Checkbox,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectItem,
-} from "@heroui/react";
+import { Button, Checkbox, Input } from "@heroui/react";
 import {
   countries,
   organizationTypes,
   sectorsName,
   tradingPeriods,
 } from "../../../data";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+
+import { FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,18 +20,21 @@ import {
 import { organizationFileFields } from "../../../constants/organisation";
 import { useCreateOrganisationMutation } from "../../../redux/features/employer/createOrganisation";
 import { Link } from "react-router-dom";
+import {
+  RHFFileInput,
+  RHFInput,
+  RHFPassword,
+  RHFRadio,
+  RHFSelect,
+} from "../../../components";
 
 const CreateOrganisation = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleVisibility = () => setIsVisible(!isVisible);
   const [isKeyPersonSameAsAuthorised, setIsKeyPersonSameAsAuthorised] =
     useState(false);
   const [isLevel1PersonSameAsAuthorised, setIsLevel1PersonSameAsAuthorised] =
     useState(false);
 
   const {
-    register,
     control,
     handleSubmit,
     watch,
@@ -274,7 +269,7 @@ const CreateOrganisation = () => {
         duration: 2000,
       });
     } catch (err: any) {
-      console.log("Error:", err);
+      // console.log("Error:", err);
       toast.error(err.data.message, { id: toastId, duration: 3000 });
     }
   };
@@ -291,49 +286,22 @@ const CreateOrganisation = () => {
             Employer Credentials
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Email"
-                labelPlacement="outside"
-                placeholder="Enter email"
-                type="email"
-                className="text-hrms-blue font-semibold"
-                {...register("loginEmail")}
-              />
-              {errors.loginEmail && (
-                <span className="text-red-500 text-sm">
-                  {errors.loginEmail.message}
-                </span>
-              )}
-            </div>
-            <div className="w-full">
-              <Input
-                endContent={
-                  <button
-                    aria-label="toggle password visibility"
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
-                    {isVisible ? <FaRegEyeSlash /> : <FaRegEye />}
-                  </button>
-                }
-                radius="sm"
-                label="Password"
-                labelPlacement="outside"
-                placeholder="Enter your password"
-                type={isVisible ? "text" : "password"}
-                {...register("password", {
-                  required: "Please enter your password",
-                })}
-              />
-              {errors.password?.message && (
-                <p className="text-red-500">
-                  {String(errors.password.message)}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="loginEmail"
+              control={control}
+              label="Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.loginEmail?.message}
+            />
+
+            <RHFPassword
+              name="password"
+              control={control}
+              label="Password"
+              placeholder="Enter password"
+              error={errors.password?.message}
+            />
           </div>
         </div>
 
@@ -351,298 +319,119 @@ const CreateOrganisation = () => {
               Find
             </Button>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Organisation Name"
-                labelPlacement="outside"
-                placeholder="Enter organisation name"
-                type="text"
-                // isRequired
-                className="text-hrms-blue font-semibold"
-                {...register("organisationName")}
-              />
-              {errors.organisationName && (
-                <small className="text-red-700 font-medium">
-                  {errors.organisationName?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="organisationName"
+              control={control}
+              label="Organisation Name"
+              placeholder="Enter organisation name"
+              error={errors.organisationName?.message}
+            />
 
-            <div>
-              <Controller
-                name="organisationType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    radius="sm"
-                    label="Type of Organisation"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select organisation type"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    {organizationTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.organisationType && (
-                <small className="text-red-700 font-medium">
-                  {errors.organisationType?.message}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="organisationType"
+              control={control}
+              label="Type of Organisation"
+              placeholder="Select organisation type"
+              options={organizationTypes}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Registration Number"
-                labelPlacement="outside"
-                placeholder="Enter organisation registration number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("registrationNumber")}
-              />
-              {errors.registrationNumber && (
-                <small className="text-red-700 font-medium">
-                  {errors.registrationNumber?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="registrationNumber"
+              control={control}
+              label="Registration Number"
+              placeholder="Enter registration number"
+              error={errors.registrationNumber?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Contact No"
-                labelPlacement="outside"
-                placeholder="Enter organisation contact number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("contactNumber")}
-              />
-              {errors.contactNumber && (
-                <small className="text-red-700 font-medium">
-                  {errors.contactNumber?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="contactNumber"
+              control={control}
+              label="Contact Number"
+              placeholder="Enter contact number"
+              error={errors.contactNumber?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Organisation Email"
-                labelPlacement="outside"
-                placeholder="Enter organisation email"
-                type="email"
-                className="text-hrms-blue font-semibold"
-                {...register("organisationEmail")}
-              />
-              {errors.organisationEmail && (
-                <small className="text-red-700 font-medium">
-                  {errors.organisationEmail?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="organisationEmail"
+              control={control}
+              label="Organisation Email"
+              placeholder="Enter organisation email"
+              type="email"
+              error={errors.organisationEmail?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Website URL"
-                labelPlacement="outside"
-                placeholder="Enter organisation website URL"
-                type="url"
-                className="text-hrms-blue font-semibold"
-                {...register("websiteURL")}
-              />
-              {errors.websiteURL && (
-                <small className="text-red-700 font-medium">
-                  {errors.websiteURL?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="websiteURL"
+              control={control}
+              label="Website URL"
+              placeholder="Enter website URL"
+              type="url"
+              error={errors.websiteURL?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Landline No"
-                labelPlacement="outside"
-                placeholder="Enter organisation landline number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("landlineNumber")}
-              />
-              {errors.landlineNumber && (
-                <small className="text-red-700 font-medium">
-                  {errors.landlineNumber?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="landlineNumber"
+              control={control}
+              label="Landline Number"
+              placeholder="Enter landline number"
+              error={errors.landlineNumber?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Trading Name"
-                labelPlacement="outside"
-                placeholder="Enter organisation trading name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("tradingName")}
-              />
-              {errors.tradingName && (
-                <small className="text-red-700 font-medium">
-                  {errors.tradingName?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="tradingName"
+              control={control}
+              label="Trading Name"
+              placeholder="Enter trading name"
+              error={errors.tradingName?.message}
+            />
 
-            <div>
-              <Controller
-                name="tradingPeriod"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    radius="sm"
-                    label="Trading Period"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select trading period"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    {tradingPeriods.map((period) => (
-                      <SelectItem key={period.value} value={period.value}>
-                        {period.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.tradingPeriod && (
-                <small className="text-red-700 font-medium">
-                  {errors.tradingPeriod?.message}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="tradingPeriod"
+              control={control}
+              label="Trading Period"
+              placeholder="Select trading period"
+              options={tradingPeriods}
+              error={errors.tradingPeriod?.message}
+            />
 
-            <div>
-              <Controller
-                name="sector"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    radius="sm"
-                    label="Name of Sector"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select sector"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    {sectorsName.map((sector) => (
-                      <SelectItem key={sector.value} value={sector.value}>
-                        {sector.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.sector && (
-                <small className="text-red-700 font-medium">
-                  {errors.sector?.message}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="sector"
+              control={control}
+              label="Name of Sector"
+              placeholder="Select sector"
+              options={sectorsName}
+              error={errors.sector?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Organisation Logo"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("logo", file, { shouldValidate: true });
-                  }
-                }}
-              />
+            <RHFFileInput
+              name="logo"
+              control={control}
+              label="Organisation Logo"
+              error={errors.logo?.message}
+            />
 
-              {errors.logo && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.logo.message)}
-                </small>
-              )}
-            </div>
+            <RHFRadio
+              name="nameChangeLast5Years"
+              control={control}
+              label="Have you changed Organisation Name/Trading Name in the last 5 years?"
+              options={[
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+              error={errors.nameChangeLast5Years?.message}
+            />
 
-            <div>
-              <Controller
-                name="nameChangeLast5Years"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                    label="Have you changed Organisation Name/Trading Name in the last 5 years?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="text-base font-medium "
-                  >
-                    <Radio value="Yes">Yes</Radio>
-                    <Radio value="No">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.nameChangeLast5Years && (
-                <small className="text-red-700 font-medium">
-                  {errors.nameChangeLast5Years?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="penaltyLast3Years"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                    label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="text-base font-medium "
-                  >
-                    <Radio value="Yes">Yes</Radio>
-                    <Radio value="No">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.penaltyLast3Years && (
-                <small className="text-red-700 font-medium">
-                  {errors.penaltyLast3Years?.message}
-                </small>
-              )}
-            </div>
+            <RHFRadio
+              name="penaltyLast3Years"
+              control={control}
+              label="Did your organisation faced penalty (e.g. recruiting illegal employee) in the last 3 years?"
+              options={[
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+              error={errors.penaltyLast3Years?.message}
+            />
           </div>
         </div>
 
@@ -652,143 +441,664 @@ const CreateOrganisation = () => {
             Authorised Person Details
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="First Name"
-                labelPlacement="outside"
-                placeholder="Enter first name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("firstName")}
-              />
-              {errors.firstName && (
-                <small className="text-red-700 font-medium">
-                  {errors.firstName?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="firstName"
+              control={control}
+              label="First Name"
+              placeholder="Enter first name"
+              error={errors.firstName?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Last Name"
-                labelPlacement="outside"
-                placeholder="Enter last name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("lastName")}
-              />
-              {errors.lastName && (
-                <small className="text-red-700 font-medium">
-                  {errors.lastName?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="lastName"
+              control={control}
+              label="Last Name"
+              placeholder="Enter last name"
+              error={errors.lastName?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Designation"
-                labelPlacement="outside"
-                placeholder="Enter designation"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("designation")}
-              />
-              {errors.designation && (
-                <small className="text-red-700 font-medium">
-                  {errors.designation?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="designation"
+              control={control}
+              label="Designation"
+              placeholder="Enter designation"
+              error={errors.designation?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Phone No"
-                labelPlacement="outside"
-                placeholder="Enter phone number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("phoneNo")}
-              />
-              {errors.phoneNo && (
-                <small className="text-red-700 font-medium">
-                  {errors.phoneNo?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="phoneNo"
+              control={control}
+              label="Phone No"
+              placeholder="Enter phone number"
+              error={errors.phoneNo?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Email"
-                labelPlacement="outside"
-                placeholder="Enter email"
-                type="email"
-                className="text-hrms-blue font-semibold"
-                {...register("email")}
-              />
-              {errors.email && (
-                <small className="text-red-700 font-medium">
-                  {errors.email?.message}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="email"
+              control={control}
+              label="Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.email?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Proof of ID"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("proofOfId", file, { shouldValidate: true });
-                  }
-                }}
-              />
-              {errors.penaltyLast3Years && (
-                <small className="text-red-700 font-medium">
-                  {errors.proofOfId?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="criminalHistory"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Do you have a history of Criminal
-conviction/Bankruptcy/Disqualification?"
-                    label="Do you have a history of Criminal
-conviction/Bankruptcy/Disqualification?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="text-base font-medium "
-                  >
-                    <Radio value="Yes">Yes</Radio>
-                    <Radio value="No">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.criminalHistory && (
-                <small className="text-red-700 font-medium">
-                  {errors.criminalHistory?.message}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="proofOfId"
+              control={control}
+              label="Proof of ID"
+              error={errors.proofOfId?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+            <RHFRadio
+              name="criminalHistory"
+              control={control}
+              label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+              options={[
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+              error={errors.criminalHistory?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
           </div>
         </div>
 
         {/* key contact person details */}
         <div className="pt-5">
+          <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Key Contact Person
+          </h3>
+          <Checkbox
+            isSelected={isKeyPersonSameAsAuthorised}
+            onValueChange={(value) => setIsKeyPersonSameAsAuthorised(value)}
+            className="pt-5"
+          >
+            If Same As Authorised Person
+          </Checkbox>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+            <RHFInput
+              name="keyPersonFirstName"
+              control={control}
+              label="First Name"
+              placeholder="Enter first name"
+              disabled={isKeyPersonSameAsAuthorised}
+              error={errors.keyPersonFirstName?.message}
+            />
+
+            <RHFInput
+              name="keyPersonLastName"
+              control={control}
+              label="Last Name"
+              placeholder="Enter last name"
+              disabled={isKeyPersonSameAsAuthorised}
+              error={errors.keyPersonLastName?.message}
+            />
+
+            <RHFInput
+              name="keyPersonDesignation"
+              control={control}
+              label="Designation"
+              placeholder="Enter designation"
+              error={errors.keyPersonDesignation?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+
+            <RHFInput
+              name="keyPersonPhoneNo"
+              control={control}
+              label="Phone No"
+              placeholder="Enter phone number"
+              error={errors.keyPersonPhoneNo?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+
+            <RHFInput
+              name="keyPersonEmail"
+              control={control}
+              label="Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.keyPersonEmail?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+
+            <RHFFileInput
+              name="keyPersonProofOfId"
+              control={control}
+              label="Proof of ID"
+              error={errors.keyPersonProofOfId?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+
+            <RHFRadio
+              name="keyPersonCriminalHistory"
+              control={control}
+              label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+              options={[
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+              error={errors.keyPersonCriminalHistory?.message}
+              disabled={isKeyPersonSameAsAuthorised}
+            />
+          </div>
+        </div>
+
+        {/* level 1 user details */}
+        <div className="pt-5">
+          <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Level 1 User
+          </h3>
+          <Checkbox
+            isSelected={isLevel1PersonSameAsAuthorised}
+            onValueChange={(value) => setIsLevel1PersonSameAsAuthorised(value)}
+            className="pt-5"
+          >
+            If Same As Authorised Person
+          </Checkbox>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+            <RHFInput
+              name="level1PersonFirstName"
+              control={control}
+              label="First Name"
+              placeholder="Enter first name"
+              disabled={isLevel1PersonSameAsAuthorised}
+              error={errors.level1PersonFirstName?.message}
+            />
+
+            <RHFInput
+              name="level1PersonLastName"
+              control={control}
+              label="Last Name"
+              placeholder="Enter last name"
+              disabled={isLevel1PersonSameAsAuthorised}
+              error={errors.level1PersonLastName?.message}
+            />
+
+            <RHFInput
+              name="level1PersonDesignation"
+              control={control}
+              label="Designation"
+              placeholder="Enter designation"
+              error={errors.level1PersonDesignation?.message}
+              disabled={isLevel1PersonSameAsAuthorised}
+            />
+
+            <RHFInput
+              name="level1PersonPhoneNo"
+              control={control}
+              label="Phone No"
+              placeholder="Enter phone number"
+              error={errors.level1PersonPhoneNo?.message}
+              disabled={isLevel1PersonSameAsAuthorised}
+            />
+
+            <RHFInput
+              name="level1PersonEmail"
+              control={control}
+              label="Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.level1PersonEmail?.message}
+              disabled={isLevel1PersonSameAsAuthorised}
+            />
+
+            <RHFFileInput
+              name="level1PersonProofOfId"
+              control={control}
+              label="Proof of ID"
+              error={errors.level1PersonProofOfId?.message}
+              disabled={isLevel1PersonSameAsAuthorised}
+            />
+
+            <RHFRadio
+              name="level1PersonCriminalHistory"
+              control={control}
+              label="Do you have a history of Criminal conviction
+                    /Bankruptcy/Disqualification?"
+              options={[
+                { value: "Yes", label: "Yes" },
+                { value: "No", label: "No" },
+              ]}
+              error={errors.level1PersonCriminalHistory?.message}
+              disabled={isLevel1PersonSameAsAuthorised}
+            />
+          </div>
+        </div>
+
+        {/* Organisation Address */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Organisation Address
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+            <RHFInput
+              name="postCode"
+              control={control}
+              label="Post Code"
+              placeholder="Enter post code"
+              error={errors.postCode?.message}
+            />
+
+            <RHFInput
+              name="addressLine1"
+              control={control}
+              label="Address Line 1"
+              placeholder="Enter address line 1"
+              error={errors.postCode?.message}
+            />
+
+            <RHFInput
+              name="addressLine2"
+              control={control}
+              label="Address Line 2"
+              placeholder="Enter address line 2"
+              error={errors.addressLine2?.message}
+            />
+
+            <RHFInput
+              name="addressLine3"
+              control={control}
+              label="Address Line 3"
+              placeholder="Enter address line 3"
+              error={errors.addressLine3?.message}
+            />
+
+            <RHFInput
+              name="cityCounty"
+              control={control}
+              label="City / County"
+              placeholder="Select city / county"
+              error={errors.cityCounty?.message}
+            />
+
+            <RHFSelect
+              name="country"
+              control={control}
+              label="Country"
+              placeholder="Select country"
+              options={countries}
+              error={errors.country?.message}
+            />
+          </div>
+        </div>
+
+        {/* Treading Hours */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Trading Hours
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
+            <div className="space-y-3">
+              <Input
+                radius="sm"
+                placeholder="Monday"
+                label="Day"
+                labelPlacement="outside"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Tuesday"
+                aria-label="Tuesday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Wednesday"
+                aria-label="Wednesday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Thursday"
+                aria-label="Thursday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Friday"
+                aria-label="Friday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Saturday"
+                aria-label="Saturday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+              <Input
+                radius="sm"
+                placeholder="Sunday"
+                aria-label="Sunday"
+                type="text"
+                isReadOnly
+                className="text-hrms-blue font-semibold"
+              />
+            </div>
+            <div className="space-y-3">
+              <RHFSelect
+                name="mondayStatus"
+                control={control}
+                label="Status"
+                placeholder="Select status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.mondayStatus?.message}
+              />
+
+              <RHFSelect
+                name="tuesdayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Tuesday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.tuesdayStatus?.message}
+              />
+
+              <RHFSelect
+                name="wednesdayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Wednesday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.wednesdayStatus?.message}
+              />
+
+              <RHFSelect
+                name="thursdayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Thursday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.thursdayStatus?.message}
+              />
+
+              <RHFSelect
+                name="fridayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Friday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.fridayStatus?.message}
+              />
+
+              <RHFSelect
+                name="saturdayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Saturday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.saturdayStatus?.message}
+              />
+
+              <RHFSelect
+                name="sundayStatus"
+                control={control}
+                placeholder="Select status"
+                ariaLabel="Sunday Status"
+                options={[
+                  { value: "Close", label: "Close" },
+                  { value: "Open", label: "Open" },
+                ]}
+                error={errors.sundayStatus?.message}
+              />
+            </div>
+            <div className="space-y-3">
+              <RHFInput
+                name="mondayOpeningTime"
+                control={control}
+                label="Opening Time"
+                type="time"
+                error={errors.mondayOpeningTime?.message}
+              />
+
+              <RHFInput
+                name="tuesdayOpeningTime"
+                control={control}
+                ariaLabel="Tuesday Opening Time"
+                type="time"
+                error={errors.tuesdayOpeningTime?.message}
+              />
+
+              <RHFInput
+                name="wednesdayOpeningTime"
+                control={control}
+                ariaLabel="Wednesday Opening Time"
+                type="time"
+                error={errors.wednesdayOpeningTime?.message}
+              />
+              <RHFInput
+                name="thursdayOpeningTime"
+                control={control}
+                ariaLabel="Thursday Opening Time"
+                type="time"
+                error={errors.thursdayOpeningTime?.message}
+              />
+              <RHFInput
+                name="fridayOpeningTime"
+                control={control}
+                ariaLabel="Friday Opening Time"
+                type="time"
+                error={errors.fridayOpeningTime?.message}
+              />
+              <RHFInput
+                name="saturdayOpeningTime"
+                control={control}
+                ariaLabel="Saturday Opening Time"
+                type="time"
+                error={errors.saturdayOpeningTime?.message}
+              />
+              <RHFInput
+                name="sundayOpeningTime"
+                control={control}
+                ariaLabel="Sunday Opening Time"
+                type="time"
+                error={errors.sundayOpeningTime?.message}
+              />
+            </div>
+            <div className="space-y-3">
+              <RHFInput
+                name="mondayClosingTime"
+                control={control}
+                label="Closing Time"
+                type="time"
+                error={errors.mondayClosingTime?.message}
+              />
+
+              <RHFInput
+                name="tuesdayClosingTime"
+                control={control}
+                ariaLabel="Tuesday Closing Time"
+                type="time"
+                error={errors.tuesdayClosingTime?.message}
+              />
+
+              <RHFInput
+                name="wednesdayClosingTime"
+                control={control}
+                ariaLabel="Wednesday Closing Time"
+                type="time"
+                error={errors.wednesdayClosingTime?.message}
+              />
+              <RHFInput
+                name="thursdayClosingTime"
+                control={control}
+                ariaLabel="Thursday Closing Time"
+                type="time"
+                error={errors.thursdayClosingTime?.message}
+              />
+              <RHFInput
+                name="fridayClosingTime"
+                control={control}
+                ariaLabel="Friday Closing Time"
+                type="time"
+                error={errors.fridayClosingTime?.message}
+              />
+              <RHFInput
+                name="saturdayClosingTime"
+                control={control}
+                ariaLabel="Saturday Closing Time"
+                type="time"
+                error={errors.saturdayClosingTime?.message}
+              />
+              <RHFInput
+                name="sundayClosingTime"
+                control={control}
+                ariaLabel="Sunday Closing Time"
+                type="time"
+                error={errors.sundayClosingTime?.message}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Upload documents */}
+        <div className="pt-5">
+          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
+            Upload Documents
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
+            <RHFFileInput
+              name="payeeAccountReference"
+              control={control}
+              label="PAYEE And Account Reference Letter From HMRC"
+              error={errors.payeeAccountReference?.message}
+            />
+
+            <RHFFileInput
+              name="latestRti"
+              control={control}
+              label="Latest RTI from accountant"
+              error={errors.latestRti?.message}
+            />
+
+            <RHFFileInput
+              name="employerLiabilityInsurance"
+              control={control}
+              label="Employer Liability Insurance Certificate"
+              error={errors.latestRti?.message}
+            />
+
+            <RHFFileInput
+              name="proofOfBusinessPremises"
+              control={control}
+              label="Proof of Business Premises (Tenancy Agreement)"
+              error={errors.proofOfBusinessPremises?.message}
+            />
+
+            <RHFFileInput
+              name="copyOfLease"
+              control={control}
+              label="Copy of Lease or Freehold Property"
+              error={errors.copyOfLease?.message}
+            />
+
+            <RHFFileInput
+              name="businessBankStatement"
+              control={control}
+              label="Business Bank Statement for last 1/2/3 months"
+              error={errors.businessBankStatement?.message}
+            />
+
+            <RHFFileInput
+              name="signedAnnualAccount"
+              control={control}
+              label="Signed Annual Account (If the business is more than 18 months old)"
+              error={errors.signedAnnualAccount?.message}
+            />
+
+            <RHFFileInput
+              name="vatCertificate"
+              control={control}
+              label="VAT Certificate (If Registered)"
+              error={errors.vatCertificate?.message}
+            />
+
+            <RHFFileInput
+              name="healthSafetyRating"
+              control={control}
+              label="Copy of Health and Safety Star Rating (Applicable for food business only)"
+              error={errors.healthSafetyRating?.message}
+            />
+
+            <RHFFileInput
+              name="regulatoryBodyCertificate"
+              control={control}
+              label="Regulatory Body Certificate (If Applicable for your business)"
+              error={errors.regulatoryBodyCertificate?.message}
+            />
+
+            <RHFFileInput
+              name="businessLicense"
+              control={control}
+              label="Registered business license or certificate"
+              error={errors.businessLicense?.message}
+            />
+
+            <RHFFileInput
+              name="franchiseAgreement"
+              control={control}
+              label="Franchise Agreement"
+              error={errors.franchiseAgreement?.message}
+            />
+
+            <RHFFileInput
+              name="governingBodyRegistration"
+              control={control}
+              label="Governing Body Registration"
+              error={errors.governingBodyRegistration?.message}
+            />
+
+            <RHFFileInput
+              name="auditedAnnualAccount"
+              control={control}
+              label="Audited Annual Account"
+              error={errors.auditedAnnualAccount?.message}
+            />
+
+            <RHFFileInput
+              name="othersDocuments"
+              control={control}
+              label="Others Documents"
+              error={errors.othersDocuments?.message}
+            />
+          </div>
+        </div>
+
+        {/* key contact person details */}
+        {/* <div className="pt-5">
           <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Key Contact Person
           </h3>
@@ -960,10 +1270,10 @@ conviction/Bankruptcy/Disqualification?"
               )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* level 1 user details */}
-        <div className="pt-5">
+        {/* <div className="pt-5">
           <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
             Level 1 User
           </h3>
@@ -1135,787 +1445,7 @@ conviction/Bankruptcy/Disqualification?"
               )}
             </div>
           </div>
-        </div>
-
-        {/* Organisation Address */}
-        <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Organisation Address
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-            <Input
-              radius="sm"
-              label="Post Code"
-              labelPlacement="outside"
-              placeholder="Enter post code"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("postCode")}
-            />
-            <Input
-              radius="sm"
-              label="Address Line 1"
-              labelPlacement="outside"
-              placeholder="Enter address line 1"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("addressLine1")}
-            />
-            <Input
-              radius="sm"
-              label="Address Line 2"
-              labelPlacement="outside"
-              placeholder="Enter address line 2"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("addressLine2")}
-            />
-            <Input
-              radius="sm"
-              label="Address Line 3"
-              labelPlacement="outside"
-              placeholder="Enter address line 3"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("addressLine3")}
-            />
-            <Input
-              radius="sm"
-              label="City / County"
-              labelPlacement="outside"
-              placeholder="Enter city / county"
-              type="text"
-              className="text-hrms-blue font-semibold"
-              {...register("cityCounty")}
-            />
-            <Controller
-              name="country"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  radius="sm"
-                  label="Country"
-                  className="text-hrms-blue font-semibold"
-                  labelPlacement="outside"
-                  placeholder="Select country"
-                  selectedKeys={
-                    field.value ? new Set([field.value]) : new Set()
-                  } // Ensure proper binding
-                  onSelectionChange={(keys) =>
-                    field.onChange(Array.from(keys)[0])
-                  } // Extract single value from Set
-                >
-                  {countries.map((country) => (
-                    <SelectItem key={country.value} value={country.value}>
-                      {country.value}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </div>
-        </div>
-
-        {/* Treading Hours */}
-        <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Trading Hours
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 pt-5">
-            <div className="space-y-3">
-              <Input
-                radius="sm"
-                placeholder="Monday"
-                label="Day"
-                labelPlacement="outside"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Tuesday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Wednesday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Thursday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Friday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Saturday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-              <Input
-                radius="sm"
-                placeholder="Sunday"
-                type="text"
-                isReadOnly
-                className="text-hrms-blue font-semibold"
-              />
-            </div>
-            <div className="space-y-3">
-              <Controller
-                name="mondayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Monday Status"
-                    radius="sm"
-                    label="Status"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-
-              <Controller
-                name="tuesdayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Tuesday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              <Controller
-                name="wednesdayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Wednesday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              <Controller
-                name="thursdayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Thursday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              <Controller
-                name="fridayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Friday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              <Controller
-                name="saturdayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Saturday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              <Controller
-                name="sundayStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Sunday Status"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    } // Ensure proper binding
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    } // Extract single value from Set
-                  >
-                    <SelectItem key="Close" value="Close">
-                      Close
-                    </SelectItem>
-                    <SelectItem key="Open" value="Open">
-                      Open
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-            </div>
-            <div className="space-y-3">
-              <Input
-                radius="sm"
-                label="Opening Time"
-                labelPlacement="outside"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("mondayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("tuesdayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("wednesdayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("thursdayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("fridayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("saturdayOpeningTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter opening time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("sundayOpeningTime")}
-              />
-            </div>
-            <div className="space-y-3">
-              <Input
-                radius="sm"
-                label="Closing Time"
-                labelPlacement="outside"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("mondayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("tuesdayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("wednesdayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("thursdayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("fridayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("saturdayClosingTime")}
-              />
-              <Input
-                radius="sm"
-                placeholder="Enter closing time"
-                type="time"
-                className="text-hrms-blue font-semibold"
-                {...register("sundayClosingTime")}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Upload documents */}
-        <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Upload Documents
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="PAYEE And Account Reference Letter From HMRC"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("payeeAccountReference", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.payeeAccountReference && (
-                <small className="text-red-700 font-medium">
-                  {errors.payeeAccountReference?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Latest RTI from accountant"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("latestRti", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.latestRti && (
-                <small className="text-red-700 font-medium">
-                  {errors.latestRti?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Employer Liability Insurance Certificate"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("employerLiabilityInsurance", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.employerLiabilityInsurance && (
-                <small className="text-red-700 font-medium">
-                  {errors.employerLiabilityInsurance?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Proof of Business Permises (Tenancy Agreement)"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("proofOfBusinessPremises", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.proofOfBusinessPremises && (
-                <small className="text-red-700 font-medium">
-                  {errors.proofOfBusinessPremises?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Copy of Lease or Freehold Property"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("copyOfLease", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.copyOfLease && (
-                <small className="text-red-700 font-medium">
-                  {errors.copyOfLease?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Business Bank Statement for last 1/2/3 months"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("businessBankStatement", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.businessBankStatement && (
-                <small className="text-red-700 font-medium">
-                  {errors.businessBankStatement?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Signed Annual Account ( If the business is more than 18 months old)"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("signedAnnualAccount", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.signedAnnualAccount && (
-                <small className="text-red-700 font-medium">
-                  {errors.signedAnnualAccount?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="VAT Certificate (If Registered)"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("vatCertificate", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.vatCertificate && (
-                <small className="text-red-700 font-medium">
-                  {errors.vatCertificate?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Copy of Health and Safty star Rating (Applicable for food business only)"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("healthSafetyRating", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.healthSafetyRating && (
-                <small className="text-red-700 font-medium">
-                  {errors.healthSafetyRating?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Regulatory Body Certificate (If Applicable for your business)"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("regulatoryBodyCertificate", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.regulatoryBodyCertificate && (
-                <small className="text-red-700 font-medium">
-                  {errors.regulatoryBodyCertificate?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Registered business license or certificate"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("businessLicense", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.businessLicense && (
-                <small className="text-red-700 font-medium">
-                  {errors.businessLicense?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Franchise Agreement"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("franchiseAgreement", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.franchiseAgreement && (
-                <small className="text-red-700 font-medium">
-                  {errors.franchiseAgreement?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Governing Body Registration"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("governingBodyRegistration", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.governingBodyRegistration && (
-                <small className="text-red-700 font-medium">
-                  {errors.governingBodyRegistration?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Audited annual account"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("auditedAnnualAccount", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.auditedAnnualAccount && (
-                <small className="text-red-700 font-medium">
-                  {errors.auditedAnnualAccount?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Others Documents"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("othersDocuments", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.othersDocuments && (
-                <small className="text-red-700 font-medium">
-                  {errors.othersDocuments?.message}
-                </small>
-              )}
-            </div>
-          </div>
-        </div>
+        </div> */}
 
         {/* submit button area */}
         <div className="flex justify-between items-center pt-5 pb-10">

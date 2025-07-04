@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 
 const ManageEmployer = () => {
   const [page, setPage] = useState(1);
-  const [params, setParams] = useState({});
+  // const [params, setParams] = useState({});
 
   // api call to get employees
   const { data, isError } = useGetOrgaisationsQuery(undefined);

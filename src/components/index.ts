@@ -10,6 +10,7 @@ import RHFInput from "./input/RHFInput";
 import RHFSelect from "./input/RHFSelect";
 import RHFFileInput from "./input/RHFFileInput";
 import RHFRadio from "./input/RHFRadio";
+import RHFPassword from "./input/RHFPassword";
 
 // Shared components
 import Actions from "./shared/Actions";
@@ -23,4 +24,5 @@ export {
   RHFFileInput,
   RHFSelect,
   RHFRadio,
+  RHFPassword,
 };
