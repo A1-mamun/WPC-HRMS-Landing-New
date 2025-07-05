@@ -14,7 +14,6 @@ import {
 import { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { employeeFileFields } from "../../../constants/employee";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -29,6 +28,7 @@ import {
   dbsTypes,
   deductions,
   employmentTypes,
+  genderOptions,
   kinRelationships,
   maritalStatus,
   nationalities,
@@ -41,6 +41,14 @@ import {
   wedgesPayModes,
 } from "../../../data";
 import { useCreateEmployeeMutation } from "../../../redux/features/employee/createEmployee";
+import {
+  RHFDatepicker,
+  RHFFileInput,
+  RHFInput,
+  RHFPassword,
+  RHFRadio,
+  RHFSelect,
+} from "../../../components";
 const CreateEmployee = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -403,49 +411,22 @@ const CreateEmployee = () => {
             Employee Credentials
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Email"
-                labelPlacement="outside"
-                placeholder="Enter email"
-                type="email"
-                className="text-hrms-blue font-semibold"
-                {...register("email")}
-              />
-              {errors.email && (
-                <span className="text-red-500 text-sm">
-                  {errors.email.message}
-                </span>
-              )}
-            </div>
-            <div className="w-full">
-              <Input
-                endContent={
-                  <button
-                    aria-label="toggle password visibility"
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
-                    {isVisible ? <FaRegEyeSlash /> : <FaRegEye />}
-                  </button>
-                }
-                radius="sm"
-                label="Password"
-                labelPlacement="outside"
-                placeholder="Enter your password"
-                type={isVisible ? "text" : "password"}
-                {...register("password", {
-                  required: "Please enter your password",
-                })}
-              />
-              {errors.password?.message && (
-                <p className="text-red-500">
-                  {String(errors.password.message)}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="email"
+              control={control}
+              label="Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.email?.message}
+            />
+
+            <RHFPassword
+              name="password"
+              control={control}
+              label="Password"
+              placeholder="Enter password"
+              error={errors.password?.message}
+            />
           </div>
         </div>
 
@@ -455,261 +436,95 @@ const CreateEmployee = () => {
             Personal Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Employee Code"
-                labelPlacement="outside"
-                placeholder="Enter employee code"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("employeeCode")}
-              />
-              {errors.employeeCode && (
-                <span className="text-red-500 text-sm">
-                  {errors.employeeCode.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="employeeCode"
+              control={control}
+              label="Employee Code"
+              placeholder="Enter employee code"
+              error={errors.employeeCode?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="First Name"
-                labelPlacement="outside"
-                placeholder="Enter first name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("firstName")}
-              />
-              {errors.firstName && (
-                <span className="text-red-500 text-sm">
-                  {errors.firstName.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="firstName"
+              control={control}
+              label="First Name"
+              placeholder="Enter first name"
+              error={errors.firstName?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Middle Name"
-                labelPlacement="outside"
-                placeholder="Enter middle name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("middleName")}
-              />
-              {errors.middleName && (
-                <span className="text-red-500 text-sm">
-                  {errors.middleName.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="middleName"
+              control={control}
+              label="Middle Name"
+              placeholder="Enter middle name"
+              error={errors.middleName?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Last Name"
-                labelPlacement="outside"
-                placeholder="Enter last name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("lastName")}
-              />
-              {errors.lastName && (
-                <span className="text-red-500 text-sm">
-                  {errors.lastName.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="lastName"
+              control={control}
+              label="Last Name"
+              placeholder="Enter last name"
+              error={errors.lastName?.message}
+            />
 
-            <div>
-              <Controller
-                name="gender"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Gender"
-                    radius="sm"
-                    label="Gender"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select gender"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    <SelectItem key="Male" value="Male">
-                      Male
-                    </SelectItem>
-                    <SelectItem key="Female" value="Female">
-                      Female
-                    </SelectItem>
-                    <SelectItem key="Others" value="Others">
-                      Others
-                    </SelectItem>
-                  </Select>
-                )}
-              />
-              {errors.gender && (
-                <span className="text-red-500 text-sm">
-                  {errors.gender.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="gender"
+              control={control}
+              label="Gender"
+              placeholder="Select gender"
+              error={errors.gender?.message}
+              options={genderOptions}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="NI Number"
-                labelPlacement="outside"
-                placeholder="Enter NI Number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("niNumber")}
-              />
-              {errors.niNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.niNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="niNumber"
+              control={control}
+              label="NI Number"
+              placeholder="Enter NI Number"
+              error={errors.niNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="dateOfBirth"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Date of Birth"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Date of Birth"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dateOfBirth && (
-                <span className="text-red-500 text-sm">
-                  {errors.dateOfBirth.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dateOfBirth"
+              control={control}
+              label="Date of Birth"
+              error={errors.dateOfBirth?.message}
+            />
 
-            <div>
-              <Controller
-                name="maritalStatus"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Marital Status"
-                    radius="sm"
-                    label="Marital Status"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select status"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {maritalStatus.map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
-                        {status.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.maritalStatus && (
-                <span className="text-red-500 text-sm">
-                  {errors.maritalStatus.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="maritalStatus"
+              control={control}
+              label="Marital Status"
+              placeholder="Select status"
+              error={errors.maritalStatus?.message}
+              options={maritalStatus}
+            />
 
-            <div>
-              <Controller
-                name="nationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Nationality"
-                    radius="sm"
-                    label="Nationality"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nat) => (
-                      <SelectItem key={nat.value} value={nat.value}>
-                        {nat.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.nationality && (
-                <span className="text-red-500 text-sm">
-                  {errors.nationality.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="nationality"
+              control={control}
+              label="Nationality"
+              placeholder="Select nationality"
+              error={errors.nationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Contact Number"
-                labelPlacement="outside"
-                placeholder="Enter contact number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("contactNumber")}
-              />
-              {errors.contactNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.contactNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="contactNumber"
+              control={control}
+              label="Contact Number"
+              placeholder="Enter contact number"
+              error={errors.contactNumber?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Alternative Number"
-                labelPlacement="outside"
-                placeholder="Enter alternative number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("alternativeNumber")}
-              />
-              {errors.alternativeNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.alternativeNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="alternativeNumber"
+              control={control}
+              label="Alternative Number"
+              placeholder="Enter alternative number"
+              error={errors.alternativeNumber?.message}
+            />
           </div>
         </div>
 
@@ -719,234 +534,73 @@ const CreateEmployee = () => {
             Service Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Department"
-                labelPlacement="outside"
-                placeholder="Enter department"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("department")}
-              />
-              {errors.department && (
-                <span className="text-red-500 text-sm">
-                  {errors.department.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="department"
+              control={control}
+              label="Department"
+              placeholder="Enter department"
+              error={errors.department?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Designation"
-                labelPlacement="outside"
-                placeholder="Enter designation"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("designation")}
-              />
-              {errors.designation && (
-                <span className="text-red-500 text-sm">
-                  {errors.designation.message}
-                </span>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="employeeType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Employee Type"
-                    radius="sm"
-                    label="Employee Type"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select employee type"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {employmentTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.employeeType && (
-                <span className="text-red-500 text-sm">
-                  {errors.employeeType.message}
-                </span>
-              )}
-            </div>
-            <div>
-              <Controller
-                name="dateOfJoining"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Date of Joining"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Date of Joining"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dateOfJoining && (
-                <span className="text-red-500 text-sm">
-                  {errors.dateOfJoining.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="designation"
+              control={control}
+              label="Designation"
+              placeholder="Enter designation"
+              error={errors.designation?.message}
+            />
 
-            <div>
-              <Controller
-                name="dateOfConfirmation"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Date of Confirmation"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Date of Confirmation"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dateOfConfirmation && (
-                <span className="text-red-500 text-sm">
-                  {errors.dateOfConfirmation.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="employeeType"
+              control={control}
+              label="Employee Type"
+              placeholder="Select employee type"
+              error={errors.employeeType?.message}
+              options={employmentTypes}
+            />
 
-            <div>
-              <Controller
-                name="contractStartDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Contract Start Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Contract Start Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.contractStartDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.contractStartDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dateOfJoining"
+              control={control}
+              label="Date of Joining"
+              error={errors.dateOfJoining?.message}
+            />
 
-            <div>
-              <Controller
-                name="contractEndDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Contract End Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Contract End Date (if applicable)"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.contractEndDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.contractEndDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dateOfConfirmation"
+              control={control}
+              label="Date of Confirmation"
+              error={errors.dateOfConfirmation?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Job Location"
-                labelPlacement="outside"
-                placeholder="Enter job location"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("jobLocation")}
-              />
-              {errors.jobLocation && (
-                <span className="text-red-500 text-sm">
-                  {errors.jobLocation.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="contractStartDate"
+              control={control}
+              label="Contract Start Date"
+              error={errors.contractStartDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Profile Picture"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("profilePicture", file, { shouldValidate: true });
-                  }
-                }}
-              />
+            <RHFDatepicker
+              name="contractEndDate"
+              control={control}
+              label="Contract End Date (if applicable)"
+              error={errors.contractEndDate?.message}
+            />
 
-              {errors.profilePicture && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.profilePicture.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="jobLocation"
+              control={control}
+              label="Job Location"
+              placeholder="Enter job location"
+              error={errors.jobLocation?.message}
+            />
+
+            <RHFFileInput
+              name="profilePicture"
+              control={control}
+              label="Profile Picture"
+              error={errors.profilePicture?.message}
+            />
           </div>
         </div>
 
@@ -1402,107 +1056,48 @@ const CreateEmployee = () => {
             Emergency / Next of Kin Contact Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Next of Kin Contact Name"
-                labelPlacement="outside"
-                placeholder="Enter name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("nextOfKinContactName")}
-              />
-              {errors.nextOfKinContactName && (
-                <span className="text-red-500 text-sm">
-                  {errors.nextOfKinContactName.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="nextOfKinContactName"
+              control={control}
+              label="Next of Kin Contact Name"
+              placeholder="Enter name"
+              error={errors.nextOfKinContactName?.message}
+            />
 
-            <div>
-              <Controller
-                name="nextOfKinContactRelationship"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Next of Kin Contact Relationship"
-                    radius="sm"
-                    label="Next of Kin Contact Relationship"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Relationship"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {kinRelationships.map((relation) => (
-                      <SelectItem key={relation.value} value={relation.value}>
-                        {relation.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.nextOfKinContactRelationship && (
-                <span className="text-red-500 text-sm">
-                  {errors.nextOfKinContactRelationship.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="nextOfKinContactRelationship"
+              control={control}
+              label="Next of Kin Contact Relationship"
+              placeholder="Select Relationship"
+              error={errors.nextOfKinContactRelationship?.message}
+              options={kinRelationships}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Next of Kin Contact Email"
-                labelPlacement="outside"
-                placeholder="Enter contact email"
-                type="tel"
-                className="text-hrms-blue font-semibold"
-                {...register("nextOfKinContactEmail")}
-              />
-              {errors.nextOfKinContactEmail && (
-                <span className="text-red-500 text-sm">
-                  {errors.nextOfKinContactEmail.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="nextOfKinContactEmail"
+              control={control}
+              label="Next of Kin Contact Email"
+              placeholder="Enter email"
+              type="email"
+              error={errors.nextOfKinContactEmail?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Next of Kin Contact Number"
-                labelPlacement="outside"
-                placeholder="Enter contact number"
-                type="tel"
-                className="text-hrms-blue font-semibold"
-                {...register("nextOfKinContactNumber")}
-              />
-              {errors.nextOfKinContactNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.nextOfKinContactNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="nextOfKinContactNumber"
+              control={control}
+              label="Next of Kin Contact Number"
+              placeholder="Enter contact number"
+              type="tel"
+              error={errors.nextOfKinContactNumber?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Next of Kin Contact Address"
-                labelPlacement="outside"
-                placeholder="Enter address"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("nextOfKinContactAddress")}
-              />
-              {errors.nextOfKinContactAddress && (
-                <span className="text-red-500 text-sm">
-                  {errors.nextOfKinContactAddress.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="nextOfKinContactAddress"
+              control={control}
+              label="Next of Kin Contact Address"
+              placeholder="Enter address"
+              error={errors.nextOfKinContactAddress?.message}
+            />
           </div>
         </div>
 
@@ -1512,101 +1107,35 @@ const CreateEmployee = () => {
             Certified Membership
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Title of Certified License"
-                labelPlacement="outside"
-                placeholder="Enter Title of Certified License"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("titleCertifiedLicense")}
-              />
-              {errors.titleCertifiedLicense && (
-                <span className="text-red-500 text-sm">
-                  {errors.titleCertifiedLicense.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="titleCertifiedLicense"
+              control={control}
+              label="Title of Certified License"
+              placeholder="Enter Title of Certified License"
+              error={errors.titleCertifiedLicense?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="License Number"
-                labelPlacement="outside"
-                placeholder="Enter License Number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("licenseNumber")}
-              />
-              {errors.licenseNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.licenseNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="licenseNumber"
+              control={control}
+              label="License Number"
+              placeholder="Enter License Number"
+              error={errors.licenseNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="issueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.issueDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.issueDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="issueDate"
+              control={control}
+              label="License Issue Date"
+              error={errors.issueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="expiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.expiryDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.expiryDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="expiryDate"
+              control={control}
+              label="License Expiry Date"
+              error={errors.expiryDate?.message}
+            />
           </div>
         </div>
 
@@ -1616,146 +1145,60 @@ const CreateEmployee = () => {
             Contact Information (Correspondence Address)
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Post Code"
-                labelPlacement="outside"
-                placeholder="Enter post code"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("postCode")}
-              />
-              {errors.postCode && (
-                <span className="text-red-500 text-sm">
-                  {errors.postCode.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="postCode"
+              control={control}
+              label="Post Code"
+              placeholder="Enter post code"
+              error={errors.postCode?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Address Line 1"
-                labelPlacement="outside"
-                placeholder="Enter address line 1"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine1")}
-              />
-              {errors.addressLine1 && (
-                <span className="text-red-500 text-sm">
-                  {errors.addressLine1.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="addressLine1"
+              control={control}
+              label="Address Line 1"
+              placeholder="Enter address line 1"
+              error={errors.addressLine1?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Address Line 2"
-                labelPlacement="outside"
-                placeholder="Enter address line 2"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine2")}
-              />
-              {errors.addressLine2 && (
-                <span className="text-red-500 text-sm">
-                  {errors.addressLine2.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="addressLine2"
+              control={control}
+              label="Address Line 2"
+              placeholder="Enter address line 2"
+              error={errors.addressLine2?.message}
+            />
+            <RHFInput
+              name="addressLine3"
+              control={control}
+              label="Address Line 3"
+              placeholder="Enter address line 3"
+              error={errors.addressLine3?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Address Line 3"
-                labelPlacement="outside"
-                placeholder="Enter address line 3"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("addressLine3")}
-              />
-              {errors.addressLine3 && (
-                <span className="text-red-500 text-sm">
-                  {errors.addressLine3.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="city"
+              control={control}
+              label="City / County"
+              placeholder="Enter city / county"
+              error={errors.city?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="City / County"
-                labelPlacement="outside"
-                placeholder="Enter city / county"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("city")}
-              />
-              {errors.city && (
-                <span className="text-red-500 text-sm">
-                  {errors.city.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="country"
+              control={control}
+              label="County"
+              placeholder="Select county"
+              error={errors.country?.message}
+              options={countries}
+            />
 
-            <div>
-              <Controller
-                name="country"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Country"
-                    radius="sm"
-                    label="Country"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select country"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {countries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        {country.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.country && (
-                <span className="text-red-500 text-sm">
-                  {errors.country.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Proof Of Address"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("proofOfAddress", file, { shouldValidate: true });
-                  }
-                }}
-              />
-
-              {errors.proofOfAddress && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.proofOfAddress.message)}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="proofOfAddress"
+              control={control}
+              label="Proof of Address"
+              error={errors.proofOfAddress?.message}
+            />
           </div>
         </div>
 
@@ -1765,251 +1208,85 @@ const CreateEmployee = () => {
             Passport Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Passport Number"
-                labelPlacement="outside"
-                placeholder="Enter passport number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("passportNumber")}
-              />
-              {errors.passportNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="passportNumber"
+              control={control}
+              label="Passport Number"
+              placeholder="Enter passport number"
+              error={errors.passportNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="passportNationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Passport Nationality"
-                    radius="sm"
-                    label="Nationality (Passport)"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nationality) => (
-                      <SelectItem
-                        key={nationality.value}
-                        value={nationality.value}
-                      >
-                        {nationality.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.passportNationality && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportNationality.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="passportNationality"
+              control={control}
+              label="Nationality ( Passport )"
+              placeholder="Select Nationality"
+              error={errors.passportNationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Place of Birth"
-                labelPlacement="outside"
-                placeholder="Enter place of birth"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("placeOfBirth")}
-              />
-              {errors.placeOfBirth && (
-                <span className="text-red-500 text-sm">
-                  {errors.placeOfBirth.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="placeOfBirth"
+              control={control}
+              label="Place of Birth"
+              placeholder="Enter place of birth"
+              error={errors.placeOfBirth?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Passport Issued By"
-                labelPlacement="outside"
-                placeholder="Enter issuing authority"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("passportIssuedBy")}
-              />
-              {errors.passportIssuedBy && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportIssuedBy.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="passportIssuedBy"
+              control={control}
+              label="Passport Issued By"
+              placeholder="Enter issuing authority"
+              error={errors.passportIssuedBy?.message}
+            />
 
-            <div>
-              <Controller
-                name="passportIssueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Passport Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Passport Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.passportIssueDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportIssueDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="passportIssueDate"
+              control={control}
+              label="Passport Issue Date"
+              error={errors.passportIssueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="passportExpiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Passport Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Passport Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.passportExpiryDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportExpiryDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="passportExpiryDate"
+              control={control}
+              label="Passport Expiry Date"
+              error={errors.passportExpiryDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="passportEligibleReviewDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Passport Eligible Review Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Passport Eligible Review Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.passportEligibleReviewDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportEligibleReviewDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="passportEligibleReviewDate"
+              control={control}
+              label="Passport Eligible Review Date"
+              error={errors.passportEligibleReviewDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Passport Document"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("passportDocument", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
+            <RHFFileInput
+              name="passportDocument"
+              control={control}
+              label="Passport Document"
+              error={errors.passportDocument?.message}
+            />
 
-              {errors.passportDocument && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.passportDocument.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="passportRemarks"
+              control={control}
+              label="Passport Remarks"
+              placeholder="Enter passport remarks"
+              error={errors.passportRemarks?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Passport Remarks"
-                labelPlacement="outside"
-                placeholder="Enter passport remarks"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("passportRemarks")}
-              />
-              {errors.passportRemarks && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportRemarks.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="passportStatus"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Is this your current status?"
-                    label="Is this your current status?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.passportStatus && (
-                <span className="text-red-500 text-sm">
-                  {errors.passportStatus.message}
-                </span>
-              )}
-            </div>
+            <RHFRadio
+              name="passportStatus"
+              control={control}
+              label="Is this your current status?"
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              error={errors.passportStatus?.message}
+            />
           </div>
         </div>
 
@@ -2019,292 +1296,93 @@ const CreateEmployee = () => {
             Visa/BRP Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="BPP/Visa Number"
-                labelPlacement="outside"
-                placeholder="Enter visa number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("visaNumber")}
-              />
-              {errors.visaNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaNumber.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="visaNumber"
+              control={control}
+              label="BPP/Visa Number"
+              placeholder="Enter visa number"
+              error={errors.visaNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="visaNationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Visa Nationality"
-                    radius="sm"
-                    label="Nationality"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nationality) => (
-                      <SelectItem
-                        key={nationality.value}
-                        value={nationality.value}
-                      >
-                        {nationality.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.visaNationality && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaNationality.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="visaNationality"
+              control={control}
+              label="Nationality ( Visa /BRP )"
+              placeholder="Select Nationality"
+              error={errors.visaNationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Controller
-                name="countryOfResidence"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Country of Residence"
-                    radius="sm"
-                    label="Country of Residence"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select country"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {countries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        {country.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.countryOfResidence && (
-                <span className="text-red-500 text-sm">
-                  {errors.countryOfResidence.message}
-                </span>
-              )}
-            </div>
+            <RHFSelect
+              name="countryOfResidence"
+              control={control}
+              label="Country of Residence"
+              placeholder="Select country"
+              error={errors.countryOfResidence?.message}
+              options={countries}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Visa Issued By"
-                labelPlacement="outside"
-                placeholder="Enter visa issuing authority"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("visaIssuedBy")}
-              />
-              {errors.visaIssuedBy && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaIssuedBy.message}
-                </span>
-              )}
-            </div>
+            <RHFInput
+              name="visaIssuedBy"
+              control={control}
+              label="Visa Issued By"
+              placeholder="Enter visa issuing authority"
+              error={errors.visaIssuedBy?.message}
+            />
 
-            <div>
-              <Controller
-                name="visaIssueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Visa Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Visa Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.visaIssueDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaIssueDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="visaIssueDate"
+              control={control}
+              label="Visa Issue Date"
+              error={errors.visaIssueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="visaExpiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Visa Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Visa Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.visaExpiryDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaExpiryDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="visaExpiryDate"
+              control={control}
+              label="Visa Expiry Date"
+              error={errors.visaExpiryDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="visaEligibleReviewDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Visa Eligible Review Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Visa Eligible Review Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.visaEligibleReviewDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaEligibleReviewDate.message}
-                </span>
-              )}
-            </div>
+            <RHFDatepicker
+              name="visaEligibleReviewDate"
+              control={control}
+              label="Visa Eligible Review Date"
+              error={errors.visaEligibleReviewDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Visa Document Front Side"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("visaDocumentFrontSide", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
+            <RHFFileInput
+              name="visaDocumentFrontSide"
+              control={control}
+              label="Visa Document Front Side"
+              error={errors.visaDocumentFrontSide?.message}
+            />
 
-              {errors.visaDocumentFrontSide && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.visaDocumentFrontSide.message)}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="visaDocumentBackSide"
+              control={control}
+              label="Visa Document Back Side"
+              error={errors.visaDocumentBackSide?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Visa Document Back Side"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("visaDocumentBackSide", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
+            <RHFInput
+              name="visaRemarks"
+              control={control}
+              label="Visa Remarks"
+              placeholder="Enter visa remarks"
+              error={errors.visaRemarks?.message}
+            />
 
-              {errors.visaDocumentBackSide && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.visaDocumentBackSide.message)}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Visa Remarks"
-                labelPlacement="outside"
-                placeholder="Enter visa remarks"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("visaRemarks")}
-              />
-              {errors.visaRemarks && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaRemarks.message}
-                </span>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="visaStatus"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Is this your current status?"
-                    label="Is this your current status?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.visaStatus && (
-                <span className="text-red-500 text-sm">
-                  {errors.visaStatus.message}
-                </span>
-              )}
-            </div>
+            <RHFRadio
+              name="visaStatus"
+              control={control}
+              label="Is this your current status?"
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              error={errors.visaStatus?.message}
+            />
           </div>
         </div>
 
@@ -2314,216 +1392,69 @@ const CreateEmployee = () => {
             EUSS/Time Limit Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="Reference Number"
-                labelPlacement="outside"
-                placeholder="Enter reference number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("eussReferenceNumber")}
-              />
-              {errors.eussReferenceNumber && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussReferenceNumber.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="eussReferenceNumber"
+              control={control}
+              label="Reference Number"
+              placeholder="Enter reference number"
+              error={errors.eussReferenceNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="eussNationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="EUSS Nationality"
-                    radius="sm"
-                    label="Nationality"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nationality) => (
-                      <SelectItem
-                        key={nationality.value}
-                        value={nationality.value}
-                      >
-                        {nationality.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.eussNationality && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussNationality.message)}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="eussNationality"
+              control={control}
+              label="Nationality"
+              placeholder="Select Nationality"
+              error={errors.eussNationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Controller
-                name="eussIssueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="EUSS Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.eussIssueDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussIssueDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="eussIssueDate"
+              control={control}
+              label="Issue Date"
+              error={errors.eussIssueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="eussExpiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="EUSS Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.eussExpiryDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussExpiryDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="eussExpiryDate"
+              control={control}
+              label="Expiry Date"
+              error={errors.eussExpiryDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="eussEligibleReviewDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="EUSS Eligible Review Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Eligible Review Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.eussEligibleReviewDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussEligibleReviewDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="eussEligibleReviewDate"
+              control={control}
+              label="Eligible Review Date"
+              error={errors.eussEligibleReviewDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="EUSS/Time Limit Document"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("eussDocument", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.eussDocument && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussDocument.message)}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="eussDocument"
+              control={control}
+              label="EUSS/Time Limit Document"
+              error={errors.eussDocument?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="EUSS/Time Limit Remarks"
-                labelPlacement="outside"
-                placeholder="Enter remarks"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("eussRemarks")}
-              />
-              {errors.eussRemarks && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussRemarks.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="eussRemarks"
+              control={control}
+              label="EUSS/Time Limit Remarks"
+              placeholder="Enter remarks"
+              error={errors.eussRemarks?.message}
+            />
 
-            <div>
-              <Controller
-                name="eussStatus"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Is this your current status?"
-                    label="Is this your current status?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.eussStatus && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.eussStatus.message)}
-                </small>
-              )}
-            </div>
+            <RHFRadio
+              name="eussStatus"
+              control={control}
+              label="Is this your current status?"
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              error={errors.eussStatus?.message}
+            />
           </div>
         </div>
 
@@ -2533,250 +1464,78 @@ const CreateEmployee = () => {
             DBS (Disclosure and Barring Service) Information
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Controller
-                name="dbsType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="DBS Type"
-                    radius="sm"
-                    label="DBS Type"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select dbs type"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {dbsTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.dbsType && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsType.message)}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="dbsType"
+              control={control}
+              label="DBS Type"
+              placeholder="Select DBS type"
+              error={errors.dbsType?.message}
+              options={dbsTypes}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Reference Number"
-                labelPlacement="outside"
-                placeholder="Enter Reference Number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("dbsReferenceNumber")}
-              />
-              {errors.dbsReferenceNumber && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsReferenceNumber.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="dbsReferenceNumber"
+              control={control}
+              label="Reference Number"
+              placeholder="Enter reference number"
+              error={errors.dbsReferenceNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="dbsNationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="DBS Nationality"
-                    radius="sm"
-                    label="Nationality"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nationality) => (
-                      <SelectItem
-                        key={nationality.value}
-                        value={nationality.value}
-                      >
-                        {nationality.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.dbsNationality && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsNationality.message)}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="dbsNationality"
+              control={control}
+              label="Nationality"
+              placeholder="Select Nationality"
+              error={errors.dbsNationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Controller
-                name="dbsIssueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="DBS Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dbsIssueDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsIssueDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dbsIssueDate"
+              control={control}
+              label="Issue Date"
+              error={errors.dbsIssueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="dbsExpiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="DBS Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dbsExpiryDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsExpiryDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dbsExpiryDate"
+              control={control}
+              label="Expiry Date"
+              error={errors.dbsExpiryDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="dbsEligibleReviewDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="DBS Eligible Review Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Eligible Review Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.dbsEligibleReviewDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsEligibleReviewDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="dbsEligibleReviewDate"
+              control={control}
+              label="Eligible Review Date"
+              error={errors.dbsEligibleReviewDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="DBS Document"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("dbsDocument", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.dbsDocument && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsDocument.message)}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="dbsDocument"
+              control={control}
+              label="DBS Document"
+              error={errors.dbsDocument?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="EUSS/Time Limit Remarks"
-                labelPlacement="outside"
-                placeholder="Enter remarks"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("dbsRemarks")}
-              />
-              {errors.dbsRemarks && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsRemarks.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="dbsRemarks"
+              control={control}
+              label="DBS Remarks"
+              placeholder="Enter remarks"
+              error={errors.dbsRemarks?.message}
+            />
 
-            <div className="col-span-4">
-              <Controller
-                name="dbsStatus"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Is this your current status?"
-                    label="Is this your current status?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.dbsStatus && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.dbsStatus.message)}
-                </small>
-              )}
-            </div>
+            <RHFRadio
+              name="dbsStatus"
+              control={control}
+              label="Is this your current status?"
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              error={errors.dbsStatus?.message}
+            />
           </div>
         </div>
 
@@ -2786,250 +1545,78 @@ const CreateEmployee = () => {
             National ID Details
           </h1>
           <div className="grid grid-cols-4 gap-5 pt-5">
-            <div>
-              <Input
-                radius="sm"
-                label="National ID Number"
-                labelPlacement="outside"
-                placeholder="Enter national id number"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("nationalIdNumber")}
-              />
-              {errors.nationalIdNumber && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdNumber.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="nationalIdNumber"
+              control={control}
+              label="National ID Number"
+              placeholder="Enter national id number"
+              error={errors.nationalIdNumber?.message}
+            />
 
-            <div>
-              <Controller
-                name="nationalIdNationality"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="National Id Nationality"
-                    radius="sm"
-                    label="Nationality"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select nationality"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {nationalities.map((nationality) => (
-                      <SelectItem
-                        key={nationality.value}
-                        value={nationality.value}
-                      >
-                        {nationality.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.nationalIdNationality && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdNationality.message)}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="nationalIdNationality"
+              control={control}
+              label="Nationality"
+              placeholder="Select Nationality"
+              error={errors.nationalIdNationality?.message}
+              options={nationalities}
+            />
 
-            <div>
-              <Controller
-                name="nationalIdCountryOfResidence"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Country of Residence"
-                    radius="sm"
-                    label="Country of Residence"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select country"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {countries.map((country) => (
-                      <SelectItem key={country.value} value={country.value}>
-                        {country.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.nationalIdCountryOfResidence && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdCountryOfResidence.message)}
-                </small>
-              )}
-            </div>
+            <RHFSelect
+              name="nationalIdCountryOfResidence"
+              control={control}
+              label="Country of Residence"
+              placeholder="Select country"
+              error={errors.nationalIdCountryOfResidence?.message}
+              options={countries}
+            />
 
-            <div>
-              <Controller
-                name="nationalIdIssueDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="National Id Issue Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Issue Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.nationalIdIssueDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdIssueDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="nationalIdIssueDate"
+              control={control}
+              label="Issue Date"
+              error={errors.nationalIdIssueDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="nationalIdExpiryDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Visa Expiry Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Visa Expiry Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.nationalIdExpiryDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdExpiryDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="nationalIdExpiryDate"
+              control={control}
+              label="Expiry Date"
+              error={errors.nationalIdExpiryDate?.message}
+            />
 
-            <div>
-              <Controller
-                name="nationalIdEligibleReviewDate"
-                control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    aria-label="Visa Eligible Review Date"
-                    radius="sm"
-                    className="text-hrms-blue font-semibold"
-                    label="Visa Eligible Review Date"
-                    labelPlacement="outside"
-                    onChange={(date) =>
-                      field.onChange(
-                        date
-                          ? format(
-                              new Date(date.year, date.month - 1, date.day),
-                              "dd-MM-yyyy"
-                            )
-                          : ""
-                      )
-                    }
-                  />
-                )}
-              />
-              {errors.nationalIdEligibleReviewDate && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdEligibleReviewDate.message)}
-                </small>
-              )}
-            </div>
+            <RHFDatepicker
+              name="nationalIdEligibleReviewDate"
+              control={control}
+              label="Eligible Review Date"
+              error={errors.nationalIdEligibleReviewDate?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="National Id Document"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("nationalIdDocument", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.nationalIdDocument && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdDocument.message)}
-                </small>
-              )}
-            </div>
+            <RHFFileInput
+              name="nationalIdDocument"
+              control={control}
+              label="National ID Document"
+              error={errors.nationalIdDocument?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="National Id Remarks"
-                labelPlacement="outside"
-                placeholder="Enter visa remarks"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("nationalIdRemarks")}
-              />
-              {errors.nationalIdRemarks && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdRemarks.message)}
-                </small>
-              )}
-            </div>
+            <RHFInput
+              name="nationalIdRemarks"
+              control={control}
+              label="National ID Remarks"
+              placeholder="Enter remarks"
+              error={errors.nationalIdRemarks?.message}
+            />
 
-            <div className="col-span-4">
-              <Controller
-                name="nationalIdStatus"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Is this your current status?"
-                    label="Is this your current status?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.nationalIdStatus && (
-                <small className="text-red-700 font-medium">
-                  {String(errors.nationalIdStatus.message)}
-                </small>
-              )}
-            </div>
+            <RHFRadio
+              name="nationalIdStatus"
+              control={control}
+              label="Is this your current status?"
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              error={errors.nationalIdStatus?.message}
+            />
           </div>
         </div>
 
@@ -3323,412 +1910,141 @@ const CreateEmployee = () => {
             Pay Details
           </h1>
           <div className="grid grid-cols-3 gap-5 pt-5">
-            <div>
-              <Controller
-                name="payGroup"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Pay Group"
-                    radius="sm"
-                    label="Pay Group"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select group"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {payGroups.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.payGroup && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.payGroup.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="payGroup"
+              control={control}
+              label="Pay Group"
+              placeholder="Select Pay Group"
+              error={errors.payGroup?.message}
+              options={payGroups}
+            />
 
-            <div>
-              <Controller
-                name="wedgesPayMode"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Wedges Pay Mode"
-                    radius="sm"
-                    label="Wedges pay mode"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Wedges pay mode"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {wedgesPayModes.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.wedgesPayMode && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.wedgesPayMode.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="wedgesPayMode"
+              control={control}
+              label="Wedges Pay Mode"
+              placeholder="Select Wedges Pay Mode"
+              error={errors.wedgesPayMode?.message}
+              options={wedgesPayModes}
+            />
 
-            <div>
-              <Controller
-                name="annualPay"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Annual Pay"
-                    radius="sm"
-                    label="Annual Pay"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Annual Pay"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {annualPays.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.annualPay && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.annualPay.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="annualPay"
+              control={control}
+              label="Annual Pay"
+              placeholder="Select Annual Pay"
+              error={errors.annualPay?.message}
+              options={annualPays}
+            />
 
-            <div>
-              <Controller
-                name="paymentType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Payment Type"
-                    radius="sm"
-                    label="Payment Type"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Payment Type"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {paymentTypes.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.paymentType && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.paymentType.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="paymentType"
+              control={control}
+              label="Payment Type"
+              placeholder="Select Payment Type"
+              error={errors.paymentType?.message}
+              options={paymentTypes}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Basic / Daily Wedges"
-                labelPlacement="outside"
-                placeholder="Enter Basic / Daily Wedges."
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("basicDailyWedges")}
-              />
-              {errors.basicDailyWedges && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.basicDailyWedges.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="basicDailyWedges"
+              control={control}
+              label="Basic / Daily Wedges"
+              placeholder="Enter Basic / Daily Wedges"
+              error={errors.basicDailyWedges?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Min. Working Hour."
-                labelPlacement="outside"
-                placeholder="Enter Min. Working Hour."
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("minWorkingHour")}
-              />
-              {errors.minWorkingHour && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.minWorkingHour.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="minWorkingHour"
+              control={control}
+              label="Min. Working Hour"
+              placeholder="Enter Min. Working Hour"
+              error={errors.minWorkingHour?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Rate."
-                labelPlacement="outside"
-                placeholder="Enter Rate."
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("rate")}
-              />
-              {errors.rate && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.rate.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="rate"
+              control={control}
+              label="Rate"
+              placeholder="Enter Rate"
+              error={errors.rate?.message}
+            />
 
-            <div>
-              <Controller
-                name="taxCode"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Tax Code"
-                    radius="sm"
-                    label="Tax Code"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Tax Code"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {taxCodes.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.taxCode && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.taxCode.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="taxCode"
+              control={control}
+              label="Tax Code"
+              placeholder="Select Tax Code"
+              error={errors.taxCode?.message}
+              options={taxCodes}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Tax Reference"
-                labelPlacement="outside"
-                placeholder="Enter Tax Reference"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("taxReference")}
-              />
-              {errors.taxReference && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.taxReference.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Input
-                radius="sm"
-                label="Tax Percentage"
-                labelPlacement="outside"
-                placeholder="Tax Percentage"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("taxPercentage")}
-              />
-              {errors.taxPercentage && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.taxPercentage.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="taxReference"
+              control={control}
+              label="Tax Reference"
+              placeholder="Enter Tax Reference"
+              error={errors.taxReference?.message}
+            />
 
-            <div>
-              <Controller
-                name="paymentMode"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Payment Mode"
-                    radius="sm"
-                    label="Payment Mode"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Payment Mode"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {paymentModes.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.paymentMode && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.paymentMode.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="taxPercentage"
+              control={control}
+              label="Tax Percentage"
+              placeholder="Enter Tax Percentage"
+              error={errors.taxPercentage?.message}
+            />
 
-            <div>
-              <Controller
-                name="bankName"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Bank Name"
-                    radius="sm"
-                    label="Bank Name"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Bank Name"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {bankNames.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.bankName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.bankName.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="paymentMode"
+              control={control}
+              label="Payment Mode"
+              placeholder="Select Payment Mode"
+              error={errors.paymentMode?.message}
+              options={paymentModes}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Branch Name"
-                labelPlacement="outside"
-                placeholder="Enter Branch Name"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("branchName")}
-              />
-              {errors.branchName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.branchName.message}
-                </p>
-              )}
-            </div>
+            <RHFSelect
+              name="bankName"
+              control={control}
+              label="Bank Name"
+              placeholder="Select Bank Name"
+              error={errors.bankName?.message}
+              options={bankNames}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Account No"
-                labelPlacement="outside"
-                placeholder="Account No"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("accountNo")}
-              />
-              {errors.accountNo && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.accountNo.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="branchName"
+              control={control}
+              label="Branch Name"
+              placeholder="Enter Branch Name"
+              error={errors.branchName?.message}
+            />
 
-            <div>
-              <Input
-                radius="sm"
-                label="Sort Code"
-                labelPlacement="outside"
-                placeholder="Enter Sort Code"
-                type="text"
-                className="text-hrms-blue font-semibold"
-                {...register("sortCode")}
-              />
-              {errors.sortCode && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.sortCode.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="accountNo"
+              control={control}
+              label="Account No"
+              placeholder="Enter Account No"
+              error={errors.accountNo?.message}
+            />
 
-            <div>
-              <Controller
-                name="paymentCurrency"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    aria-label="Payment Currency"
-                    radius="sm"
-                    label="Payment Currency"
-                    className="text-hrms-blue font-semibold"
-                    labelPlacement="outside"
-                    placeholder="Select Payment Currency"
-                    selectedKeys={
-                      field.value ? new Set([field.value]) : new Set()
-                    }
-                    onSelectionChange={(keys) =>
-                      field.onChange(Array.from(keys)[0])
-                    }
-                  >
-                    {paymentCurrencies.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.value}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                )}
-              />
-              {errors.paymentCurrency && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.paymentCurrency.message}
-                </p>
-              )}
-            </div>
+            <RHFInput
+              name="sortCode"
+              control={control}
+              label="Sort Code"
+              placeholder="Enter Sort Code"
+              error={errors.sortCode?.message}
+            />
+
+            <RHFSelect
+              name="paymentCurrency"
+              control={control}
+              label="Payment Currency"
+              placeholder="Select Payment Currency"
+              error={errors.paymentCurrency?.message}
+              options={paymentCurrencies}
+            />
           </div>
         </div>
 

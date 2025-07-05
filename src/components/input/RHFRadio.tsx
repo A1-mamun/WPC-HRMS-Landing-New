@@ -31,7 +31,7 @@ const RHFRadio = <T extends FieldValues>({
             orientation="horizontal"
             isDisabled={disabled}
             onValueChange={field.onChange}
-            className="text-base font-medium"
+            className="text-hrms-blue font-semibold"
           >
             {options.map((option) => (
               <Radio key={option.value} value={option.value}>

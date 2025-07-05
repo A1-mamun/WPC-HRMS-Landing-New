@@ -797,3 +797,9 @@ export const users = [
     status: "Active",
   },
 ];
+
+export const genderOptions = [
+  { value: "Male" },
+  { value: "Female" },
+  { value: "Other" },
+];
