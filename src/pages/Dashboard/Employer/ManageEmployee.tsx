@@ -18,7 +18,7 @@ const ManageEmployee = () => {
 
   // api call to get employees
   const { data, isError } = useGetOrgaisationEmployeesQuery(undefined);
-  // console.log("data", data);
+  console.log("Employees", data?.data);
 
   const rowsPerPage = data?.meta?.limit;
 
@@ -163,7 +163,7 @@ const ManageEmployee = () => {
                     <TableCell className="text-xs font-semibold border-r border-gray-200 px-2 py-1 truncate">
                       {columnKey === "action" ? (
                         <div>
-                          <Actions />
+                          <Actions employee={item}/>
                         </div>
                       ) : (
                         <div className="truncate">
