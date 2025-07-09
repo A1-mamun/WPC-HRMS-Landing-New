@@ -45,15 +45,10 @@ import {
   RHFDatepicker,
   RHFFileInput,
   RHFInput,
-  RHFPassword,
   RHFRadio,
   RHFSelect,
 } from "../../../components";
-const CreateEmployee = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleVisibility = () => setIsVisible(!isVisible);
-
+const EditEmployee = () => {
   const {
     register,
     control,
@@ -402,34 +397,9 @@ const CreateEmployee = () => {
   return (
     <main className="dashboard-padding">
       <h1 className="text-2xl font-medium pb-2 border-b border-hrms-blue-light">
-        Create Employee
+        Edit Employee
       </h1>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
-        {/* employee credentials */}
-        <div className="pt-5">
-          <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Employee Credentials
-          </h1>
-          <div className="grid grid-cols-4 gap-5 pt-5">
-            <RHFInput
-              name="email"
-              control={control}
-              label="Email"
-              placeholder="Enter email"
-              type="email"
-              error={errors.email?.message}
-            />
-
-            <RHFPassword
-              name="password"
-              control={control}
-              label="Password"
-              placeholder="Enter password"
-              error={errors.password?.message}
-            />
-          </div>
-        </div>
-
         {/* Employee personal details */}
         <div className="pt-5">
           <h1 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
@@ -844,7 +814,7 @@ const CreateEmployee = () => {
                     </label>
                     <input
                       type="date"
-                      className="w-full p-2 border rounded bg-gray-100"
+                      className="w-full p-2 border rounded"
                       {...register(`jobDetails.${index}.startDate`)}
                     />
                     {errors.jobDetails?.[index]?.startDate && (
@@ -2112,4 +2082,4 @@ const CreateEmployee = () => {
   );
 };
 
-export default CreateEmployee;
+export default EditEmployee;

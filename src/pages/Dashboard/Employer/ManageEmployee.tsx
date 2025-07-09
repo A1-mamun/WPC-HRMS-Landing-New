@@ -158,12 +158,12 @@ const ManageEmployee = () => {
             </TableHeader>
             <TableBody items={items}>
               {(item: any) => (
-                <TableRow key={item.personalDetails?.employeeCode}>
+                <TableRow key={item._id}>
                   {(columnKey) => (
                     <TableCell className="text-xs font-semibold border-r border-gray-200 px-2 py-1 truncate">
                       {columnKey === "action" ? (
                         <div>
-                          <Actions />
+                          <Actions id={item._id} />
                         </div>
                       ) : (
                         <div className="truncate">

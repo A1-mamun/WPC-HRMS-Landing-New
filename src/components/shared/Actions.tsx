@@ -4,11 +4,12 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Link,
 } from "@heroui/react";
 import { FaEdit, FaFilePdf } from "react-icons/fa";
 import { FaFileExcel } from "react-icons/fa";
 
-export default function App() {
+const Action = ({ id }: { id: string }) => {
   const iconClasses =
     "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
@@ -27,6 +28,8 @@ export default function App() {
           key="edit"
           shortcut="⌘⇧E"
           startContent={<FaEdit className={iconClasses} />}
+          as={Link}
+          href={`/dashboard/edit-employee/${id}`}
         >
           Edit file
         </DropdownItem>
@@ -47,4 +50,6 @@ export default function App() {
       </DropdownMenu>
     </Dropdown>
   );
-}
+};
+
+export default Action;

@@ -22,7 +22,6 @@ const RHFInput = <T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <DatePicker
-          {...field}
           radius="sm"
           className="text-hrms-blue font-semibold"
           label={label}
@@ -37,6 +36,7 @@ const RHFInput = <T extends FieldValues>({
                 : ""
             )
           }
+          // onChange={(date) => field.onChange(date)}
         />
       )}
     />
