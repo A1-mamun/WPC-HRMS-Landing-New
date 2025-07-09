@@ -183,31 +183,6 @@ const EditOrganisation = () => {
     }
   }, [isLevel1PersonSameAsAuthorised]);
 
-  // function diff<T extends Record<string, any>>(
-  //   values: T,
-  //   dirty: any
-  // ): Partial<T> {
-  //   const changed: Partial<T> = {};
-
-  //   (Object.keys(dirty) as (keyof T)[]).forEach((key) => {
-  //     if (dirty[key] === true) {
-  //       changed[key] = values[key]; // primitive or file input
-  //     } else if (typeof dirty[key] === "object" && values[key]) {
-  //       const nested = diff(values[key], dirty[key]);
-  //       if (Object.keys(nested).length) {
-  //         changed[key] = nested as any;
-  //       }
-  //     }
-  //   });
-  //   return changed;
-  // }
-
-  // const handleSubmitForm = async (data: FieldValues) => {
-  //   const changedFields = diff(data, dirtyFields);
-
-  //   console.log("Only the changed fields:", changedFields);
-  // };
-
   const handleSubmitForm = async (data: FieldValues) => {
     // Create FormData object for file uploads
     const formData = new FormData();
