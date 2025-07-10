@@ -249,7 +249,7 @@ const CreateEmployee = () => {
           issueDate: data.issueDate,
           expiryDate: data.expiryDate,
         },
-        contactiInfo: {
+        contactInfo: {
           postCode: data.postCode,
           addressLine1: data.addressLine1,
           addressLine2: data.addressLine2,
@@ -258,7 +258,7 @@ const CreateEmployee = () => {
           country: data.country,
           proofOfAddress: "",
         },
-        pasportDetails: {
+        passportDetails: {
           passportNo: data.passportNumber,
           nationality: data.passportNationality,
           placeOfBirth: data.placeOfBirth,

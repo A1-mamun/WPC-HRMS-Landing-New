@@ -97,7 +97,7 @@ const otherDetailsSchema = z.object({
   isCurrentStatus: z.enum(["yes", "no"]).optional(),
 });
 
-export const addEmployeeDocumentsSchema = z.object({
+export const updateEmployeeDocumentsSchema = z.object({
   // personal details
   employeeCode: z
     .string({ required_error: "Email is required" })
@@ -385,4 +385,6 @@ export const addEmployeeDocumentsSchema = z.object({
   deductions: z.array(z.string()).optional(),
 });
 
-export type EmployeeFormSchemaType = z.infer<typeof addEmployeeDocumentsSchema>;
+export type EmployeeUpdateFormSchemaType = z.infer<
+  typeof updateEmployeeDocumentsSchema
+>;

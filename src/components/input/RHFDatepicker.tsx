@@ -36,6 +36,7 @@ const RHFInput = <T extends FieldValues>({
                 : ""
             )
           }
+          // formatOutput="DD-MM-YYYY"
           // onChange={(date) => field.onChange(date)}
         />
       )}

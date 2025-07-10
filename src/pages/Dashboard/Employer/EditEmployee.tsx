@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import {
   Button,
@@ -11,15 +12,11 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { employeeFileFields } from "../../../constants/employee";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addEmployeeDocumentsSchema,
-  EmployeeFormSchemaType,
-} from "../../../schemas/addEmployeeDocumentsSchema";
 import { format } from "date-fns";
 import {
   annualPays,
@@ -40,10 +37,7 @@ import {
   taxCodes,
   wedgesPayModes,
 } from "../../../data";
-import {
-  useCreateEmployeeMutation,
-  useGetEmployeeByIdQuery,
-} from "../../../redux/features/employee/createEmployee";
+import { useGetEmployeeByIdQuery } from "../../../redux/features/employee/createEmployee";
 import {
   RHFDatepicker,
   RHFFileInput,
@@ -52,6 +46,10 @@ import {
   RHFSelect,
 } from "../../../components";
 import { useParams } from "react-router-dom";
+import {
+  EmployeeUpdateFormSchemaType,
+  updateEmployeeDocumentsSchema,
+} from "../../../schemas/updateEmployeeDocumentsSchema";
 const EditEmployee = () => {
   const { id } = useParams();
   const {
@@ -61,15 +59,131 @@ const EditEmployee = () => {
   } = useGetEmployeeByIdQuery(id);
   const {
     register,
+    reset,
     control,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<EmployeeFormSchemaType>({
-    resolver: zodResolver(addEmployeeDocumentsSchema),
+  } = useForm<EmployeeUpdateFormSchemaType>({
+    resolver: zodResolver(updateEmployeeDocumentsSchema),
   });
+  console.log("Employee Data:", employeeData);
 
-  const [createEmployee] = useCreateEmployeeMutation();
+  useEffect(() => {
+    if (employeeData?.data) {
+      // Set form values with employee data
+      reset({
+        employeeCode: employeeData?.data?.personalDetails.employeeCode,
+        firstName: employeeData?.data?.personalDetails.firstName,
+        middleName: employeeData?.data?.personalDetails.middleName,
+        lastName: employeeData?.data?.personalDetails.lastName,
+        gender: employeeData?.data?.personalDetails.gender,
+        niNumber: employeeData?.data?.personalDetails.niNumber,
+        dateOfBirth: employeeData?.data?.personalDetails.dateOfBirth,
+        maritalStatus: employeeData?.data?.personalDetails.maritalStatus,
+        nationality: employeeData?.data?.personalDetails.nationality,
+        contactNumber: employeeData?.data?.personalDetails.contactNo,
+        alternativeNumber: employeeData?.data?.personalDetails.alternativeNo,
+        department: employeeData?.data?.serviceDetails.department,
+        designation: employeeData?.data?.serviceDetails.designation,
+        dateOfJoining: employeeData?.data?.serviceDetails.dateOfJoining,
+        employeeType: employeeData?.data?.serviceDetails.employeeType,
+        dateOfConfirmation:
+          employeeData?.data?.serviceDetails.dateOfConfirmation,
+        contractStartDate: employeeData?.data?.serviceDetails.contractStartDate,
+        contractEndDate: employeeData?.data?.serviceDetails.contractEndDate,
+        jobLocation: employeeData?.data?.serviceDetails.jobLocation,
+        nextOfKinContactName:
+          employeeData?.data?.nextOfKinDetails.nextOfKinContactName,
+        nextOfKinContactRelationship:
+          employeeData?.data?.nextOfKinDetails.nextOfKinContactRelationship,
+        nextOfKinContactEmail:
+          employeeData?.data?.nextOfKinDetails.nextOfKinContactEmail,
+        nextOfKinContactNumber:
+          employeeData?.data?.nextOfKinDetails.nextOfKinContactNumber,
+        nextOfKinContactAddress:
+          employeeData?.data?.nextOfKinDetails.nextOfKinContactAddress,
+        titleCertifiedLicense:
+          employeeData?.data?.certifiedMembership.licenseTitle,
+        licenseNumber: employeeData?.data?.certifiedMembership.licenseNo,
+        issueDate: employeeData?.data?.certifiedMembership.issueDate,
+        expiryDate: employeeData?.data?.certifiedMembership.expiryDate,
+        postCode: employeeData?.data?.contactInfo.postCode,
+        addressLine1: employeeData?.data?.contactInfo.addressLine1,
+        addressLine2: employeeData?.data?.contactInfo.addressLine2,
+        addressLine3: employeeData?.data?.contactInfo.addressLine3,
+        city: employeeData?.data?.contactInfo.city,
+        country: employeeData?.data?.contactInfo.country,
+        passportNumber: employeeData?.data?.passportDetails.passportNo,
+        passportNationality: employeeData?.data?.passportDetails.nationality,
+        placeOfBirth: employeeData?.data?.passportDetails.placeOfBirth,
+        passportIssuedBy: employeeData?.data?.passportDetails.issuedBy,
+        passportIssueDate: employeeData?.data?.passportDetails.issueDate,
+        passportExpiryDate: employeeData?.data?.passportDetails.expiryDate,
+        passportEligibleReviewDate:
+          employeeData?.data?.passportDetails.eligibleReviewDate,
+        passportRemarks: employeeData?.data?.passportDetails.remarks,
+        passportStatus: employeeData?.data?.passportDetails.isCurrentStatus,
+        visaNumber: employeeData?.data?.visaDetails.visaNo,
+        visaNationality: employeeData?.data?.visaDetails.nationality,
+        countryOfResidence: employeeData?.data?.visaDetails.countryOfResidence,
+        visaIssuedBy: employeeData?.data?.visaDetails.issuedBy,
+        visaIssueDate: employeeData?.data?.visaDetails.issueDate,
+        visaExpiryDate: employeeData?.data?.visaDetails.expiryDate,
+        visaEligibleReviewDate:
+          employeeData?.data?.visaDetails.eligibleReviewDate,
+        visaRemarks: employeeData?.data?.visaDetails.remarks,
+        visaStatus: employeeData?.data?.visaDetails.isCurrentStatus,
+        eussReferenceNumber: employeeData?.data?.eussDetails.referenceNo,
+        eussNationality: employeeData?.data?.eussDetails.nationality,
+        eussIssueDate: employeeData?.data?.eussDetails.issueDate,
+        eussExpiryDate: employeeData?.data?.eussDetails.expiryDate,
+        eussEligibleReviewDate:
+          employeeData?.data?.eussDetails.eligibleReviewDate,
+        eussRemarks: employeeData?.data?.eussDetails.remarks,
+        eussStatus: employeeData?.data?.eussDetails.isCurrentStatus,
+        dbsType: employeeData?.data?.dbsDetails.type,
+        dbsReferenceNumber: employeeData?.data?.dbsDetails.referenceNo,
+        dbsNationality: employeeData?.data?.dbsDetails.nationality,
+        dbsIssueDate: employeeData?.data?.dbsDetails.issueDate,
+        dbsExpiryDate: employeeData?.data?.dbsDetails.expiryDate,
+        dbsEligibleReviewDate:
+          employeeData?.data?.dbsDetails.eligibleReviewDate,
+        dbsRemarks: employeeData?.data?.dbsDetails.remarks,
+        dbsStatus: employeeData?.data?.dbsDetails.isCurrentStatus,
+        nationalIdNumber: employeeData?.data?.nationalIdDetails.nationalIdNo,
+        nationalIdNationality:
+          employeeData?.data?.nationalIdDetails.nationality,
+        nationalIdCountryOfResidence:
+          employeeData?.data?.nationalIdDetails.countryOfResidence,
+        nationalIdIssueDate: employeeData?.data?.nationalIdDetails.issueDate,
+        nationalIdExpiryDate: employeeData?.data?.nationalIdDetails.expiryDate,
+        nationalIdEligibleReviewDate:
+          employeeData?.data?.nationalIdDetails.eligibleReviewDate,
+        nationalIdRemarks: employeeData?.data?.nationalIdDetails.remarks,
+        nationalIdStatus: employeeData?.data?.nationalIdDetails.isCurrentStatus,
+        payGroup: employeeData?.data?.payDetails.paymentGroup,
+        wedgesPayMode: employeeData?.data?.payDetails.wedgesPaymentMode,
+        annualPay: employeeData?.data?.payDetails.annualPay,
+        paymentType: employeeData?.data?.payDetails.paymentType,
+        basicDailyWedges: employeeData?.data?.payDetails.basicDailyWedges,
+        minWorkingHour: employeeData?.data?.payDetails.minWorkingHour,
+        rate: employeeData?.data?.payDetails.rate,
+        taxCode: employeeData?.data?.payDetails.taxCode,
+        taxReference: employeeData?.data?.payDetails.taxReference,
+        paymentMode: employeeData?.data?.payDetails.paymentMode,
+        bankName: employeeData?.data?.payDetails.bankName,
+        branchName: employeeData?.data?.payDetails.branchName,
+        accountNo: employeeData?.data?.payDetails.accountNo,
+        sortCode: employeeData?.data?.payDetails.sortCode,
+        paymentCurrency: employeeData?.data?.payDetails.paymentCurrency,
+        educationalDetails: employeeData?.data?.educationalDetails || [],
+        jobDetails: employeeData?.data?.jobDetails || [],
+        trainingDetails: employeeData?.data?.trainingDetails || [],
+        otherDetails: employeeData?.data?.otherDetails || [],
+      });
+    }
+  }, [employeeData]);
 
   // state for managing the expandable educational details fields
   const [educationalDetails, setEducationalDetails] = useState([
@@ -239,7 +353,7 @@ const EditEmployee = () => {
           contractStartDate: data.contractStartDate,
           contractEndDate: data.contractEndDate,
           jobLocation: data.jobLocation,
-          profilePicture: "",
+          profilePicture: employeeData?.data?.serviceDetails.profilePicture,
         },
         nextOfKinDetails: {
           nextOfKinContactName: data.nextOfKinContactName,
@@ -261,7 +375,7 @@ const EditEmployee = () => {
           addressLine3: data.addressLine3,
           city: data.city,
           country: data.country,
-          proofOfAddress: "",
+          proofOfAddress: employeeData?.data?.contactInfo.proofOfAddress,
         },
         pasportDetails: {
           passportNo: data.passportNumber,
@@ -271,7 +385,7 @@ const EditEmployee = () => {
           issueDate: data.passportIssueDate,
           expiryDate: data.passportExpiryDate,
           eligibleReviewDate: data.passportEligibleReviewDate,
-          document: "",
+          document: employeeData?.data?.passportDetails.document,
           remarks: data.passportRemarks,
           isCurrentStatus: data.passportStatus,
         },
@@ -283,8 +397,8 @@ const EditEmployee = () => {
           issueDate: data.visaIssueDate,
           expiryDate: data.visaExpiryDate,
           eligibleReviewDate: data.visaEligibleReviewDate,
-          frontsideDocument: "",
-          backsideDocument: "",
+          frontsideDocument: employeeData?.data?.visaDetails.frontsideDocument,
+          backsideDocument: employeeData?.data?.visaDetails.backsideDocument,
           remarks: data.visaRemarks,
           isCurrentStatus: data.visaStatus,
         },
@@ -294,7 +408,7 @@ const EditEmployee = () => {
           issueDate: data.eussIssueDate,
           expiryDate: data.eussExpiryDate,
           eligibleReviewDate: data.eussEligibleReviewDate,
-          document: "",
+          document: employeeData?.data?.eussDetails.document,
           remarks: data.eussRemarks,
           isCurrentStatus: data.eussStatus,
         },
@@ -305,7 +419,7 @@ const EditEmployee = () => {
           issueDate: data.dbsIssueDate,
           expiryDate: data.dbsExpiryDate,
           eligibleReviewDate: data.dbsEligibleReviewDate,
-          document: "",
+          document: employeeData?.data?.dbsDetails.document,
           remarks: data.dbsRemarks,
           isCurrentStatus: data.dbsStatus,
         },
@@ -316,7 +430,7 @@ const EditEmployee = () => {
           issueDate: data.nationalIdIssueDate,
           expiryDate: data.nationalIdExpiryDate,
           eligibleReviewDate: data.nationalIdEligibleReviewDate,
-          document: "",
+          document: employeeData?.data?.nationalIdDetails.document,
           remarks: data.nationalIdRemarks,
           isCurrentStatus: data.nationalIdStatus,
         },
