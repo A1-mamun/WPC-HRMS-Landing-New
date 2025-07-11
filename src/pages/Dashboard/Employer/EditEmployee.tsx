@@ -67,7 +67,7 @@ const EditEmployee = () => {
   } = useForm<EmployeeUpdateFormSchemaType>({
     resolver: zodResolver(updateEmployeeDocumentsSchema),
   });
-  console.log("Employee Data:", employeeData);
+  // console.log("Employee Data:", employeeData);
 
   useEffect(() => {
     if (employeeData?.data) {
@@ -182,6 +182,11 @@ const EditEmployee = () => {
         trainingDetails: employeeData?.data?.trainingDetails || [],
         otherDetails: employeeData?.data?.otherDetails || [],
       });
+
+      setEducationalDetails(employeeData?.data?.educationalDetails || []);
+      setJobDetails(employeeData?.data?.jobDetails || []);
+      setTrainingDetails(employeeData?.data?.trainingDetails || []);
+      setOtherDetails(employeeData?.data?.otherDetails || []);
     }
   }, [employeeData]);
 
@@ -323,7 +328,7 @@ const EditEmployee = () => {
 
   const handleSubmitForm = async (data: FieldValues) => {
     const formData = new FormData();
-
+    // console.log("Form Data:", data);
     const formattedData = {
       credentials: {
         email: data.email,

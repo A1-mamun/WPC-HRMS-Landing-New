@@ -229,7 +229,8 @@ export const updateEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   passportRemarks: z.string().min(1, "Remarks is required"),
   passportStatus: z.enum(["yes", "no"], {
     required_error: "Status is required",
@@ -263,7 +264,8 @@ export const updateEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   visaDocumentBackSide: z
     .custom<File>((val) => val instanceof File && val.size > 0, {
       message: "Document is required",
@@ -273,7 +275,8 @@ export const updateEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   visaRemarks: z.string().min(1, "Remarks is required"),
   visaStatus: z.enum(["yes", "no"], { required_error: "Status is required" }),
 
