@@ -25,34 +25,45 @@ const educationalDetailsSchema = z.object({
   percentage: z.string().optional(),
   grade: z.string().optional(),
   transcriptDocument: z
-    .custom<File>((val) => val instanceof File && val.size > 0, {
-      message: "Transcript is required",
-    })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
-    })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG, PNG or PDF  allowed",
-      }
-    )
+    .union([
+      z.string().url(), // for existing document URLs
+      z
+        .instanceof(File)
+        .refine((file) => file.size > 0, {
+          message: "Transcript is required",
+        })
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max file size is 2MB",
+        })
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+          {
+            message: "Only JPG, PNG or PDF allowed",
+          }
+        ),
+    ])
     .optional(),
+
   certificateDocument: z
-    .custom<File>((val) => val instanceof File && val.size > 0, {
-      message: "Document is required",
-    })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
-    })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
+    .union([
+      z.string().url(), // for existing document URLs
+      z
+        .instanceof(File)
+        .refine((file) => file.size > 0, {
+          message: "Certificate is required",
+        })
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max file size is 2MB",
+        })
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+          {
+            message: "Only JPG, PNG or PDF allowed",
+          }
+        ),
+    ])
     .optional(),
 });
 
@@ -89,9 +100,13 @@ const otherDetailsSchema = z.object({
     .refine((file) => file.size <= 2 * 1024 * 1024, {
       message: "Max file size is 2MB",
     })
-    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-      message: "Only JPG or PNG allowed",
-    })
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+      {
+        message: "Only JPG, PNG or PDF allowed",
+      }
+    )
     .optional(),
   remarks: z.string().optional(),
   isCurrentStatus: z.enum(["yes", "no"]).optional(),

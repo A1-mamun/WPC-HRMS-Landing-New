@@ -15,7 +15,17 @@ const createEmployeeApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    updateEmployee: builder.mutation({
+      query: ({ employeeId, data }) => ({
+        url: `/employee/${employeeId}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
-export const { useCreateEmployeeMutation, useGetEmployeeByIdQuery } =
-  createEmployeeApi;
+export const {
+  useCreateEmployeeMutation,
+  useGetEmployeeByIdQuery,
+  useUpdateEmployeeMutation,
+} = createEmployeeApi;

@@ -89,9 +89,13 @@ const otherDetailsSchema = z.object({
     .refine((file) => file.size <= 2 * 1024 * 1024, {
       message: "Max file size is 2MB",
     })
-    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-      message: "Only JPG or PNG allowed",
-    })
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+      {
+        message: "Only JPG, PNG or PDF allowed",
+      }
+    )
     .optional(),
   remarks: z.string().optional(),
   isCurrentStatus: z.enum(["yes", "no"]).optional(),

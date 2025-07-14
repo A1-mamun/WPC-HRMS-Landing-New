@@ -10,7 +10,7 @@ interface RHFInputProps<T extends FieldValues> {
   error?: string;
 }
 
-const RHFInput = <T extends FieldValues>({
+const RHFDatepicker = <T extends FieldValues>({
   name,
   control,
   label,
@@ -36,8 +36,6 @@ const RHFInput = <T extends FieldValues>({
                 : ""
             )
           }
-          // formatOutput="DD-MM-YYYY"
-          // onChange={(date) => field.onChange(date)}
         />
       )}
     />
@@ -45,4 +43,4 @@ const RHFInput = <T extends FieldValues>({
   </div>
 );
 
-export default RHFInput;
+export default RHFDatepicker;

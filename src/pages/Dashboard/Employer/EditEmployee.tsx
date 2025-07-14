@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import {
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  DatePicker,
-  Input,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectItem,
-} from "@heroui/react";
+import { Button, Checkbox, CheckboxGroup, Input } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { employeeFileFields } from "../../../constants/employee";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+
 import {
   annualPays,
   bankNames,
@@ -37,7 +27,10 @@ import {
   taxCodes,
   wedgesPayModes,
 } from "../../../data";
-import { useGetEmployeeByIdQuery } from "../../../redux/features/employee/createEmployee";
+import {
+  useGetEmployeeByIdQuery,
+  useUpdateEmployeeMutation,
+} from "../../../redux/features/employee/createEmployee";
 import {
   RHFDatepicker,
   RHFFileInput,
@@ -52,11 +45,16 @@ import {
 } from "../../../schemas/updateEmployeeDocumentsSchema";
 const EditEmployee = () => {
   const { id } = useParams();
+
+  // fetch employee data by id
   const {
     data: employeeData,
     isLoading: employeeLoading,
     error: employeeError,
   } = useGetEmployeeByIdQuery(id);
+
+  const [updateEmployee] = useUpdateEmployeeMutation();
+
   const {
     register,
     reset,
@@ -71,7 +69,6 @@ const EditEmployee = () => {
 
   useEffect(() => {
     if (employeeData?.data) {
-      // Set form values with employee data
       reset({
         employeeCode: employeeData?.data?.personalDetails.employeeCode,
         firstName: employeeData?.data?.personalDetails.firstName,
@@ -330,10 +327,6 @@ const EditEmployee = () => {
     const formData = new FormData();
     // console.log("Form Data:", data);
     const formattedData = {
-      credentials: {
-        email: data.email,
-        password: data.password,
-      },
       employeeData: {
         personalDetails: {
           employeeCode: data.employeeCode,
@@ -345,7 +338,7 @@ const EditEmployee = () => {
           dateOfBirth: data.dateOfBirth,
           maritalStatus: data.maritalStatus,
           nationality: data.nationality,
-          email: data.email,
+          email: employeeData?.data?.personalDetails.email,
           contactNo: data.contactNumber,
           alternativeNo: data.alternativeNumber,
         },
@@ -373,7 +366,7 @@ const EditEmployee = () => {
           issueDate: data.issueDate,
           expiryDate: data.expiryDate,
         },
-        contactiInfo: {
+        contactInfo: {
           postCode: data.postCode,
           addressLine1: data.addressLine1,
           addressLine2: data.addressLine2,
@@ -382,7 +375,7 @@ const EditEmployee = () => {
           country: data.country,
           proofOfAddress: employeeData?.data?.contactInfo.proofOfAddress,
         },
-        pasportDetails: {
+        passportDetails: {
           passportNo: data.passportNumber,
           nationality: data.passportNationality,
           placeOfBirth: data.placeOfBirth,
@@ -481,13 +474,14 @@ const EditEmployee = () => {
 
     // append educational details files
     data.educationalDetails.forEach((detail: any, index: number) => {
-      if (detail.transcriptDocument) {
+      if (detail.transcriptDocument instanceof File) {
         formData.append(
           `educationalDetails.${index}.transcriptDocument`,
           detail.transcriptDocument
         );
       }
-      if (detail.certificateDocument) {
+
+      if (detail.certificateDocument instanceof File) {
         formData.append(
           `educationalDetails.${index}.certificateDocument`,
           detail.certificateDocument
@@ -510,10 +504,9 @@ const EditEmployee = () => {
     // console.log("taxable:", data.taxables);
     const toastId = toast.loading("Creating Employee...");
     try {
-      await createEmployee(formData).unwrap();
-      // const res = await addOrgDocuments(formattedData).unwrap();
-      // console.log("Response:", res);
-      toast.success("Employee created successfully", {
+      await updateEmployee({ employeeId: id, data: formData }).unwrap();
+
+      toast.success("Employee updated successfully", {
         id: toastId,
         duration: 2000,
       });
@@ -1758,258 +1751,84 @@ const EditEmployee = () => {
               {otherDetails.map((_, index) => (
                 <div key={index} className="mb-5">
                   <div className="grid grid-cols-4 gap-5">
-                    <div>
-                      <Input
-                        radius="sm"
-                        label="Document name"
-                        labelPlacement="outside"
-                        placeholder="Enter Document name"
-                        type="text"
-                        className="text-hrms-blue font-semibold"
-                        {...register(`otherDetails.${index}.documentName`)}
-                      />
-                      {errors.otherDetails?.[index]?.documentName && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].documentName.message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFInput
+                      name={`otherDetails.${index}.documentName`}
+                      control={control}
+                      label="Document Name"
+                      placeholder="Enter Document name"
+                      error={
+                        errors.otherDetails?.[index]?.documentName?.message
+                      }
+                    />
 
-                    <div>
-                      <Input
-                        radius="sm"
-                        label="Document reference number"
-                        labelPlacement="outside"
-                        placeholder="Enter document reference number"
-                        type="text"
-                        className="text-hrms-blue font-semibold"
-                        {...register(`otherDetails.${index}.referenceNo`)}
-                      />
-                      {errors.otherDetails?.[index]?.referenceNo && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].referenceNo.message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFInput
+                      name={`otherDetails.${index}.referenceNo`}
+                      control={control}
+                      label="Document Reference Number"
+                      placeholder="Enter Document reference number"
+                      error={errors.otherDetails?.[index]?.referenceNo?.message}
+                    />
 
-                    <div>
-                      <Controller
-                        name={`otherDetails.${index}.nationality`}
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            aria-label="Others Document Nationality"
-                            radius="sm"
-                            label="Nationality"
-                            className="text-hrms-blue font-semibold"
-                            labelPlacement="outside"
-                            placeholder="Select nationality"
-                            selectedKeys={
-                              field.value ? new Set([field.value]) : new Set()
-                            }
-                            onSelectionChange={(keys) =>
-                              field.onChange(Array.from(keys)[0])
-                            }
-                          >
-                            {nationalities.map((nationality) => (
-                              <SelectItem
-                                key={nationality.value}
-                                value={nationality.value}
-                              >
-                                {nationality.value}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        )}
-                      />
-                      {errors.otherDetails?.[index]?.nationality && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].nationality.message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFSelect
+                      name={`otherDetails.${index}.nationality`}
+                      control={control}
+                      label="Nationality"
+                      placeholder="Select nationality"
+                      error={errors.otherDetails?.[index]?.nationality?.message}
+                      options={nationalities}
+                    />
 
-                    <div>
-                      <Controller
-                        name={`otherDetails.${index}.issueDate`}
-                        control={control}
-                        render={({ field }) => (
-                          <DatePicker
-                            aria-label="Others Document Issue Date"
-                            radius="sm"
-                            className="text-hrms-blue font-semibold"
-                            label="Issue Date"
-                            labelPlacement="outside"
-                            onChange={(date) =>
-                              field.onChange(
-                                date
-                                  ? format(
-                                      new Date(
-                                        date.year,
-                                        date.month - 1,
-                                        date.day
-                                      ),
-                                      "dd-MM-yyyy"
-                                    )
-                                  : ""
-                              )
-                            }
-                          />
-                        )}
-                      />
-                      {errors.otherDetails?.[index]?.issueDate && (
-                        <small className="text-red-700 font-medium">
-                          {String(errors.otherDetails[index].issueDate.message)}
-                        </small>
-                      )}
-                    </div>
+                    <RHFDatepicker
+                      name={`otherDetails.${index}.issueDate`}
+                      control={control}
+                      label="Issue Date"
+                      error={errors.otherDetails?.[index]?.issueDate?.message}
+                    />
 
-                    <div>
-                      <Controller
-                        name={`otherDetails.${index}.expiryDate`}
-                        control={control}
-                        render={({ field }) => (
-                          <DatePicker
-                            aria-label="Others Document Expiry Date"
-                            radius="sm"
-                            className="text-hrms-blue font-semibold"
-                            label="Expiry Date"
-                            labelPlacement="outside"
-                            onChange={(date) =>
-                              field.onChange(
-                                date
-                                  ? format(
-                                      new Date(
-                                        date.year,
-                                        date.month - 1,
-                                        date.day
-                                      ),
-                                      "dd-MM-yyyy"
-                                    )
-                                  : ""
-                              )
-                            }
-                          />
-                        )}
-                      />
-                      {errors.otherDetails?.[index]?.expiryDate && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].expiryDate.message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFDatepicker
+                      name={`otherDetails.${index}.expiryDate`}
+                      control={control}
+                      label="Expiry Date"
+                      error={errors.otherDetails?.[index]?.expiryDate?.message}
+                    />
 
-                    <div>
-                      <Controller
-                        name={`otherDetails.${index}.eligibleReviewDate`}
-                        control={control}
-                        render={({ field }) => (
-                          <DatePicker
-                            aria-label="Eligible Review Date"
-                            radius="sm"
-                            className="text-hrms-blue font-semibold"
-                            label="Eligible Review Date"
-                            labelPlacement="outside"
-                            onChange={(date) =>
-                              field.onChange(
-                                date
-                                  ? format(
-                                      new Date(
-                                        date.year,
-                                        date.month - 1,
-                                        date.day
-                                      ),
-                                      "dd-MM-yyyy"
-                                    )
-                                  : ""
-                              )
-                            }
-                          />
-                        )}
-                      />
-                      {errors.otherDetails?.[index]?.eligibleReviewDate && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].eligibleReviewDate
-                              .message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFDatepicker
+                      name={`otherDetails.${index}.eligibleReviewDate`}
+                      control={control}
+                      label="Eligible Review Date"
+                      error={
+                        errors.otherDetails?.[index]?.eligibleReviewDate
+                          ?.message
+                      }
+                    />
 
-                    <div>
-                      <Input
-                        radius="sm"
-                        label="Upload Document"
-                        labelPlacement="outside"
-                        type="file"
-                        className="text-hrms-blue font-semibold"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setValue(`otherDetails.${index}.document`, file, {
-                              shouldValidate: true,
-                            });
-                          }
-                        }}
-                      />
-                      {errors.otherDetails?.[index]?.document && (
-                        <small className="text-red-700 font-medium">
-                          {String(errors.otherDetails[index].document.message)}
-                        </small>
-                      )}
-                    </div>
+                    <RHFFileInput
+                      name={`otherDetails.${index}.document`}
+                      control={control}
+                      label="Document"
+                      error={errors.otherDetails?.[index]?.document?.message}
+                    />
 
-                    <div>
-                      <Input
-                        radius="sm"
-                        label="Remarks"
-                        labelPlacement="outside"
-                        placeholder="Enter remarks"
-                        type="text"
-                        className="text-hrms-blue font-semibold"
-                        {...register(`otherDetails.${index}.remarks`)}
-                      />
-                      {errors.otherDetails?.[index]?.remarks && (
-                        <small className="text-red-700 font-medium">
-                          {String(errors.otherDetails[index].remarks.message)}
-                        </small>
-                      )}
-                    </div>
+                    <RHFInput
+                      name={`otherDetails.${index}.remarks`}
+                      control={control}
+                      label="Remarks"
+                      placeholder="Enter remarks"
+                      error={errors.otherDetails?.[index]?.remarks?.message}
+                    />
 
-                    <div>
-                      <Controller
-                        name={`otherDetails.${index}.isCurrentStatus`}
-                        control={control}
-                        render={({ field }) => (
-                          <RadioGroup
-                            aria-label="Is this your current status?"
-                            label="Is this your current status?"
-                            orientation="horizontal"
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <Radio value="yes">Yes</Radio>
-                            <Radio value="no">No</Radio>
-                          </RadioGroup>
-                        )}
-                      />
-                      {errors.otherDetails?.[index]?.isCurrentStatus && (
-                        <small className="text-red-700 font-medium">
-                          {String(
-                            errors.otherDetails[index].isCurrentStatus.message
-                          )}
-                        </small>
-                      )}
-                    </div>
+                    <RHFRadio
+                      name={`otherDetails.${index}.isCurrentStatus`}
+                      control={control}
+                      label="Is this your current status?"
+                      options={[
+                        { value: "yes", label: "Yes" },
+                        { value: "no", label: "No" },
+                      ]}
+                      error={
+                        errors.otherDetails?.[index]?.isCurrentStatus?.message
+                      }
+                    />
 
                     <div className=" flex justify-start items-end pb-2">
                       {index === otherDetails.length - 1 && (
