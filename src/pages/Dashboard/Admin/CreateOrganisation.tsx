@@ -163,11 +163,11 @@ const CreateOrganisation = () => {
 
         // Organisation Address section
         organisationAddress: {
-          postCode: data.postCode,
-          addressLine1: data.addressLine1,
-          addressLine2: data.addressLine2,
-          addressLine3: data.addressLine3,
-          city: data.cityCounty,
+          postCode: data.postCode || "",
+          addressLine1: data.addressLine1 || "",
+          addressLine2: data.addressLine2 || "",
+          addressLine3: data.addressLine3 || "",
+          city: data.cityCounty || "",
           country: data.country,
         },
 

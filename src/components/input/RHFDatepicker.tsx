@@ -10,7 +10,7 @@ interface RHFInputProps<T extends FieldValues> {
   error?: string;
 }
 
-const RHFInput = <T extends FieldValues>({
+const RHFDatepicker = <T extends FieldValues>({
   name,
   control,
   label,
@@ -22,7 +22,6 @@ const RHFInput = <T extends FieldValues>({
       control={control}
       render={({ field }) => (
         <DatePicker
-          {...field}
           radius="sm"
           className="text-hrms-blue font-semibold"
           label={label}
@@ -44,4 +43,4 @@ const RHFInput = <T extends FieldValues>({
   </div>
 );
 
-export default RHFInput;
+export default RHFDatepicker;

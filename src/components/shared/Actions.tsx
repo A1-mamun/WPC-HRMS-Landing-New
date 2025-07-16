@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Link,
 } from "@heroui/react";
 import { FaEdit, FaFilePdf, FaFileExcel } from "react-icons/fa";
 import jsPDF from "jspdf";
@@ -87,6 +88,8 @@ const Actions = ({ employee }: { employee: any }) => {
         <DropdownItem
           key="edit"
           startContent={<FaEdit className={iconClasses} />}
+          as={Link}
+          href={`/dashboard/edit-employee/${id}`}
         >
           Edit file
         </DropdownItem>
@@ -107,6 +110,4 @@ const Actions = ({ employee }: { employee: any }) => {
       </DropdownMenu>
     </Dropdown>
   );
-};
-
-export default Actions;
+}

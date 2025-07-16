@@ -25,34 +25,45 @@ const educationalDetailsSchema = z.object({
   percentage: z.string().optional(),
   grade: z.string().optional(),
   transcriptDocument: z
-    .custom<File>((val) => val instanceof File && val.size > 0, {
-      message: "Transcript is required",
-    })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
-    })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG, PNG or PDF  allowed",
-      }
-    )
+    .union([
+      z.string().url(), // for existing document URLs
+      z
+        .instanceof(File)
+        .refine((file) => file.size > 0, {
+          message: "Transcript is required",
+        })
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max file size is 2MB",
+        })
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+          {
+            message: "Only JPG, PNG or PDF allowed",
+          }
+        ),
+    ])
     .optional(),
+
   certificateDocument: z
-    .custom<File>((val) => val instanceof File && val.size > 0, {
-      message: "Document is required",
-    })
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Max file size is 1MB",
-    })
-    .refine(
-      (file) =>
-        ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
-      {
-        message: "Only JPG,PNG or PDF  allowed",
-      }
-    )
+    .union([
+      z.string().url(), // for existing document URLs
+      z
+        .instanceof(File)
+        .refine((file) => file.size > 0, {
+          message: "Certificate is required",
+        })
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max file size is 2MB",
+        })
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "application/pdf"].includes(file.type),
+          {
+            message: "Only JPG, PNG or PDF allowed",
+          }
+        ),
+    ])
     .optional(),
 });
 
@@ -101,16 +112,7 @@ const otherDetailsSchema = z.object({
   isCurrentStatus: z.enum(["yes", "no"]).optional(),
 });
 
-export const addEmployeeDocumentsSchema = z.object({
-  // employee credentials
-  email: z
-    .string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email({ message: "Invalid email address" }),
-  password: z
-    .string({ required_error: "Password is required" })
-    .min(1, "Password is required"),
-
+export const updateEmployeeDocumentsSchema = z.object({
   // personal details
   employeeCode: z
     .string({ required_error: "Email is required" })
@@ -242,7 +244,8 @@ export const addEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   passportRemarks: z.string().min(1, "Remarks is required"),
   passportStatus: z.enum(["yes", "no"], {
     required_error: "Status is required",
@@ -276,7 +279,8 @@ export const addEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   visaDocumentBackSide: z
     .custom<File>((val) => val instanceof File && val.size > 0, {
       message: "Document is required",
@@ -286,7 +290,8 @@ export const addEmployeeDocumentsSchema = z.object({
     })
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
       message: "Only JPG or PNG  allowed",
-    }),
+    })
+    .optional(),
   visaRemarks: z.string().min(1, "Remarks is required"),
   visaStatus: z.enum(["yes", "no"], { required_error: "Status is required" }),
 
@@ -398,4 +403,6 @@ export const addEmployeeDocumentsSchema = z.object({
   deductions: z.array(z.string()).optional(),
 });
 
-export type EmployeeFormSchemaType = z.infer<typeof addEmployeeDocumentsSchema>;
+export type EmployeeUpdateFormSchemaType = z.infer<
+  typeof updateEmployeeDocumentsSchema
+>;

@@ -9,6 +9,23 @@ const createEmployeeApi = baseApi.injectEndpoints({
         body: formData,
       }),
     }),
+    getEmployeeById: builder.query({
+      query: (id) => ({
+        url: `/employee/${id}`,
+        method: "GET",
+      }),
+    }),
+    updateEmployee: builder.mutation({
+      query: ({ employeeId, data }) => ({
+        url: `/employee/${employeeId}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
-export const { useCreateEmployeeMutation } = createEmployeeApi;
+export const {
+  useCreateEmployeeMutation,
+  useGetEmployeeByIdQuery,
+  useUpdateEmployeeMutation,
+} = createEmployeeApi;

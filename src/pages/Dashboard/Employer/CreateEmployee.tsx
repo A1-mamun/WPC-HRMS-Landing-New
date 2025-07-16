@@ -50,10 +50,6 @@ import {
   RHFSelect,
 } from "../../../components";
 const CreateEmployee = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleVisibility = () => setIsVisible(!isVisible);
-
   const {
     register,
     control,
@@ -214,51 +210,51 @@ const CreateEmployee = () => {
         personalDetails: {
           employeeCode: data.employeeCode,
           firstName: data.firstName,
-          middleName: data.middleName,
+          middleName: data.middleName || "",
           lastName: data.lastName,
           gender: data.gender,
-          niNumber: data.niNumber,
+          niNumber: data.niNumber || "",
           dateOfBirth: data.dateOfBirth,
           maritalStatus: data.maritalStatus,
           nationality: data.nationality,
           email: data.email,
           contactNo: data.contactNumber,
-          alternativeNo: data.alternativeNumber,
+          alternativeNo: data.alternativeNumber || "",
         },
         serviceDetails: {
-          department: data.department,
-          designation: data.designation,
+          department: data.department || "",
+          designation: data.designation || "",
           dateOfJoining: data.dateOfJoining,
           employeeType: data.employeeType,
           dateOfConfirmation: data.dateOfConfirmation,
           contractStartDate: data.contractStartDate,
           contractEndDate: data.contractEndDate,
-          jobLocation: data.jobLocation,
+          jobLocation: data.jobLocation || "",
           profilePicture: "",
         },
         nextOfKinDetails: {
-          nextOfKinContactName: data.nextOfKinContactName,
+          nextOfKinContactName: data.nextOfKinContactName || "",
           nextOfKinContactRelationship: data.nextOfKinContactRelationship,
-          nextOfKinContactEmail: data.nextOfKinContactEmail,
-          nextOfKinContactNumber: data.nextOfKinContactNumber,
-          nextOfKinContactAddress: data.nextOfKinContactAddress,
+          nextOfKinContactEmail: data.nextOfKinContactEmail || "",
+          nextOfKinContactNumber: data.nextOfKinContactNumber || "",
+          nextOfKinContactAddress: data.nextOfKinContactAddress || "",
         },
         certifiedMembership: {
-          licenseTitle: data.titleCertifiedLicense,
-          licenseNo: data.licenseNumber,
+          licenseTitle: data.titleCertifiedLicense || "",
+          licenseNo: data.licenseNumber || "",
           issueDate: data.issueDate,
           expiryDate: data.expiryDate,
         },
-        contactiInfo: {
-          postCode: data.postCode,
-          addressLine1: data.addressLine1,
-          addressLine2: data.addressLine2,
-          addressLine3: data.addressLine3,
-          city: data.city,
+        contactInfo: {
+          postCode: data.postCode || "",
+          addressLine1: data.addressLine1 || "",
+          addressLine2: data.addressLine2 || "",
+          addressLine3: data.addressLine3 || "",
+          city: data.city || "",
           country: data.country,
           proofOfAddress: "",
         },
-        pasportDetails: {
+        passportDetails: {
           passportNo: data.passportNumber,
           nationality: data.passportNationality,
           placeOfBirth: data.placeOfBirth,
@@ -284,35 +280,35 @@ const CreateEmployee = () => {
           isCurrentStatus: data.visaStatus,
         },
         eussDetails: {
-          referenceNo: data.eussReferenceNumber,
+          referenceNo: data.eussReferenceNumber || "",
           nationality: data.eussNationality,
           issueDate: data.eussIssueDate,
           expiryDate: data.eussExpiryDate,
           eligibleReviewDate: data.eussEligibleReviewDate,
           document: "",
-          remarks: data.eussRemarks,
+          remarks: data.eussRemarks || "",
           isCurrentStatus: data.eussStatus,
         },
         dbsDetails: {
           type: data.dbsType,
-          referenceNo: data.dbsReferenceNumber,
+          referenceNo: data.dbsReferenceNumber || "",
           nationality: data.dbsNationality,
           issueDate: data.dbsIssueDate,
           expiryDate: data.dbsExpiryDate,
           eligibleReviewDate: data.dbsEligibleReviewDate,
           document: "",
-          remarks: data.dbsRemarks,
+          remarks: data.dbsRemarks || "",
           isCurrentStatus: data.dbsStatus,
         },
         nationalIdDetails: {
-          nationalIdNo: data.nationalIdNumber,
+          nationalIdNo: data.nationalIdNumber || "",
           nationality: data.nationalIdNationality,
           countryOfResidence: data.nationalIdCountryOfResidence,
           issueDate: data.nationalIdIssueDate,
           expiryDate: data.nationalIdExpiryDate,
           eligibleReviewDate: data.nationalIdEligibleReviewDate,
           document: "",
-          remarks: data.nationalIdRemarks,
+          remarks: data.nationalIdRemarks || "",
           isCurrentStatus: data.nationalIdStatus,
         },
         payDetails: {
@@ -320,16 +316,16 @@ const CreateEmployee = () => {
           wedgesPaymentMode: data.wedgesPayMode,
           annualPay: data.annualPay,
           paymentType: data.paymentType,
-          basicDailyWedges: data.basicDailyWedges,
+          basicDailyWedges: data.basicDailyWedges || "",
           minWorkingHour: data.minWorkingHour,
-          rate: data.rate,
+          rate: data.rate || "",
           taxCode: data.taxCode,
-          taxReference: data.taxReference,
+          taxReference: data.taxReference || "",
           paymentMode: data.paymentMode,
           bankName: data.bankName,
-          branchName: data.branchName,
-          accountNo: data.accountNo,
-          sortCode: data.sortCode,
+          branchName: data.branchName || "",
+          accountNo: data.accountNo || "",
+          sortCode: data.sortCode || "",
           paymentCurrency: data.paymentCurrency,
         },
         payStructure: {
@@ -394,7 +390,7 @@ const CreateEmployee = () => {
         duration: 2000,
       });
     } catch (err: any) {
-      console.log("Error:", err);
+      // console.log("Error:", err);
       toast.error(err.data.message, { id: toastId, duration: 3000 });
     }
   };
@@ -844,7 +840,7 @@ const CreateEmployee = () => {
                     </label>
                     <input
                       type="date"
-                      className="w-full p-2 border rounded"
+                      className="w-full p-2 border rounded bg-gray-100"
                       {...register(`jobDetails.${index}.startDate`)}
                     />
                     {errors.jobDetails?.[index]?.startDate && (
