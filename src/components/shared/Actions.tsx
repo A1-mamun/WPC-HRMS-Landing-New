@@ -89,7 +89,7 @@ const Actions = ({ employee }: { employee: any }) => {
           key="edit"
           startContent={<FaEdit className={iconClasses} />}
           as={Link}
-          href={`/dashboard/edit-employee/${id}`}
+          href={`/dashboard/edit-employee/${employee.id}`}
         >
           Edit file
         </DropdownItem>
@@ -111,3 +111,5 @@ const Actions = ({ employee }: { employee: any }) => {
     </Dropdown>
   );
 }
+
+export default Actions
