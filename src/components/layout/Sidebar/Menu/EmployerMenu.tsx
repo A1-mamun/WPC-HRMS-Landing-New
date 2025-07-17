@@ -19,6 +19,11 @@ const EmployerMenu = () => {
         label="Manage Payroll"
         address="manage-payroll"
       />
+      <MenuItem
+        icon={<FaUserCog />}
+        label="HCM Master"
+        address="hcm-master"
+      />
     </>
   );
 };

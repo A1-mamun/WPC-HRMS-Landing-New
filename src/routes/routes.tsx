@@ -16,6 +16,7 @@ import CreateOrganisation from "../pages/Dashboard/Admin/CreateOrganisation";
 import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
 import EditOrganisation from "../pages/Dashboard/Admin/EditOrganisation";
 import EditEmployee from "../pages/Dashboard/Employer/EditEmployee";
+import HcmTab from "../pages/Dashboard/HcmMaster/HcmTab";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "manage-employee",
         element: <ManageEmployee />,
+      },
+      {
+        path: "hcm-master",
+        element: <HcmTab />,
       },
       {
         path: "edit-employee/:id",
