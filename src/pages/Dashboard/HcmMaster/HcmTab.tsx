@@ -1,6 +1,7 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DepartmentTable from "./DepartmentTable";
+import DesignationTable from "./DesignationTable";
 
 const tabClass =
   "py-2 px-5 text-sm rounded-md font-medium text-black cursor-pointer";
@@ -15,22 +16,27 @@ const HcmTab = () => {
       <div className="px-5 py-3">
         <Tabs>
           <TabList className="flex bg-[#ecebeb] p-3 gap-2 rounded-md">
-            {["Department", "Designation", "Employment type"].map((tabTitle, index) => (
-              <Tab
-                key={index}
-                className={tabClass}
-                selectedClassName={selectdClass}
-              >
-                {tabTitle}
-              </Tab>
-            ))}
+            {["Department", "Designation", "Employment type"].map(
+              (tabTitle, index) => (
+                <Tab
+                  key={index}
+                  className={tabClass}
+                  selectedClassName={selectdClass}
+                >
+                  {tabTitle}
+                </Tab>
+              )
+            )}
           </TabList>
 
           <TabPanel>
-            <DepartmentTable/>
+            <DepartmentTable />
           </TabPanel>
           <TabPanel>
-            <h2>Any content 2</h2>
+            <DesignationTable />
+          </TabPanel>
+          <TabPanel>
+            <h2>Any content 3</h2>
           </TabPanel>
         </Tabs>
       </div>
