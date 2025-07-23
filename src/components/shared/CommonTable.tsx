@@ -7,21 +7,27 @@ import {
   TableRow,
   TableCell,
   Pagination,
+  Button,
+  Tooltip,
 } from "@heroui/react";
 import { FaEdit } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 type Department = {
-  id: number;
+  _id: string;
   name: string;
   siNo?: number; // Optional for pagination
 };
 
-const CommonTable = ({
+const CommonHCMTable = ({
   tableName,
+  route,
   limit,
   data,
 }: {
   tableName: string;
+  route: string;
   limit: number;
   data: Department[];
 }) => {
@@ -43,7 +49,7 @@ const CommonTable = ({
   return (
     <div>
       {/* Search bar */}
-      <div className="flex justify-end py-3">
+      <div className="flex justify-between py-3">
         <div className="flex items-center space-x-2">
           <label htmlFor="search" className="text-sm font-medium">
             Search:
@@ -54,6 +60,15 @@ const CommonTable = ({
             className="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
             placeholder="Type to search..."
           />
+        </div>
+        <div>
+          <Button
+            radius="full"
+            className="bg-hrms-blue-hover text-white"
+            isIconOnly
+          >
+            <FiPlus size={30} />
+          </Button>
         </div>
       </div>
 
@@ -104,18 +119,33 @@ const CommonTable = ({
           <TableBody items={items}>
             {(item: Department) => (
               <TableRow
-                key={item.id}
+                key={item._id}
                 className={
                   (item?.siNo as number) % 2 === 0 ? "bg-[#f4f4f5]" : "bg-white"
                 }
               >
                 {(columnKey) => (
-                  <TableCell className="text-xs font-medium text-gray-700 border-r border-gray-200 px-3 py-3 truncate rounded-md">
+                  <TableCell className="text-xs font-medium text-gray-700 border-r border-gray-200 px-3 py-2 truncate rounded-md">
                     {columnKey === "serial" ? (
                       <div>{item.siNo}</div>
                     ) : columnKey === "action" ? (
                       <div className="flex justify-center">
-                        <FaEdit className="text-blue-600 hover:text-blue-800 cursor-pointer text-sm" />
+                        <Tooltip
+                          content="Edit"
+                          showArrow
+                          placement="bottom"
+                          color="primary"
+                        >
+                          <Link to={`/dashboard/edit-${route}/${item._id}`}>
+                            {/* <Button
+                              size="sm"
+                              isIconOnly
+                              className="bg-hrms-blue-hover text-sm font-jura text-white font-semibold"
+                            > */}
+                            <FaEdit size={22} />
+                            {/* </Button> */}
+                          </Link>
+                        </Tooltip>
                       </div>
                     ) : (
                       <div>{item.name}</div>
@@ -131,4 +161,4 @@ const CommonTable = ({
   );
 };
 
-export default CommonTable;
+export default CommonHCMTable;

@@ -16,7 +16,7 @@ import CreateOrganisation from "../pages/Dashboard/Admin/CreateOrganisation";
 import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
 import EditOrganisation from "../pages/Dashboard/Admin/EditOrganisation";
 import EditEmployee from "../pages/Dashboard/Employer/EditEmployee";
-import HcmTab from "../pages/Dashboard/HcmMaster/HcmTab";
+import HcmTab from "../pages/Dashboard/Employer/HcmMaster/HcmTab";
 
 const router = createBrowserRouter([
   {
