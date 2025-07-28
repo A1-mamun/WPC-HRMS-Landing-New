@@ -62,6 +62,76 @@ const hcmMasterApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    createOrganisationDepartment: builder.mutation({
+      query: ({ data }) => ({
+        url: "/department/create-department",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationDesignation: builder.mutation({
+      query: ({ data }) => ({
+        url: "/designation/create-designation",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationEmploymentType: builder.mutation({
+      query: ({ data }) => ({
+        url: "/employment-type/create-employment-type",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationPayGroup: builder.mutation({
+      query: ({ data }) => ({
+        url: "/pay-group/create-pay-group",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationAnnualPay: builder.mutation({
+      query: ({ data }) => ({
+        url: "/annual-pay/create-annual-pay",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationBankMaster: builder.mutation({
+      query: ({ data }) => ({
+        url: "/bank-master/create-bank-master",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationBankSortCode: builder.mutation({
+      query: ({ data }) => ({
+        url: "/bank-sort-code/create-bank-sort-code",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationTaxMaster: builder.mutation({
+      query: ({ data }) => ({
+        url: "/tax-master/create-tax-master",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationPaymentType: builder.mutation({
+      query: ({ data }) => ({
+        url: "/payment-type/create-payment-type",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createOrganisationWedgesPayMode: builder.mutation({
+      query: ({ data }) => ({
+        url: "/wedges-pay-mode/create-wedges-pay-mode",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 export const {
@@ -75,4 +145,14 @@ export const {
   useGetOrganisationTaxMastersQuery,
   useGetOrganisationPaymentTypesQuery,
   useGetOrganisationWedgesPayModesQuery,
+  useCreateOrganisationDepartmentMutation,
+  useCreateOrganisationDesignationMutation,
+  useCreateOrganisationEmploymentTypeMutation,
+  useCreateOrganisationPayGroupMutation,
+  useCreateOrganisationAnnualPayMutation,
+  useCreateOrganisationBankMasterMutation,
+  useCreateOrganisationBankSortCodeMutation,
+  useCreateOrganisationTaxMasterMutation,
+  useCreateOrganisationPaymentTypeMutation,
+  useCreateOrganisationWedgesPayModeMutation,
 } = hcmMasterApi;

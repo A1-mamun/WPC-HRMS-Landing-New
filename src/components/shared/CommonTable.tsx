@@ -7,11 +7,9 @@ import {
   TableRow,
   TableCell,
   Pagination,
-  Button,
   Tooltip,
 } from "@heroui/react";
 import { FaEdit } from "react-icons/fa";
-import { FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 type Department = {
@@ -48,30 +46,6 @@ const CommonHCMTable = ({
 
   return (
     <div>
-      {/* Search bar */}
-      <div className="flex justify-between py-3">
-        <div className="flex items-center space-x-2">
-          <label htmlFor="search" className="text-sm font-medium">
-            Search:
-          </label>
-          <input
-            id="search"
-            type="text"
-            className="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-            placeholder="Type to search..."
-          />
-        </div>
-        <div>
-          <Button
-            radius="full"
-            className="bg-hrms-blue-hover text-white"
-            isIconOnly
-          >
-            <FiPlus size={30} />
-          </Button>
-        </div>
-      </div>
-
       {/* Table */}
       <div className="overflow-x-auto my-3 border rounded-md">
         <Table
@@ -137,13 +111,7 @@ const CommonHCMTable = ({
                           color="primary"
                         >
                           <Link to={`/dashboard/edit-${route}/${item._id}`}>
-                            {/* <Button
-                              size="sm"
-                              isIconOnly
-                              className="bg-hrms-blue-hover text-sm font-jura text-white font-semibold"
-                            > */}
                             <FaEdit size={22} />
-                            {/* </Button> */}
                           </Link>
                         </Tooltip>
                       </div>
