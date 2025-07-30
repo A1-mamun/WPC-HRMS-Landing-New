@@ -8,9 +8,12 @@ import {
   TableCell,
   Pagination,
   Tooltip,
+  Button,
+  useDisclosure,
 } from "@heroui/react";
 import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+
+import HCMEditModal from "./HCMEditModal";
 
 type Department = {
   _id: string;
@@ -19,16 +22,23 @@ type Department = {
 };
 
 const CommonHCMTable = ({
-  tableName,
+  title,
   route,
+  tableName,
   limit,
   data,
+  refetch,
 }: {
   tableName: string;
-  route: string;
   limit: number;
   data: Department[];
+  title: string;
+  route: string;
+  refetch: () => void;
 }) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<Department | null>(null);
+
   const [page, setPage] = useState(1);
   const rowsPerPage = limit;
 
@@ -99,7 +109,7 @@ const CommonHCMTable = ({
                 }
               >
                 {(columnKey) => (
-                  <TableCell className="text-xs font-medium text-gray-700 border-r border-gray-200 px-3 py-2 truncate rounded-md">
+                  <TableCell className="text-xs font-medium text-gray-700 border-r border-gray-200 px-3 py-[6px] truncate rounded-md">
                     {columnKey === "serial" ? (
                       <div>{item.siNo}</div>
                     ) : columnKey === "action" ? (
@@ -110,9 +120,17 @@ const CommonHCMTable = ({
                           placement="bottom"
                           color="primary"
                         >
-                          <Link to={`/dashboard/edit-${route}/${item._id}`}>
-                            <FaEdit size={22} />
-                          </Link>
+                          <Button
+                            isIconOnly
+                            size="sm"
+                            className="bg-hrms-blue-hover"
+                            onPress={() => {
+                              setSelectedItem(item);
+                              onOpen();
+                            }}
+                          >
+                            <FaEdit size={16} color="white" />
+                          </Button>
                         </Tooltip>
                       </div>
                     ) : (
@@ -124,6 +142,15 @@ const CommonHCMTable = ({
             )}
           </TableBody>
         </Table>
+        <HCMEditModal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          title={title}
+          name={selectedItem ? selectedItem.name : ""}
+          id={selectedItem ? selectedItem._id : ""}
+          route={route}
+          refetch={refetch}
+        />
       </div>
     </div>
   );

@@ -24,8 +24,7 @@ const AnnualPayTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Annual Pay...");
 
@@ -106,8 +105,10 @@ const AnnualPayTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Annual Pay"
+          title="Annual Pay"
           route="annual-pay"
+          refetch={refetch}
+          tableName="Annual Pay"
           limit={5}
           data={data?.data}
         />

@@ -24,8 +24,7 @@ const PaymentTypeTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Payment Type...");
 
@@ -107,8 +106,10 @@ const PaymentTypeTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Payment Type"
+          title="Payment Type"
           route="payment-type"
+          refetch={refetch}
+          tableName="Payment Type"
           limit={5}
           data={data?.data}
         />

@@ -24,8 +24,7 @@ const PayGroupTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Pay Group...");
 
@@ -107,8 +106,10 @@ const PayGroupTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Payment Type"
-          route="payment-type"
+          title="Payment Group"
+          route="pay-group"
+          refetch={refetch}
+          tableName="Payment Group"
           limit={5}
           data={data?.data}
         />

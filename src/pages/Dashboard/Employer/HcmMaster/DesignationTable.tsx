@@ -25,8 +25,7 @@ const DesignationTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Designation...");
 
@@ -107,8 +106,10 @@ const DesignationTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Designation"
+          title="Designation"
           route="designation"
+          refetch={refetch}
+          tableName="Designation"
           limit={5}
           data={data?.data}
         />

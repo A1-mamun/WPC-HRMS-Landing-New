@@ -25,8 +25,7 @@ const DepartmentTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Department...");
 
@@ -108,10 +107,12 @@ const DepartmentTable = () => {
         </div>
       ) : (
         <CommonHCMTable
+          title="Department"
           tableName="Department"
-          route="department"
           limit={5}
           data={data?.data}
+          route="department"
+          refetch={refetch}
         />
       )}
     </div>

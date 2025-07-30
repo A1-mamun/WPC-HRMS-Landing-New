@@ -24,8 +24,7 @@ const BankMasterTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Bank Master...");
 
@@ -106,8 +105,10 @@ const BankMasterTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Bank Master"
+          title="Bank Master"
           route="bank-master"
+          refetch={refetch}
+          tableName="Bank Master"
           limit={5}
           data={data?.data}
         />

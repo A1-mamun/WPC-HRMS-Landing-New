@@ -16,6 +16,8 @@ import RHFDatepicker from "./input/RHFDatepicker";
 // Shared components
 import Actions from "./shared/Actions";
 import CommonHCMTable from "./shared/CommonTable";
+import HCMModal from "./shared/HCMEditModal";
+import HCMEditModal from "./shared/HCMEditModal";
 
 export {
   MainLayout,
@@ -29,4 +31,6 @@ export {
   RHFPassword,
   RHFDatepicker,
   CommonHCMTable,
+  HCMModal,
+  HCMEditModal,
 };

@@ -25,8 +25,7 @@ const BankSortCodeTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Sort Code...");
 
@@ -107,8 +106,10 @@ const BankSortCodeTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Bank Sort Code"
+          title="Bank Sort Code"
           route="bank-sort-code"
+          refetch={refetch}
+          tableName="Bank Sort Code"
           limit={5}
           data={data?.data}
         />

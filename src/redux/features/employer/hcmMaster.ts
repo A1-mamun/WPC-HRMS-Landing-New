@@ -132,6 +132,76 @@ const hcmMasterApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    updateOrganisationHCMMaster: builder.mutation({
+      query: ({ route, id, data }) => ({
+        url: `/${route}/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // updateOrganisationDesignation: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/designation/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationEmploymentType: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/employment-type/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationPayGroup: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/pay-group/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationAnnualPay: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/annual-pay/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationBankMaster: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/bank-master/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationBankSortCode: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/bank-sort-code/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationTaxMaster: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/tax-master/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationPaymentType: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/payment-type/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
+    // updateOrganisationWedgesPayMode: builder.mutation({
+    //   query: ({ id, data }) => ({
+    //     url: `/wedges-pay-mode/${id}`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    // }),
   }),
 });
 export const {
@@ -155,4 +225,15 @@ export const {
   useCreateOrganisationTaxMasterMutation,
   useCreateOrganisationPaymentTypeMutation,
   useCreateOrganisationWedgesPayModeMutation,
+  useUpdateOrganisationHCMMasterMutation,
+  // useUpdateOrganisationDepartmentMutation,
+  // useUpdateOrganisationDesignationMutation,
+  // useUpdateOrganisationEmploymentTypeMutation,
+  // useUpdateOrganisationPayGroupMutation,
+  // useUpdateOrganisationAnnualPayMutation,
+  // useUpdateOrganisationBankMasterMutation,
+  // useUpdateOrganisationBankSortCodeMutation,
+  // useUpdateOrganisationTaxMasterMutation,
+  // useUpdateOrganisationPaymentTypeMutation,
+  // useUpdateOrganisationWedgesPayModeMutation,
 } = hcmMasterApi;

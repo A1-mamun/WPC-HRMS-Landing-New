@@ -25,8 +25,7 @@ const EmploymentTypeTable = () => {
     ).value.trim();
 
     // Capitalize the first letter of the  name
-    const name =
-      nameInput.charAt(0).toUpperCase() + nameInput.slice(1).toLowerCase();
+    const name = nameInput.charAt(0).toUpperCase() + nameInput.slice(1);
 
     const toastId = toast.loading("Creating Employment Type...");
 
@@ -108,8 +107,10 @@ const EmploymentTypeTable = () => {
         </div>
       ) : (
         <CommonHCMTable
-          tableName="Employment Type"
+          title="Employment Type"
           route="employment-type"
+          refetch={refetch}
+          tableName="Employment Type"
           limit={5}
           data={data?.data}
         />
