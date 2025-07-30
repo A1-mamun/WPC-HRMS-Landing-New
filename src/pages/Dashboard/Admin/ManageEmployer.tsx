@@ -21,7 +21,7 @@ const ManageEmployer = () => {
   // const [params, setParams] = useState({});
 
   // api call to get employees
-  const { data, isError } = useGetOrgaisationsQuery(undefined);
+  const { data, isError, refetch } = useGetOrgaisationsQuery(undefined);
   // console.log("data", data);
 
   const rowsPerPage = data?.meta?.limit;
@@ -185,8 +185,16 @@ const ManageEmployer = () => {
             </TableBody>
           </Table>
         ) : isError ? (
-          <div className="p-4 text-center text-xl font-bold text-red-700">
-            Something went wrong. Please try again later.
+          <div className="p-4 text-center ">
+            <p className="text-xl font-bold text-red-700">
+              Something went wrong. Please try again later.
+            </p>
+            <Button
+              onPress={refetch}
+              className="bg-hrms-blue-hover text-white mt-4 font-semibold text-lg"
+            >
+              Try Again
+            </Button>
           </div>
         ) : (
           <div className="p-4 text-center text-xl font-bold text-gray-500">

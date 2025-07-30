@@ -4,8 +4,8 @@ import { Select, SelectItem } from "@heroui/react";
 import { Controller, Control, FieldPath, FieldValues } from "react-hook-form";
 
 interface Option {
-  value: string;
-  label?: string;
+  _id: string;
+  name: string;
 }
 
 interface RHFSelectProps<T extends FieldValues> {
@@ -47,8 +47,8 @@ const RHFSelect = <T extends FieldValues>({
           className="text-hrms-blue font-semibold"
         >
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label || option.value}
+            <SelectItem key={option._id} value={option.name}>
+              {option.name}
             </SelectItem>
           ))}
         </Select>

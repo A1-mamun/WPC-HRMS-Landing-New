@@ -22,10 +22,17 @@ const organisationApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    getOrgainsationHCMMaster: builder.query({
+      query: () => ({
+        url: "/employer/hcm-master-data",
+        method: "GET",
+      }),
+    }),
   }),
 });
 export const {
   useCreateOrganisationMutation,
   useGetOrgaisationEmployeesQuery,
   useUpdateOrganisationMutation,
+  useGetOrgainsationHCMMasterQuery,
 } = organisationApi;
