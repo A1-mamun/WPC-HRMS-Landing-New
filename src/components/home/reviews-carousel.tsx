@@ -1,6 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+// import "swiper/css";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 import { Avatar } from "@heroui/react";

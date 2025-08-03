@@ -797,8 +797,8 @@ const CreateOrganisation = () => {
                 label="Status"
                 placeholder="Select status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.mondayStatus?.message}
               />
@@ -809,8 +809,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Tuesday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.tuesdayStatus?.message}
               />
@@ -821,8 +821,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Wednesday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.wednesdayStatus?.message}
               />
@@ -833,8 +833,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Thursday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.thursdayStatus?.message}
               />
@@ -845,8 +845,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Friday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.fridayStatus?.message}
               />
@@ -857,8 +857,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Saturday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.saturdayStatus?.message}
               />
@@ -869,8 +869,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Sunday Status"
                 options={[
-                  { value: "Close", label: "Close" },
-                  { value: "Open", label: "Open" },
+                  { _id: "1", name: "Close" },
+                  { _id: "2", name: "Open" },
                 ]}
                 error={errors.sundayStatus?.message}
               />

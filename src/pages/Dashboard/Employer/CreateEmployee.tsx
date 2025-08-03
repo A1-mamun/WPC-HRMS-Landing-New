@@ -1706,10 +1706,10 @@ const CreateEmployee = () => {
                             >
                               {nationalities.map((nationality) => (
                                 <SelectItem
-                                  key={nationality.value}
-                                  value={nationality.value}
+                                  key={nationality._id}
+                                  value={nationality.name}
                                 >
-                                  {nationality.value}
+                                  {nationality.name}
                                 </SelectItem>
                               ))}
                             </Select>
@@ -2095,8 +2095,8 @@ const CreateEmployee = () => {
                       onValueChange={field.onChange}
                     >
                       {taxables.map((mode) => (
-                        <Checkbox key={mode.value} value={mode.value}>
-                          {mode.value}
+                        <Checkbox key={mode._id} value={mode.name}>
+                          {mode.name}
                         </Checkbox>
                       ))}
                     </CheckboxGroup>
@@ -2114,8 +2114,8 @@ const CreateEmployee = () => {
                       onValueChange={field.onChange}
                     >
                       {deductions.map((mode) => (
-                        <Checkbox key={mode.value} value={mode.value}>
-                          {mode.value}
+                        <Checkbox key={mode._id} value={mode.name}>
+                          {mode.name}
                         </Checkbox>
                       ))}
                     </CheckboxGroup>
@@ -2150,11 +2150,15 @@ const CreateEmployee = () => {
             Try Again
           </Button>
         </div>
-      ) : (
+      ) : isLoading ? (
         <div className="flex items-center justify-center h-screen">
           <p className="text-lg font-semibold">
             Loading Create Employee Form...
           </p>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-lg font-semibold">Internal Server Error</p>
         </div>
       )}
     </div>
