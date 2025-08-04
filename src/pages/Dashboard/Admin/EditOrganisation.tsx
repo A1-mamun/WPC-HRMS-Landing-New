@@ -358,7 +358,7 @@ const EditOrganisation = () => {
         duration: 2000,
       });
     } catch (err: any) {
-      // console.log("Error:", err);
+      console.log("Error:", err);
       toast.error(err.data.message, { id: toastId, duration: 3000 });
     }
   };

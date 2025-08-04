@@ -43,6 +43,7 @@ const CreateOrganisation = () => {
   } = useForm<EmployerFormSchemaType>({
     resolver: zodResolver(addOrgDocumentsSchema),
   });
+  // console.log(errors);
 
   const [createOrganisation] = useCreateOrganisationMutation();
 
@@ -76,7 +77,7 @@ const CreateOrganisation = () => {
       setValue("keyPersonProofOfId", null);
       setValue("keyPersonCriminalHistory", "");
     }
-  }, [isKeyPersonSameAsAuthorised]);
+  }, [isKeyPersonSameAsAuthorised, watchAuthorisedPerson]);
 
   // update level 1 user details when checkbox is checked
   useEffect(() => {
@@ -97,7 +98,7 @@ const CreateOrganisation = () => {
       setValue("level1PersonProofOfId", null);
       setValue("level1PersonCriminalHistory", "");
     }
-  }, [isLevel1PersonSameAsAuthorised]);
+  }, [isLevel1PersonSameAsAuthorised, watchAuthorisedPerson]);
 
   const handleSubmitForm = async (data: FieldValues) => {
     // Create FormData object for file uploads
@@ -269,7 +270,7 @@ const CreateOrganisation = () => {
         duration: 2000,
       });
     } catch (err: any) {
-      // console.log("Error:", err);
+      console.log("Error:", err);
       toast.error(err.data.message, { id: toastId, duration: 3000 });
     }
   };
@@ -334,6 +335,7 @@ const CreateOrganisation = () => {
               label="Type of Organisation"
               placeholder="Select organisation type"
               options={organizationTypes}
+              error={errors.organisationType?.message}
             />
 
             <RHFInput
@@ -487,7 +489,6 @@ const CreateOrganisation = () => {
               control={control}
               label="Proof of ID"
               error={errors.proofOfId?.message}
-              disabled={isKeyPersonSameAsAuthorised}
             />
             <RHFRadio
               name="criminalHistory"
@@ -499,7 +500,6 @@ const CreateOrganisation = () => {
                 { value: "No", label: "No" },
               ]}
               error={errors.criminalHistory?.message}
-              disabled={isKeyPersonSameAsAuthorised}
             />
           </div>
         </div>
