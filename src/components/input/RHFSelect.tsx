@@ -47,7 +47,7 @@ const RHFSelect = <T extends FieldValues>({
           className="text-hrms-blue font-semibold"
         >
           {options.map((option) => (
-            <SelectItem key={option._id} value={option.name}>
+            <SelectItem key={option.name} value={option.name}>
               {option.name}
             </SelectItem>
           ))}
