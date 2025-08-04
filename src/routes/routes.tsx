@@ -17,11 +17,17 @@ import ManageEmployer from "../pages/Dashboard/Admin/ManageEmployer";
 import EditOrganisation from "../pages/Dashboard/Admin/EditOrganisation";
 import EditEmployee from "../pages/Dashboard/Employer/EditEmployee";
 import HcmTab from "../pages/Dashboard/Employer/HcmMaster/HcmTab";
+import ErrorPage from "../pages/ErrorPage";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
+import EmployerRoute from "./EmployerRoute";
+import EmployeeRoute from "./EmployeeRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -44,52 +50,99 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "create-organisation",
-        element: <CreateOrganisation />,
+        element: (
+          <AdminRoute>
+            <CreateOrganisation />
+          </AdminRoute>
+        ),
       },
       {
         path: "manage-organisation",
-        element: <ManageEmployer />,
+        element: (
+          <AdminRoute>
+            <ManageEmployer />
+          </AdminRoute>
+        ),
       },
       {
         path: "edit-organisation/:id",
-        element: <EditOrganisation />,
+        element: (
+          <AdminRoute>
+            <EditOrganisation />
+          </AdminRoute>
+        ),
       },
-      {
-        path: "employee-attendance",
-        element: <Attendance />,
-      },
-      {
-        path: "employee-leave",
-        element: <Leave />,
-      },
-
       {
         path: "create-employee",
-        element: <CreateEmployee />,
+        element: (
+          <EmployerRoute>
+            <CreateEmployee />
+          </EmployerRoute>
+        ),
       },
       {
         path: "manage-employee",
-        element: <ManageEmployee />,
-      },
-      {
-        path: "hcm-master",
-        element: <HcmTab />,
+        element: (
+          <EmployerRoute>
+            <ManageEmployee />
+          </EmployerRoute>
+        ),
       },
       {
         path: "edit-employee/:id",
-        element: <EditEmployee />,
+        element: (
+          <EmployerRoute>
+            <EditEmployee />
+          </EmployerRoute>
+        ),
       },
       {
         path: "manage-payroll",
-        element: <ManagePayroll />,
+        element: (
+          <EmployerRoute>
+            <ManagePayroll />
+          </EmployerRoute>
+        ),
+      },
+      {
+        path: "hcm-master",
+        element: (
+          <EmployerRoute>
+            <HcmTab />
+          </EmployerRoute>
+        ),
+      },
+      {
+        path: "employee-attendance",
+        element: (
+          <EmployeeRoute>
+            <Attendance />
+          </EmployeeRoute>
+        ),
+      },
+      {
+        path: "employee-leave",
+        element: (
+          <EmployeeRoute>
+            <Leave />
+          </EmployeeRoute>
+        ),
       },
     ],
   },
