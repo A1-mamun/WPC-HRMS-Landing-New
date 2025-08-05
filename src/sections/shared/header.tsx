@@ -206,7 +206,7 @@ const Header = () => {
               animate="visible"
               exit="exit"
               variants={mobileMenuVariants}
-              className=" bg-bg-primary shadow-lg z-50 relative w-full padding-responsive-x  pb-5"
+              className=" bg-bg-primary shadow-lg z-40 relative w-full padding-responsive-x  pb-5"
             >
               {navItems.map((item) => (
                 <li key={item.name}>
@@ -226,6 +226,44 @@ const Header = () => {
                   </div>
                 </li>
               ))}
+
+              {user ? (
+                <div className="flex lg:hidden items-center gap-5 justify-between h-full ml-4 mt-3">
+                  <Button
+                    variant="bordered"
+                    radius="sm"
+                    onPress={handleLogOut}
+                    className="border-hrms-gold text-hrms-gold"
+                  >
+                    Log Out
+                  </Button>
+
+                  <Avatar isBordered className="">
+                    <FaCircleUser />
+                  </Avatar>
+                </div>
+              ) : (
+                <div className="flex lg:hidden items-center gap-5 h-full ml-4 mt-2">
+                  <Button
+                    as="a"
+                    href="/login"
+                    variant="bordered"
+                    radius="sm"
+                    className="border-hrms-gold text-hrms-gold"
+                  >
+                    Log In
+                  </Button>
+                  <Button
+                    as="a"
+                    href="/register"
+                    variant="bordered"
+                    radius="sm"
+                    className="border-hrms-blue text-hrms-blue font-medium"
+                  >
+                    Register
+                  </Button>
+                </div>
+              )}
             </motion.ul>
           </>
         )}

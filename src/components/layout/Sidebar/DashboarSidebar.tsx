@@ -7,7 +7,6 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
-  Link,
   useDisclosure,
 } from "@heroui/react";
 import MenuItem from "./Menu/MenuItem";
@@ -16,6 +15,7 @@ import EmployerMenu from "./Menu/EmployerMenu";
 import EmployeeMenu from "./Menu/EmployeeMenu";
 import { useAppSelector } from "../../../redux/hooks";
 import { useCurrentUser } from "../../../redux/features/auth/authSlice";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const userRole = {
   ADMIN: "admin",
@@ -25,7 +25,7 @@ const userRole = {
 
 const DashboardSidebar = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const navigate = useNavigate();
   const user = useAppSelector(useCurrentUser);
 
   const handleOpen = () => {
@@ -38,10 +38,17 @@ const DashboardSidebar = () => {
         label="Dashboard"
         address="/dashboard"
         icon={<AiOutlineDashboard />}
+        onOpenChange={onOpenChange}
       />
-      {user!.role === userRole.ADMIN && <AdminMenu />}
-      {user!.role === userRole.EMPLOYER && <EmployerMenu />}
-      {user!.role === userRole.EMPLOYEE && <EmployeeMenu />}
+      {user!.role === userRole.ADMIN && (
+        <AdminMenu onOpenChange={onOpenChange} />
+      )}
+      {user!.role === userRole.EMPLOYER && (
+        <EmployerMenu onOpenChange={onOpenChange} />
+      )}
+      {user!.role === userRole.EMPLOYEE && (
+        <EmployeeMenu onOpenChange={onOpenChange} />
+      )}
     </>
   );
 
@@ -82,11 +89,15 @@ const DashboardSidebar = () => {
                   <div className="space-y-2">{navLinks}</div>
                 </DrawerBody>
                 <DrawerFooter>
-                  <Link href="/">
-                    <Button size="sm" onPress={onClose}>
-                      Back to Home
-                    </Button>
-                  </Link>
+                  <Button
+                    size="sm"
+                    onPress={() => {
+                      onClose(); // close the drawer
+                      navigate("/"); // navigate to home
+                    }}
+                  >
+                    Back to Home
+                  </Button>
                 </DrawerFooter>
               </>
             )}
@@ -115,11 +126,11 @@ const DashboardSidebar = () => {
       <div className="hidden lg:block bg-hrms-blue sticky left-0 top-0 h-screen z-20 ">
         <div className="h-screen px-3 w-52">
           <div className="h-16 flex items-center justify-center">
-            <Link href="/">
+            <NavLink to="/">
               <Button className="font-jura text-4xl font-bold text-bg-primary bg-transparent">
                 HRMS
               </Button>
-            </Link>
+            </NavLink>
           </div>
           <div className="space-y-2">{navLinks}</div>
         </div>
