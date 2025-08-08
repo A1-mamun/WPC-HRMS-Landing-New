@@ -8,7 +8,7 @@ import {
   tradingPeriods,
 } from "../../../data";
 
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +37,6 @@ const CreateOrganisation = () => {
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<EmployerFormSchemaType>({
@@ -48,15 +47,28 @@ const CreateOrganisation = () => {
   const [createOrganisation] = useCreateOrganisationMutation();
 
   // watch authorise person details
-  const watchAuthorisedPerson = watch([
-    "firstName",
-    "lastName",
-    "designation",
-    "phoneNo",
-    "email",
-    "proofOfId",
-    "criminalHistory",
-  ]);
+  // const watchAuthorisedPerson = watch([
+  //   "firstName",
+  //   "lastName",
+  //   "designation",
+  //   "phoneNo",
+  //   "email",
+  //   "proofOfId",
+  //   "criminalHistory",
+  // ]);
+
+  const watchAuthorisedPerson = useWatch({
+    name: [
+      "firstName",
+      "lastName",
+      "designation",
+      "phoneNo",
+      "email",
+      "proofOfId",
+      "criminalHistory",
+    ],
+    control,
+  });
 
   // update key contact person details when checkbox is checked
   useEffect(() => {
@@ -79,7 +91,43 @@ const CreateOrganisation = () => {
     }
   }, [isKeyPersonSameAsAuthorised, watchAuthorisedPerson]);
 
+  useEffect(() => {
+    if (!isKeyPersonSameAsAuthorised) {
+      setValue("level1PersonFirstName", "");
+      setValue("level1PersonLastName", "");
+      setValue("level1PersonDesignation", "");
+      setValue("level1PersonPhoneNo", "");
+      setValue("level1PersonEmail", "");
+      setValue("level1PersonProofOfId", null);
+      setValue("level1PersonCriminalHistory", "");
+    }
+  }, [isKeyPersonSameAsAuthorised]);
+
+  useEffect(() => {
+    if (isKeyPersonSameAsAuthorised) {
+      setValue("keyPersonFirstName", watchAuthorisedPerson[0]);
+      setValue("keyPersonLastName", watchAuthorisedPerson[1]);
+      setValue("keyPersonDesignation", watchAuthorisedPerson[2]);
+      setValue("keyPersonPhoneNo", watchAuthorisedPerson[3]);
+      setValue("keyPersonEmail", watchAuthorisedPerson[4]);
+      setValue("keyPersonProofOfId", watchAuthorisedPerson[5]);
+      setValue("keyPersonCriminalHistory", watchAuthorisedPerson[6]);
+    }
+  }, [isKeyPersonSameAsAuthorised, watchAuthorisedPerson]);
+
   // update level 1 user details when checkbox is checked
+  useEffect(() => {
+    if (!isLevel1PersonSameAsAuthorised) {
+      setValue("level1PersonFirstName", "");
+      setValue("level1PersonLastName", "");
+      setValue("level1PersonDesignation", "");
+      setValue("level1PersonPhoneNo", "");
+      setValue("level1PersonEmail", "");
+      setValue("level1PersonProofOfId", null);
+      setValue("level1PersonCriminalHistory", "");
+    }
+  }, [isLevel1PersonSameAsAuthorised]);
+
   useEffect(() => {
     if (isLevel1PersonSameAsAuthorised) {
       setValue("level1PersonFirstName", watchAuthorisedPerson[0]);
@@ -89,14 +137,6 @@ const CreateOrganisation = () => {
       setValue("level1PersonEmail", watchAuthorisedPerson[4]);
       setValue("level1PersonProofOfId", watchAuthorisedPerson[5]);
       setValue("level1PersonCriminalHistory", watchAuthorisedPerson[6]);
-    } else {
-      setValue("level1PersonFirstName", "");
-      setValue("level1PersonLastName", "");
-      setValue("level1PersonDesignation", "");
-      setValue("level1PersonPhoneNo", "");
-      setValue("level1PersonEmail", "");
-      setValue("level1PersonProofOfId", null);
-      setValue("level1PersonCriminalHistory", "");
     }
   }, [isLevel1PersonSameAsAuthorised, watchAuthorisedPerson]);
 
@@ -259,20 +299,22 @@ const CreateOrganisation = () => {
       formData.append("level1PersonProofOfId", data.level1PersonProofOfId);
     }
 
-    const toastId = toast.loading("Creating organisation...");
+    console.log("formattedData:", formattedData);
 
-    try {
-      await createOrganisation(formData).unwrap();
-      // const res = await addOrgDocuments(formattedData).unwrap();
-      // console.log("Response:", res);
-      toast.success("Organisation created successfully", {
-        id: toastId,
-        duration: 2000,
-      });
-    } catch (err: any) {
-      console.log("Error:", err);
-      toast.error(err.data.message, { id: toastId, duration: 3000 });
-    }
+    // const toastId = toast.loading("Creating organisation...");
+
+    // try {
+    //   await createOrganisation(formData).unwrap();
+    //   // const res = await addOrgDocuments(formattedData).unwrap();
+    //   // console.log("Response:", res);
+    //   toast.success("Organisation created successfully", {
+    //     id: toastId,
+    //     duration: 2000,
+    //   });
+    // } catch (err: any) {
+    //   console.log("Error:", err);
+    //   toast.error(err.data.message, { id: toastId, duration: 3000 });
+    // }
   };
 
   return (
