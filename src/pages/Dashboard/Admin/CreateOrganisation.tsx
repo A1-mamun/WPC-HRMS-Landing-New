@@ -301,20 +301,20 @@ const CreateOrganisation = () => {
 
     console.log("formattedData:", formattedData);
 
-    // const toastId = toast.loading("Creating organisation...");
+    const toastId = toast.loading("Creating organisation...");
 
-    // try {
-    //   await createOrganisation(formData).unwrap();
-    //   // const res = await addOrgDocuments(formattedData).unwrap();
-    //   // console.log("Response:", res);
-    //   toast.success("Organisation created successfully", {
-    //     id: toastId,
-    //     duration: 2000,
-    //   });
-    // } catch (err: any) {
-    //   console.log("Error:", err);
-    //   toast.error(err.data.message, { id: toastId, duration: 3000 });
-    // }
+    try {
+      await createOrganisation(formData).unwrap();
+      // const res = await addOrgDocuments(formattedData).unwrap();
+      // console.log("Response:", res);
+      toast.success("Organisation created successfully", {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (err: any) {
+      console.log("Error:", err);
+      toast.error(err.data.message, { id: toastId, duration: 3000 });
+    }
   };
 
   return (
