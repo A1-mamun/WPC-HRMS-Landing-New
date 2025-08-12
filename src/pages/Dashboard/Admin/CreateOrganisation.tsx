@@ -318,7 +318,7 @@ const CreateOrganisation = () => {
   };
 
   return (
-    <main className="dashboard-padding ">
+    <main className="dashboard-padding">
       <h1 className="text-2xl font-medium pb-2 border-b border-hrms-blue-light">
         Create Organaisation
       </h1>
@@ -839,8 +839,8 @@ const CreateOrganisation = () => {
                 label="Status"
                 placeholder="Select status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.mondayStatus?.message}
               />
@@ -851,8 +851,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Tuesday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.tuesdayStatus?.message}
               />
@@ -863,8 +863,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Wednesday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.wednesdayStatus?.message}
               />
@@ -875,8 +875,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Thursday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.thursdayStatus?.message}
               />
@@ -887,8 +887,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Friday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.fridayStatus?.message}
               />
@@ -899,8 +899,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Saturday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.saturdayStatus?.message}
               />
@@ -911,8 +911,8 @@ const CreateOrganisation = () => {
                 placeholder="Select status"
                 ariaLabel="Sunday Status"
                 options={[
-                  { _id: "1", name: "Close" },
                   { _id: "2", name: "Open" },
+                  { _id: "1", name: "Close" },
                 ]}
                 error={errors.sundayStatus?.message}
               />
@@ -1138,356 +1138,6 @@ const CreateOrganisation = () => {
             />
           </div>
         </div>
-
-        {/* key contact person details */}
-        {/* <div className="pt-5">
-          <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Key Contact Person
-          </h3>
-          <Checkbox
-            isSelected={isKeyPersonSameAsAuthorised}
-            onValueChange={(value) => setIsKeyPersonSameAsAuthorised(value)}
-            className="pt-5"
-          >
-            If Same As Authorised Person
-          </Checkbox>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-            <div>
-              <label
-                htmlFor="firstName"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                placeholder="Enter first name"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isKeyPersonSameAsAuthorised}
-                {...register("keyPersonFirstName")}
-              />
-              {errors.keyPersonFirstName && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonFirstName?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="keyPersonLastName"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="keyPersonLastName"
-                placeholder="Enter last name"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isKeyPersonSameAsAuthorised}
-                {...register("keyPersonLastName")}
-              />
-              {errors.keyPersonLastName && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonLastName?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="keyPersonDesignation"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Designation
-              </label>
-              <input
-                type="text"
-                id="keyPersonDesignation"
-                placeholder="Enter designation"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isKeyPersonSameAsAuthorised}
-                {...register("keyPersonDesignation")}
-              />
-              {errors.keyPersonDesignation && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonDesignation?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="keyPersonPhoneNo"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Phone No
-              </label>
-              <input
-                type="text"
-                id="keyPersonPhoneNo"
-                placeholder="Enter phone number"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isKeyPersonSameAsAuthorised}
-                {...register("keyPersonPhoneNo")}
-              />
-              {errors.keyPersonPhoneNo && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonPhoneNo?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="keyPersonEmail"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="keyPersonEmail"
-                placeholder="Enter email"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isKeyPersonSameAsAuthorised}
-                {...register("keyPersonEmail")}
-              />
-              {errors.keyPersonEmail && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonEmail?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Proof of ID"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("keyPersonProofOfId", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.keyPersonProofOfId && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonProofOfId?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="keyPersonCriminalHistory"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Do you have a history of Criminal conviction
-                    /Bankruptcy/Disqualification?"
-                    label="Do you have a history of Criminal conviction
-                    /Bankruptcy/Disqualification?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="text-base font-medium "
-                  >
-                    <Radio value="Yes">Yes</Radio>
-                    <Radio value="No">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.keyPersonCriminalHistory && (
-                <small className="text-red-700 font-medium">
-                  {errors.keyPersonCriminalHistory?.message}
-                </small>
-              )}
-            </div>
-          </div>
-        </div> */}
-
-        {/* level 1 user details */}
-        {/* <div className="pt-5">
-          <h3 className="text-xl font-medium pb-2 border-b border-hrms-blue-light">
-            Level 1 User
-          </h3>
-          <Checkbox
-            isSelected={isLevel1PersonSameAsAuthorised}
-            onValueChange={(value) => setIsLevel1PersonSameAsAuthorised(value)}
-            className="pt-5"
-          >
-            If Same As Authorised Person
-          </Checkbox>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-5">
-            <div>
-              <label
-                htmlFor="firstName"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                placeholder="Enter first name"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isLevel1PersonSameAsAuthorised}
-                {...register("level1PersonFirstName")}
-              />
-              {errors.level1PersonFirstName && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonFirstName?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="lastName"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                placeholder="Enter last name"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isLevel1PersonSameAsAuthorised}
-                {...register("level1PersonLastName")}
-              />
-              {errors.level1PersonLastName && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonLastName?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="designation"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Designation
-              </label>
-              <input
-                type="text"
-                id="designation"
-                placeholder="Enter designation"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isLevel1PersonSameAsAuthorised}
-                {...register("level1PersonDesignation")}
-              />
-              {errors.level1PersonDesignation && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonDesignation?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="phoneNo"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Phone No
-              </label>
-              <input
-                type="text"
-                id="phoneNo"
-                placeholder="Enter phone number"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isLevel1PersonSameAsAuthorised}
-                {...register("level1PersonPhoneNo")}
-              />
-              {errors.level1PersonPhoneNo && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonPhoneNo?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-hrms-blue mb-1"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                placeholder="Enter email"
-                className="w-full px-4 py-[9px] bg-gray-100 rounded-md text-hrms-blue focus:outline-none focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed "
-                disabled={isLevel1PersonSameAsAuthorised}
-                {...register("level1PersonEmail")}
-              />
-              {errors.level1PersonEmail && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonEmail?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Input
-                radius="sm"
-                label="Proof of ID"
-                labelPlacement="outside"
-                type="file"
-                className="text-hrms-blue font-semibold"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("level1PersonProofOfId", file, {
-                      shouldValidate: true,
-                    });
-                  }
-                }}
-              />
-              {errors.level1PersonProofOfId && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonProofOfId?.message}
-                </small>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                name="level1PersonCriminalHistory"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Do you have a history of Criminal conviction
-/Bankruptcy/Disqualification?"
-                    label="Do you have a history of Criminal conviction
-/Bankruptcy/Disqualification?"
-                    orientation="horizontal"
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="text-base font-medium "
-                  >
-                    <Radio value="Yes">Yes</Radio>
-                    <Radio value="No">No</Radio>
-                  </RadioGroup>
-                )}
-              />
-              {errors.level1PersonCriminalHistory && (
-                <small className="text-red-700 font-medium">
-                  {errors.level1PersonCriminalHistory?.message}
-                </small>
-              )}
-            </div>
-          </div>
-        </div> */}
 
         {/* submit button area */}
         <div className="flex justify-between items-center pt-5 pb-10">

@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardBody } from "@heroui/react";
 import { ReactNode, useRef } from "react";
 import { useInView } from "framer-motion";

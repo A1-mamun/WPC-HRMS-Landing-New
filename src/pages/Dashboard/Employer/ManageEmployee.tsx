@@ -18,18 +18,20 @@ const ManageEmployee = () => {
 
   // api call to get employees
   const { data, isError } = useGetOrgaisationEmployeesQuery(undefined);
-  // console.log("Employees", data?.data);
+  console.log("Employees", data?.data);
 
   const rowsPerPage = data?.meta?.limit;
 
   const pages =
-    data?.data && rowsPerPage ? Math.ceil(data.data.length / rowsPerPage) : 1;
+    data?.data.employees && rowsPerPage
+      ? Math.ceil(data.data.employees.length / rowsPerPage)
+      : 1;
 
   const items = useMemo(() => {
-    if (!data?.data || !rowsPerPage) return [];
+    if (!data?.data.employees || !rowsPerPage) return [];
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-    return data.data.slice(start, end);
+    return data.data.employees.slice(start, end);
   }, [page, data, rowsPerPage]);
 
   // console.log("items", items);
@@ -56,7 +58,7 @@ const ManageEmployee = () => {
 
       {/* Responsive table wrapper */}
       <div className="overflow-x-auto my-4 mx-5 border rounded-md">
-        {data?.data && rowsPerPage ? (
+        {data?.data.employees && rowsPerPage ? (
           <Table
             color="primary"
             radius="sm"
@@ -163,7 +165,10 @@ const ManageEmployee = () => {
                     <TableCell className="text-xs font-semibold border-r border-gray-200 px-2 py-1 truncate">
                       {columnKey === "action" ? (
                         <div>
-                          <Actions employee={item} />
+                          <Actions
+                            employee={item}
+                            organisation={data?.data?.organisation}
+                          />
                         </div>
                       ) : (
                         <div className="truncate">
