@@ -6,6 +6,7 @@ import { Controller, Control, FieldPath, FieldValues } from "react-hook-form";
 interface Option {
   _id: string;
   name: string;
+  value?: string;
 }
 
 interface RHFSelectProps<T extends FieldValues> {
@@ -47,7 +48,7 @@ const RHFSelect = <T extends FieldValues>({
           className="text-hrms-blue font-semibold"
         >
           {options.map((option) => (
-            <SelectItem key={option.name} value={option.name}>
+            <SelectItem key={option.value?option.value:option.name} value={option.value?option.value:option.name}>
               {option.name}
             </SelectItem>
           ))}

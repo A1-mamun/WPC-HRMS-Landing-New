@@ -24,6 +24,12 @@ const EmployerMenu = ({ onOpenChange }: { onOpenChange?: () => void }) => {
       />
       <MenuItem
         icon={<FaUserCog />}
+        label="Circumstances"
+        address="circumstances"
+        onOpenChange={onOpenChange}
+      />
+      <MenuItem
+        icon={<FaUserCog />}
         label="HCM Master"
         address="hcm-master"
         onOpenChange={onOpenChange}
