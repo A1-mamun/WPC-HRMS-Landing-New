@@ -22,6 +22,8 @@ import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
 import EmployerRoute from "./EmployerRoute";
 import EmployeeRoute from "./EmployeeRoute";
+import AddChangeOfCircumstances from "../pages/Dashboard/Employer/Circumstances/AddChangeOfCircumstances";
+import CircumstancesTab from "../pages/Dashboard/Employer/Circumstances/Circumstances";
 
 const router = createBrowserRouter([
   {
@@ -117,6 +119,22 @@ const router = createBrowserRouter([
         element: (
           <EmployerRoute>
             <ManagePayroll />
+          </EmployerRoute>
+        ),
+      },
+      {
+        path: "add-change-of-circumstances",
+        element: (
+          <EmployerRoute>
+            <AddChangeOfCircumstances />
+          </EmployerRoute>
+        ),
+      },
+      {
+        path: "circumstances",
+        element: (
+          <EmployerRoute>
+            <CircumstancesTab />
           </EmployerRoute>
         ),
       },
